@@ -1,0 +1,75 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfViewerCSharpAPI", "PdfViewerCSharpAPI_R2\PdfViewerCSharpAPI.csproj", "{12BB3EF2-6EA8-4428-9854-893F44524614}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfViewerWPF_R2", "PdfViewerWPF_R2\PdfViewerWPF_R2.csproj", "{90B51D0F-C4F2-408D-9879-CDCE515173C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewerWPFSample", "Sample\ViewerWPFSample\ViewerWPFSample.csproj", "{4020E23B-0185-4587-8B2E-9823E4D245EE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9} = {90B51D0F-C4F2-408D-9879-CDCE515173C9}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		UnicodeDebug|Any CPU = UnicodeDebug|Any CPU
+		UnicodeDebug|Mixed Platforms = UnicodeDebug|Mixed Platforms
+		UnicodeDebug|x64 = UnicodeDebug|x64
+		UnicodeDebug|x86 = UnicodeDebug|x86
+		UnicodeRelease|Any CPU = UnicodeRelease|Any CPU
+		UnicodeRelease|Mixed Platforms = UnicodeRelease|Mixed Platforms
+		UnicodeRelease|x64 = UnicodeRelease|x64
+		UnicodeRelease|x86 = UnicodeRelease|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|Any CPU.ActiveCfg = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|Any CPU.Build.0 = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|Mixed Platforms.ActiveCfg = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|Mixed Platforms.Build.0 = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|x64.ActiveCfg = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|x64.Build.0 = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|x86.ActiveCfg = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|Any CPU.ActiveCfg = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|Any CPU.Build.0 = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|Mixed Platforms.ActiveCfg = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|Mixed Platforms.Build.0 = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|x64.ActiveCfg = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|x64.Build.0 = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|x86.ActiveCfg = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|x86.Build.0 = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|Any CPU.ActiveCfg = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|Any CPU.Build.0 = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|Mixed Platforms.ActiveCfg = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|Mixed Platforms.Build.0 = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|x64.ActiveCfg = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|x64.Build.0 = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|x86.ActiveCfg = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|Any CPU.ActiveCfg = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|Any CPU.Build.0 = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|Mixed Platforms.ActiveCfg = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|Mixed Platforms.Build.0 = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|x64.ActiveCfg = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|x64.Build.0 = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|x86.ActiveCfg = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|x86.Build.0 = UnicodeRelease|Any CPU
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|Any CPU.ActiveCfg = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|Mixed Platforms.ActiveCfg = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|Mixed Platforms.Build.0 = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x64.ActiveCfg = UnicodeDebug|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x64.Build.0 = UnicodeDebug|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x86.ActiveCfg = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x86.Build.0 = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|Any CPU.ActiveCfg = UnicodeRelease|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|Mixed Platforms.ActiveCfg = UnicodeRelease|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|Mixed Platforms.Build.0 = UnicodeRelease|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x64.ActiveCfg = UnicodeRelease|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x64.Build.0 = UnicodeRelease|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x86.ActiveCfg = UnicodeRelease|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x86.Build.0 = UnicodeRelease|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

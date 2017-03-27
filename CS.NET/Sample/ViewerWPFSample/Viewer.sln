@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewerWPFSample", "ViewerWPFSample.csproj", "{4020E23B-0185-4587-8B2E-9823E4D245EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		UnicodeDebug|x64 = UnicodeDebug|x64
+		UnicodeDebug|x86 = UnicodeDebug|x86
+		UnicodeRelease|x64 = UnicodeRelease|x64
+		UnicodeRelease|x86 = UnicodeRelease|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x64.ActiveCfg = UnicodeDebug|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x64.Build.0 = UnicodeDebug|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x86.ActiveCfg = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeDebug|x86.Build.0 = UnicodeDebug|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x64.ActiveCfg = UnicodeRelease|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x64.Build.0 = UnicodeRelease|x64
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x86.ActiveCfg = UnicodeRelease|x86
+		{4020E23B-0185-4587-8B2E-9823E4D245EE}.UnicodeRelease|x86.Build.0 = UnicodeRelease|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

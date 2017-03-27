@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="border" xml:space="preserve">
+    <value>Border:</value>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="file" xml:space="preserve">
+    <value>_File</value>
+  </data>
+  <data name="first_page" xml:space="preserve">
+    <value>First page</value>
+  </data>
+  <data name="fit" xml:space="preserve">
+    <value>Fit:</value>
+  </data>
+  <data name="fit_actual" xml:space="preserve">
+    <value>Fit actual size</value>
+  </data>
+  <data name="fit_none" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="fit_page" xml:space="preserve">
+    <value>Fit page</value>
+  </data>
+  <data name="fit_width" xml:space="preserve">
+    <value>Fit by width</value>
+  </data>
+  <data name="last_page" xml:space="preserve">
+    <value>Last page</value>
+  </data>
+  <data name="layout" xml:space="preserve">
+    <value>Layout:</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="next_page" xml:space="preserve">
+    <value>Next page</value>
+  </data>
+  <data name="not_found" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="no_more_matches" xml:space="preserve">
+    <value>No more matches found.</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>_Open</value>
+  </data>
+  <data name="open_file" xml:space="preserve">
+    <value>Open file</value>
+  </data>
+  <data name="page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="previous_page" xml:space="preserve">
+    <value>Previous page</value>
+  </data>
+  <data name="resolution" xml:space="preserve">
+    <value>Resolution:</value>
+  </data>
+  <data name="rotate_right" xml:space="preserve">
+    <value>Rotate right by 90°</value>
+  </data>
+  <data name="rotation" xml:space="preserve">
+    <value>Rotation:</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="shadow_on_off" xml:space="preserve">
+    <value>Border on/off</value>
+  </data>
+  <data name="text_not_found" xml:space="preserve">
+    <value>{0} could not be found.</value>
+  </data>
+  <data name="undefined" xml:space="preserve">
+    <value>Undefined</value>
+  </data>
+  <data name="userunit" xml:space="preserve">
+    <value>User Unit:</value>
+  </data>
+  <data name="view" xml:space="preserve">
+    <value>_View</value>
+  </data>
+  <data name="view_outlines" xml:space="preserve">
+    <value>View Outlines</value>
+  </data>
+  <data name="view_page_list" xml:space="preserve">
+    <value>View Page Thumbnails</value>
+  </data>
+  <data name="window_title" xml:space="preserve">
+    <value>3-Heights(TM) WPF PDF Viewer - DEMO</value>
+  </data>
+  <data name="zoom" xml:space="preserve">
+    <value>Zoom:</value>
+  </data>
+  <data name="zoom_in" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="zoom_out" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="end_search" xml:space="preserve">
+    <value>End search</value>
+  </data>
+  <data name="license_key_invalid" xml:space="preserve">
+    <value>Could not find valid license key for this product.</value>
+  </data>
+  <data name="doublee" xml:space="preserve">
+    <value>Double</value>
+  </data>
+  <data name="double_title" xml:space="preserve">
+    <value>Double with title page</value>
+  </data>
+  <data name="page_display" xml:space="preserve">
+    <value>Page display:</value>
+  </data>
+  <data name="single" xml:space="preserve">
+    <value>Single</value>
+  </data>
+  <data name="zoom_mode" xml:space="preserve">
+    <value>Change mouse to be used for zooming</value>
+  </data>
+  <data name="PageLayoutOneColumn" xml:space="preserve">
+    <value>Shows one scrollable Column of all pages</value>
+  </data>
+  <data name="PageLayoutSinglePage" xml:space="preserve">
+    <value>Shows each page separately</value>
+  </data>
+  <data name="PageLayoutTwoColumnLeft" xml:space="preserve">
+    <value>Shows two columns of all pages</value>
+  </data>
+  <data name="PageLayoutTwoColumnRight" xml:space="preserve">
+    <value>Shows two columns of all pages, with a separate cover page at the start</value>
+  </data>
+  <data name="PageLayoutTwoPageLeft" xml:space="preserve">
+    <value>Shows a pair of pages separately</value>
+  </data>
+  <data name="PageLayoutTwoPageRight" xml:space="preserve">
+    <value>Shows a pair of pages separately, with a separate cover page at the start</value>
+  </data>
+  <data name="pause_play_button" xml:space="preserve">
+    <value>Pauses and resumes drawing the layout</value>
+  </data>
+  <data name="debug" xml:space="preserve">
+    <value>Debug:</value>
+  </data>
+  <data name="debug_IgnoreEmbeddedPreferences" xml:space="preserve">
+    <value>Ignore Preferences that are embedded in the file</value>
+  </data>
+  <data name="mark" xml:space="preserve">
+    <value>Mark a rectangular region</value>
+  </data>
+  <data name="search_previous" xml:space="preserve">
+    <value>Search previous (not implemented)</value>
+  </data>
+  <data name="search_match_case" xml:space="preserve">
+    <value>Match case</value>
+  </data>
+  <data name="search_regex" xml:space="preserve">
+    <value>Use regular expressions</value>
+  </data>
+  <data name="search_wrap" xml:space="preserve">
+    <value>Wrap around</value>
+  </data>
+  <data name="search_no_match" xml:space="preserve">
+    <value>No match found</value>
+  </data>
+  <data name="textSelection" xml:space="preserve">
+    <value>Select text</value>
+  </data>
+</root>

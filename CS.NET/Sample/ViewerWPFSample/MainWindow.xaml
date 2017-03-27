@@ -1,0 +1,193 @@
+﻿<Window x:Class="ViewerWPFSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:custom="clr-namespace:PdfTools.PdfViewerWPF;assembly=PdfViewerWPF"
+        WindowStartupLocation="CenterScreen"
+        xmlns:props="clr-namespace:ViewerWPFSample.Properties"
+        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1200">
+
+
+    <DockPanel LastChildFill="True" x:Name="root" x:FieldModifier="public">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{x:Static props:MainWindowRes.file}"  >
+                <MenuItem Header="{x:Static props:MainWindowRes.open}" Click="Open_Click" />
+                <MenuItem Header="{x:Static props:MainWindowRes.close}" Click="Close_Click" />
+            </MenuItem>
+            <MenuItem Header="{x:Static props:MainWindowRes.view}"  >
+                <MenuItem Header="{x:Static props:MainWindowRes.view_outlines}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=ShowOutlines}"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.view_page_list}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=ShowThumbnails}" />
+            </MenuItem>
+            <MenuItem Header="{x:Static props:MainWindowRes.search}"  >
+                <MenuItem Header="{x:Static props:MainWindowRes.search_match_case}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=SearchMatchCase}"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.search_wrap}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=SearchWrap}"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.search_previous}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=SearchPrevious}"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.search_regex}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=SearchRegex}"/>
+            </MenuItem>
+            <MenuItem Header="{x:Static props:MainWindowRes.debug}"  >
+                <MenuItem Header="{x:Static props:MainWindowRes.debug_IgnoreEmbeddedPreferences}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=IgnoreEmbeddedPreferences}"/>
+            </MenuItem>
+        </Menu>
+
+
+        <StatusBar Name="StatusBarForDependencyProperties"  DockPanel.Dock="Bottom">
+            <TextBlock Text="{x:Static props:MainWindowRes.page}" Margin="10, 0, 0, 0"   />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=PageNo}" Padding="0" />
+
+          
+            <TextBlock Text="/" Margin="0"  Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=PageCount}" Margin="0, 0, 10, 0" Padding="0"/>
+
+            <Separator Width="1"  />
+            
+            <TextBlock Text="{x:Static props:MainWindowRes.zoom}" Margin="10, 0, 0, 0"  Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=Zoom, StringFormat=N2}" Margin="0, 0, 10, 0" Padding="0" />
+
+            <Separator Width="1"  />
+            <TextBlock Text="{x:Static props:MainWindowRes.rotation}" Margin="10, 0, 0, 0"  Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=Rotate}" Margin="0, 0, 10, 0" Padding="0" />
+
+            <Separator Width="1"  />
+
+            <TextBlock Text="{x:Static props:MainWindowRes.border}" Margin="10, 0, 0, 0"  Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=Border}" Margin="0, 0, 10, 0" Padding="0" />
+
+            <Separator Width="1"  />
+
+            <TextBlock Text="{x:Static props:MainWindowRes.fit}" Margin="10, 0, 0, 0" Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=FitMode, Converter={StaticResource FitModeConverter}}" Margin="0, 0, 10, 0" Padding="0" />
+            
+            <Separator Width="1"  />
+
+            <TextBlock Text="{x:Static props:MainWindowRes.page_display}" Margin="10, 0, 0, 0" Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=PageLayoutMode, Converter={StaticResource PageLayoutModeConverter}}" Margin="0, 0, 10, 0" Padding="0" />
+
+            <Separator Width="1"  />
+            <TextBlock Text="{x:Static props:MainWindowRes.resolution}" Margin="10, 0, 0, 0" Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=Resolution, Converter={StaticResource ResolutionConverter}}" Margin="0, 0, 10, 0" Padding="0" />
+
+            <Separator Width="1"  />
+            <TextBlock Text="{x:Static props:MainWindowRes.userunit}" Margin="10, 0, 0, 0" Padding="0" />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=UserUnit}" Margin="0, 0, 10, 0" Padding="0" />
+
+            <Separator Width="1"  />
+            <TextBlock Text="{Binding ElementName=PdfViewer, Path=SelectedText, StringFormat=\&quot;\{0\}\&quot;}" Margin="0, 0, 10, 0" Padding="0" />
+            
+            <Separator Width="1"  />
+            <TextBlock Text="" Name="DocumentName"  Margin="0, 0, 10, 0" Padding="0" />
+
+        </StatusBar>
+
+        <Grid>
+            <Grid.RowDefinitions> 
+                <RowDefinition Height="35" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+
+
+            <ToolBarPanel  Grid.Row="0">
+                <ToolBar Name="ToolBar" Band="1" BandIndex="1" Height="35" x:FieldModifier="public" >
+
+                    <Button Click="Open_Click" x:Name="Open_Button" Height="30" ToolTip="    {x:Static props:MainWindowRes.open_file}"  >
+                        <Image Source="{StaticResource go_directory}" />
+                    </Button>
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+                    <Button Click="Start_Click" x:Name="Start_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.first_page}" x:FieldModifier="public">
+                        <Image Source="{StaticResource go_first}" />
+                    </Button>
+                    <Button Click="Left_Click" x:Name="Left_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.previous_page}" x:FieldModifier="public">
+                        <Image Source="{StaticResource go_back}" />
+                    </Button>
+                    <Button Click="Right_Click" x:Name="Right_Button" Height="30"  ToolTip="{x:Static props:MainWindowRes.next_page}" x:FieldModifier="public">
+                        <Image Source="{StaticResource go_next}" />
+                    </Button>
+                    <Button Click="End_Click" x:Name="End_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.last_page}" x:FieldModifier="public">
+                        <Image Source="{StaticResource go_last}" />
+                    </Button>
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+                    <Button Click="ZoomIn_Click" x:Name="ZoomIn_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.zoom_in}" x:FieldModifier="public">
+                        <Image Source="{StaticResource zoom_in}" />
+                    </Button>
+                    <Button Click="ZoomOut_Click" x:Name="ZoomOut_Button" Height="30" x:FieldModifier="public">
+                        <Image Source="{StaticResource zoom_out}" ToolTip="{x:Static props:MainWindowRes.zoom_out}" />
+                    </Button>
+                    <Button Click="ZoomMode_Click" x:Name="ZoomMode_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.zoom_mode}" x:FieldModifier="public">
+                        <Image Source="{StaticResource zoom_mode}" />
+                    </Button>
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+
+                    <Button Click="Rotate_Click" x:Name="Rotate_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.rotate_right}" x:FieldModifier="public">
+                        <Image Source="{StaticResource rotate_right}" />
+                    </Button>
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+                    <Button Click="FitPage_Click" x:Name="FitPage_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.fit_page}"  x:FieldModifier="public">
+                        <Image Source="{StaticResource page_fit}" />
+                    </Button>
+                    <Button Click="FitWidth_Click" x:Name="FitWidth_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.fit_width}"  x:FieldModifier="public">
+                        <Image Source="{StaticResource page_width}" />
+                    </Button>
+                    <Button Click="FitActualSize_Click" x:Name="FitActualSize_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.fit_actual}"  x:FieldModifier="public">
+                        <Image Source="{StaticResource page_actual}" />
+                    </Button>
+
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+
+
+
+                    <Button Click="PageLayoutOneColumn_Click" x:Name="PageLayoutOneColumn_Button" Height="30"  x:FieldModifier="public">
+                        <Image Source="{StaticResource PageLayoutOneColumn}" ToolTip="{x:Static props:MainWindowRes.PageLayoutOneColumn}"/>
+                    </Button>
+                    <Button Click="PageLayoutTwoColumnLeft_Click" x:Name="PageLayoutTwoColumnLeft_Button" Height="30"  x:FieldModifier="public">
+                        <Image Source="{StaticResource PageLayoutTwoColumnLeft}" ToolTip="{x:Static props:MainWindowRes.PageLayoutTwoColumnLeft}"/>
+                    </Button>
+                    <Button Click="PageLayoutTwoColumnRight_Click" x:Name="PageLayoutTwoColumnRight_Button" Height="30"  x:FieldModifier="public">
+                        <Image Source="{StaticResource PageLayoutTwoColumnRight}" ToolTip="{x:Static props:MainWindowRes.PageLayoutTwoColumnRight}"/>
+                    </Button>
+                    <Button Click="PageLayoutSinglePage_Click" x:Name="PageLayoutSinglePage_Button" Height="30"  x:FieldModifier="public" >
+                        <Image Source="{StaticResource PageLayoutSinglePage}" ToolTip="{x:Static props:MainWindowRes.PageLayoutSinglePage}"/>
+                    </Button>
+                    <Button Click="PageLayoutTwoPageLeft_Click" x:Name="PageLayoutTwoPageLeft_Button" Height="30"  x:FieldModifier="public" >
+                        <Image Source="{StaticResource PageLayoutTwoPageLeft}" ToolTip="{x:Static props:MainWindowRes.PageLayoutTwoPageLeft}"/>
+                    </Button>
+                    <Button Click="PageLayoutTwoPageRight_Click" x:Name="PageLayoutTwoPageRight_Button" Height="30"  x:FieldModifier="public" >
+                        <Image Source="{StaticResource PageLayoutTwoPageRight}" ToolTip="{x:Static props:MainWindowRes.PageLayoutTwoPageRight}"/>
+                    </Button>
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+                    <!--<Button Click="PausePlayClick" x:Name="PausePlay_Button" Height="30" >
+                        <Image Source="{StaticResource pause_play_button}" ToolTip="{x:Static props:MainWindowRes.pause_play_button}"/>
+                    </Button>
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>-->
+                    <Button Click="ShadowOnOff_Click" x:Name="ShadowOnOff_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.shadow_on_off}">
+                        <Image Source="{StaticResource shadow_on_off}" />
+                    </Button>
+                    
+                    <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
+                    
+                    <TextBlock Text="Search" VerticalAlignment="Center" Margin="10, 0, 10, 0"/>
+                    <TextBox Width="100" Name="SearchTextBox" TextChanged="SearchTextBox_OnTextChanged" KeyDown="SearchTextBox_OnKeyDown" x:FieldModifier="public"/>
+                    <Button Click="NextSearchClick" Height="30"  Name="NextSearchButton" ToolTip="{x:Static props:MainWindowRes.search}"  x:FieldModifier="public">
+                        <Image Source="{StaticResource search}" />
+                     </Button>
+                    <Button Click="CancelSearchClick" Height="30" ToolTip="{x:Static props:MainWindowRes.end_search}" >
+                        <Image Source="{StaticResource cancel}" />
+                    </Button>
+                    <Button Click="MarkClick" x:Name="Mark_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.mark}"  x:FieldModifier="public">
+                        <Image Source="{StaticResource mark}" />
+                    </Button>
+                    <Button Click="TextSelectionClick" x:Name="TextSelection_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.textSelection}"  x:FieldModifier="public">
+                        <Image Source="{StaticResource textSelection}" />
+                    </Button>
+                </ToolBar>
+
+            </ToolBarPanel>
+            <custom:PdfViewerWPF Name="PdfViewer" Grid.Row="1" IgnoreEmbeddedPreferences="True"  FitMode="FitWidth" ShowThumbnails="True" ShowOutlines="True" PageLayoutMode="TwoColumnLeft" Border="8" Rotate="0" x:FieldModifier="public"/>
+
+        </Grid>
+        
+    </DockPanel>
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control"
+                                    Key="D"
+                                    Command="{Binding OpenPdfRef_Click}" />
+    </Window.InputBindings>
+</Window>

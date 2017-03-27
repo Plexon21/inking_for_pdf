@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfViewerWPF_R2", "PdfViewerWPF_R2.csproj", "{90B51D0F-C4F2-408D-9879-CDCE515173C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfViewerCSharpAPI", "..\PdfViewerCSharpAPI_R2\PdfViewerCSharpAPI.csproj", "{12BB3EF2-6EA8-4428-9854-893F44524614}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		UnicodeDebug|Win32 = UnicodeDebug|Win32
+		UnicodeDebug|x64 = UnicodeDebug|x64
+		UnicodeRelease|Win32 = UnicodeRelease|Win32
+		UnicodeRelease|x64 = UnicodeRelease|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|Win32.ActiveCfg = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|Win32.Build.0 = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|x64.ActiveCfg = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeDebug|x64.Build.0 = UnicodeDebug|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|Win32.ActiveCfg = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|Win32.Build.0 = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|x64.ActiveCfg = UnicodeRelease|Any CPU
+		{90B51D0F-C4F2-408D-9879-CDCE515173C9}.UnicodeRelease|x64.Build.0 = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|Win32.ActiveCfg = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|Win32.Build.0 = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|x64.ActiveCfg = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeDebug|x64.Build.0 = UnicodeDebug|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|Win32.ActiveCfg = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|Win32.Build.0 = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|x64.ActiveCfg = UnicodeRelease|Any CPU
+		{12BB3EF2-6EA8-4428-9854-893F44524614}.UnicodeRelease|x64.Build.0 = UnicodeRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

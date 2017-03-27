@@ -1,0 +1,29 @@
+﻿<Window x:Class="ViewerWPFSample.MessageBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        MaxHeight="600" MaxWidth="1000" MinHeight="200" MinWidth="300" WindowStartupLocation="CenterOwner"
+        xmlns:props="clr-namespace:ViewerWPFSample.Properties">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
+       
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Name="TextContent" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" VerticalAlignment="Top"></TextBlock>
+        <Button Name="CopyToClipboard" Click="CopyToClipBoard_Click" Grid.Row="3" Grid.Column="2"  Content="Copy to clipboard" IsDefault="false"/>
+        <Button Name="CloseButton" Click="Close_Click" Grid.Row="3" Grid.Column="4"  Content="Close" IsDefault="True"/>
+        
+    </Grid>
+</Window>

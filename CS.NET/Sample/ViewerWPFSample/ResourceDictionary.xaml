@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:ViewerWPFSample.Converters">
+
+    <converters:FitModeConverter x:Key="FitModeConverter" />
+    <converters:ResolutionConverter x:Key="ResolutionConverter" />
+    <converters:PageLayoutModeConverter x:Key="PageLayoutModeConverter" />
+    <BitmapImage x:Key="go_next" UriSource="Resources/gnome_go_next.png" />
+    <BitmapImage x:Key="go_back" UriSource="Resources/gnome_go_previous.png" />
+    <BitmapImage x:Key="go_first" UriSource="Resources/gnome_go_first.png" />
+    <BitmapImage x:Key="go_last" UriSource="Resources/gnome_go_last.png" />
+    <BitmapImage x:Key="go_directory" UriSource="Resources/gnome_fs_directory_accept.png" />
+    <BitmapImage x:Key="zoom_in" UriSource="Resources/gnome_zoom_in.png" />
+    <BitmapImage x:Key="zoom_out" UriSource="Resources/gnome_zoom_out.png" />
+    <BitmapImage x:Key="zoom_mode" UriSource="Resources/gnome_zoom.png" />
+    <BitmapImage x:Key="rotate_right" UriSource="Resources/gnome_go_jump.png" />
+    <BitmapImage x:Key="page_fit" UriSource="Resources/page.png" />
+    <BitmapImage x:Key="page_actual" UriSource="Resources/gnome_document_page_setup.png" />
+    <BitmapImage x:Key="page_width" UriSource="Resources/page_white_width.png" />
+    <BitmapImage x:Key="PageLayoutSinglePage" UriSource="Resources/page_layout_single_page.ico" />
+    <BitmapImage x:Key="PageLayoutTwoPageLeft" UriSource="Resources/page_layout_two_page_left.ico" />
+    <BitmapImage x:Key="PageLayoutTwoPageRight" UriSource="Resources/page_layout_two_page_right.ico" />
+    <BitmapImage x:Key="PageLayoutOneColumn" UriSource="Resources/page_layout_one_column.ico" />
+    <BitmapImage x:Key="PageLayoutTwoColumnLeft" UriSource="Resources/page_layout_two_column_left2.ico" />
+    <BitmapImage x:Key="PageLayoutTwoColumnRight" UriSource="Resources/page_layout_two_column_right.ico" />
+    <BitmapImage x:Key="shadow_on_off" UriSource="Resources/shape_shadow_toggle.png" />
+    <BitmapImage x:Key="search" UriSource="Resources\gnome_search_tool.png" />
+    <BitmapImage x:Key="cancel" UriSource="Resources\gnome_window_close.png" />
+    <BitmapImage x:Key="mark" UriSource="Resources\placeholderButton.jpg" />
+    <BitmapImage x:Key="textSelection" UriSource="Resources\placeholderButton.jpg" />
+    <BitmapImage x:Key="pause_play_button" UriSource="Resources\pause_play_button.ico" />
+</ResourceDictionary>
