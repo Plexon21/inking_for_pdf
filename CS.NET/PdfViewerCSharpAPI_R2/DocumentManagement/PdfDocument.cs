@@ -444,7 +444,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         //structs to parse CObjects
         [StructLayout(LayoutKind.Sequential)]
-        private struct Point
+        public struct Point
         {
             public Point(double x, double y) { this.x = x; this.y = y; }
             public double x;    // Horizontal coordinate.
@@ -498,7 +498,27 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public int m_nGlyphPositionSize;
         }
 
-
+        //Marshalling der Annotation aus der dll
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TPdfAnnotation
+        {
+            public int id;
+            public int level;
+            [MarshalAs(UnmanagedType.I1)]
+            public bool descendants;
+            public IntPtr stringPtr;
+            public string title { get { return Marshal.PtrToStringUni(stringPtr); } }
+            public int pageNo;
+            public Point pt;
+            public double zoom;
+            public double left;
+            public double top;
+            public double right;
+            public double bottom;
+            public IntPtr destPtr;
+            public string destType { get { return Marshal.PtrToStringUni(destPtr); } }           
+           
+        }
         public IList<PdfTextFragment> LoadTextFragments(int pageNo)
         {
             if (!isOpen)
@@ -570,6 +590,18 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             eLicenseError = 0, ePasswordError = 1, eFileNotFoundError = 2, eUnknownError = 3, eIllegalArgumentError = 4, eOutOfMemoryError = 5, eFileCorruptError = 6, eUnsupportedFeatureError = 7
         };
 
+        private enum TPdfAnnotationType
+        {
+            eAnntationUnknown = 0,
+            eAnnotationText = 1,
+            eAnnotationLink = 2,
+            eAnnotationFreeText = 3,
+            eAnnotationHighlight = 9,
+            eAnnotationInk = 15,
+            eAnnotationPopup = 16,
+            eAnnotationWidet = 20
+        }
+
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern IntPtr PdfViewerCreateObjectW(string filename, IntPtr fileMem, IntPtr fileMemLength, string password);
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
@@ -602,6 +634,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         static extern TViewerError PdfViewerGetLastError();
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern TPdfAnnotation PdfViewerCreateAnnotation(long pHandle, TPdfAnnotationType eType, int iPage, double[] r, int iLen);
         #endregion
 
     }
