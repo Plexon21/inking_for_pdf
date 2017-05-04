@@ -502,23 +502,82 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         [StructLayout(LayoutKind.Sequential)]
         public struct TPdfAnnotation
         {
-            public int id;
-            public int level;
+            public IntPtr annotationHandle;
+            public int pageNr;
+            public IntPtr ptrSubtype;
+            public string subType { get { return Marshal.PtrToStringUni(ptrSubtype); } }
+            public int nrOfColors;
+            public IntPtr ptrColors;
+            public double[] colors
+            {
+                get
+                {
+                    double[] array = new double[nrOfColors];
+                    IntPtr pG = ptrColors;
+                    for (int i = 0; i < nrOfColors; i++)
+                    {
+                        array[i] = (double)Marshal.PtrToStructure(pG, typeof(double));
+                        pG += Marshal.SizeOf(typeof(double));
+                    }
+                    return array;
+                }
+            }
+            public int flags;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public double[] rect;
+            public IntPtr ptrQuadPoints;
+            public double[] quadPoints
+            {
+                get
+                {
+                    double[] array = new double[nrOfQuadPoints];
+                    IntPtr pG = ptrQuadPoints;
+                    for (int i = 0; i < nrOfQuadPoints; i++)
+                    {
+                        array[i] = (double)Marshal.PtrToStructure(pG, typeof(double));
+                        pG += Marshal.SizeOf(typeof(double));
+                    }
+                    return array;
+                }
+            }
+            public int nrOfQuadPoints;
+            public IntPtr ptrContents;
+            public string contents { get { return Marshal.PtrToStringUni(ptrContents); } }
             [MarshalAs(UnmanagedType.I1)]
-            public bool descendants;
-            public IntPtr stringPtr;
-            public string title { get { return Marshal.PtrToStringUni(stringPtr); } }
-            public int pageNo;
-            public Point pt;
-            public double zoom;
-            public double left;
-            public double top;
-            public double right;
-            public double bottom;
-            public IntPtr destPtr;
-            public string destType { get { return Marshal.PtrToStringUni(destPtr); } }           
-           
+            public bool isLink;
+            public IntPtr ptrActionType;
+            public string actionType { get { return Marshal.PtrToStringUni(ptrActionType); } }
+            [MarshalAs(UnmanagedType.I1)]
+            public bool hasURI;
+            public IntPtr ptrURI;
+            public string URI { get { return Marshal.PtrToStringUni(ptrURI); } }
+            int destType;
+            [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.I1, SizeConst = 5)]
+            public bool[] hasDestVal;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+            public double[] destArray;
+            int destPage;
+            [MarshalAs(UnmanagedType.I1)]
+            public bool isMarkup;
+            public IntPtr ptrTextLabel;
+            public string textLabel { get { return Marshal.PtrToStringUni(ptrTextLabel); } }
+            [MarshalAs(UnmanagedType.I1)]
+            public bool hasPopup;
+            TPopupAnnotation m_pPopupAnnot;
         }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TPopupAnnotation
+        {
+            public IntPtr popupAnnotationHandle;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public double[] rect;
+            [MarshalAs(UnmanagedType.I1)]
+            public bool isOpen;
+            public IntPtr ptrSubtype;
+            public string subType { get { return Marshal.PtrToStringUni(ptrSubtype); } }
+        }
+
         public IList<PdfTextFragment> LoadTextFragments(int pageNo)
         {
             if (!isOpen)
@@ -547,8 +606,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             Logger.LogInfo("Loaded textFragments of page " + pageNo);
             return textFragments;
         }
-
-
 
         public IList<PdfOutlineItem> GetOutlines(int parentId)
         {
@@ -634,8 +691,11 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         static extern TViewerError PdfViewerGetLastError();
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
+
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern TPdfAnnotation PdfViewerCreateAnnotation(long pHandle, TPdfAnnotationType eType, int iPage, double[] r, int iLen);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, ref IntPtr pdfAnnotations, ref int count);
         #endregion
 
     }

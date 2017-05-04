@@ -82,6 +82,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\PdfAnnotation.cs" />
     <Compile Include="DocumentManagement\AlwaysRememberCache.cs" />
     <Compile Include="DocumentManagement\IGenericCache.cs" />
     <Compile Include="DocumentManagement\IPdfDocument.cs" />
@@ -123,6 +124,7 @@
   <ItemGroup>
     <None Include="pdf-tools.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>IF EXIST $(ProjectDir)..\..\bin copy /Y $(TargetPath) $(ProjectDir)..\..\bin\</PostBuildEvent>
