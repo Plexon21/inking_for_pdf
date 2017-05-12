@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{11AA2F5E-2C0E-443E-9153-92B5C6A021BF}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Playground</RootNamespace>
-    <AssemblyName>Playground</AssemblyName>
+    <ProjectGuid>{719B1192-BA73-4036-BFA2-8A26128A4BB4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PlaygroundExtension</RootNamespace>
+    <AssemblyName>PlaygroundExtension</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -45,17 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Annotation.cs" />
-    <Compile Include="AnnotationHandler.cs" />
-    <Compile Include="IAnnotationMetadata.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="InkAnnotation.cs" />
+    <Compile Include="TextAnnotation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Annotations\" />
+    <ProjectReference Include="..\Playground\Playground.csproj">
+      <Project>{11aa2f5e-2c0e-443e-9153-92b5c6a021bf}</Project>
+      <Name>Playground</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
