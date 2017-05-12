@@ -43,5 +43,23 @@ namespace Playground
         }
         [ImportMany]
         public IEnumerable<Lazy<Annotation, IAnnotationMetadata>> annotations;
+        public void ShowAllAnnotationsOnConsole()
+        {
+            foreach (var annot in annotations)
+            {
+                Console.WriteLine(annot.Metadata.Name + " Version:" + annot.Metadata.Version);
+                Console.WriteLine(annot.Value.show());
+            }
+        }
+        public string Show(String annotationName)
+        {
+            var annot = annotations.Where(a => a.Metadata.Name == annotationName).FirstOrDefault();
+            return annot?.Value.show();
+        }
+        public string GetMetadata(String annotationName)
+        {
+            var annot = annotations.Where(a => a.Metadata.Name == annotationName).FirstOrDefault();
+            return annot != null ? annot.Metadata.Name + " Version:" + annot.Metadata.Version : null;
+        }
     }
 }

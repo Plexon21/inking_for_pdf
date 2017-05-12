@@ -10,15 +10,26 @@ using System.Threading.Tasks;
 namespace Playground
 {
     public class Program
-    {   
+    {
         static void Main(string[] args)
         {
             AnnotationHandler handler = new AnnotationHandler();
-            foreach (var annot in handler.annotations) {
-                Console.WriteLine(annot.Metadata.Name + " Version:" + annot.Metadata.Version);
-                Console.WriteLine(annot.Value.show());
+
+            var key = "c";
+            while ("c".Equals(key))
+            {
+                Console.WriteLine("Insert name of Annotationtype");
+                var input = Console.ReadLine();
+                var res = handler.Show(input);
+                var meta = handler.GetMetadata(input);
+                if (res == null)
+                {
+                    res = "Annotation type " + input + " not found.";
+                }
+                Console.WriteLine(res);
+                Console.WriteLine("Press c to continue");
+                key = Console.ReadLine();
             }
-            Console.ReadKey();
         }
     }
 }
