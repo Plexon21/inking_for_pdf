@@ -96,5 +96,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             get;
         }
 
+        IPdfDocument GetDocument();
+
     }
 }

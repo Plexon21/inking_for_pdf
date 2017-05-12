@@ -21,6 +21,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
     using System.Windows.Media.Imaging;
     using PdfTools.PdfViewerCSharpAPI.Utilities;
     using PdfTools.PdfViewerCSharpAPI.Model;
+    using static PdfTools.PdfViewerCSharpAPI.DocumentManagement.PdfDocument;
 
     /// <summary>
     /// Interface of a Document, which represents a pdf file in its raw form
@@ -60,5 +61,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         TPageLayoutMode GetPageLayout();
         PdfDestination GetOpenActionDestination();
         IList<PdfOutlineItem> GetOutlines(int parentId);
+
+        IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
+        bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count);
+        void DeleteAnnotation(IntPtr anno);
     }
 }

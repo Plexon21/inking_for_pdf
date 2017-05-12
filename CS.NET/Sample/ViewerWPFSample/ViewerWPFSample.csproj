@@ -113,12 +113,13 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PdfViewerCSharpAPI, Version=4.7.0.0, Culture=neutral, PublicKeyToken=de6610a347b79ec0, processorArchitecture=MSIL">
+    <Reference Include="PdfViewerCSharpAPI, Version=4.9.0.0, Culture=neutral, PublicKeyToken=de6610a347b79ec0, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\PdfViewerCSharpAPI.dll</HintPath>
+      <HintPath>..\..\PdfViewerCSharpAPI_R2\bin\UnicodeDebug\PdfViewerCSharpAPI.dll</HintPath>
     </Reference>
-    <Reference Include="PdfViewerWPF">
-      <HintPath>..\..\..\bin\PdfViewerWPF.dll</HintPath>
+    <Reference Include="PdfViewerWPF, Version=4.9.0.0, Culture=neutral, PublicKeyToken=de6610a347b79ec0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\PdfViewerWPF_R2\bin\UnicodeDebug\PdfViewerWPF.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -443,6 +443,11 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return pageCache.ExactlyLoaded(pageNo);
         }
 
+        public IPdfDocument GetDocument()
+        {
+            return document;
+        }
+
         public event Action<int> PageRectLoaded
         {
             add { pageCache.ItemLoadedToCache += value; }

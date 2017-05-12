@@ -153,6 +153,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         void SetDestination(PdfDestination destination);
 
 
+
         PdfSourceRect GetPageRectGuess(int page);
 
         /// <summary>
@@ -392,6 +393,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
 
         #endregion Events
+
+        IPdfCanvas GetCanvas();
     }
 
 }

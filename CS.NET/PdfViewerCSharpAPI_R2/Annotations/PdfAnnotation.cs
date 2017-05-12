@@ -10,6 +10,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
     {
         public PdfAnnotation(PdfDocument.TPdfAnnotation ann)
         {
+
         }
     }
 }
