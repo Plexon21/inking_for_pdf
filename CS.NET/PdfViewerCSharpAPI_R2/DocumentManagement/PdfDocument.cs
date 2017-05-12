@@ -498,16 +498,27 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public int m_nGlyphPositionSize;
         }
 
+
         //Marshalling der Annotation aus der dll
         [StructLayout(LayoutKind.Sequential)]
         public struct TPdfAnnotation
         {
+            
             public IntPtr annotationHandle;
+
+           
             public int pageNr;
+            
+            
             public IntPtr ptrSubtype;
+            
             public string subType { get { return Marshal.PtrToStringUni(ptrSubtype); } }
+            
+            
             public int nrOfColors;
+            
             public IntPtr ptrColors;
+            
             public double[] colors
             {
                 get
@@ -522,10 +533,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     return array;
                 }
             }
+            
             public int flags;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             public double[] rect;
             public IntPtr ptrQuadPoints;
+            
             public double[] quadPoints
             {
                 get
@@ -540,6 +553,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     return array;
                 }
             }
+            
             public int nrOfQuadPoints;
             public IntPtr ptrContents;
             public string contents { get { return Marshal.PtrToStringUni(ptrContents); } }
@@ -647,7 +661,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             eLicenseError = 0, ePasswordError = 1, eFileNotFoundError = 2, eUnknownError = 3, eIllegalArgumentError = 4, eOutOfMemoryError = 5, eFileCorruptError = 6, eUnsupportedFeatureError = 7
         };
 
-        private enum TPdfAnnotationType
+        public enum TPdfAnnotationType
         {
             eAnntationUnknown = 0,
             eAnnotationText = 1,
@@ -693,10 +707,28 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
 
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern TPdfAnnotation PdfViewerCreateAnnotation(long pHandle, TPdfAnnotationType eType, int iPage, double[] r, int iLen);
+        static extern IntPtr PdfViewerCreateAnnotation(IntPtr pHandle, TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
+
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, ref IntPtr pdfAnnotations, ref int count);
+        static extern void PdfViewerDeleteAnnotation(IntPtr annot);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations, ref int count);
         #endregion
 
+        public IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth)
+        {
+            return PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
+        }
+
+        public bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
+        {
+            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNo, out pdfAnnotations, ref count);
+        }
+
+        public void DeleteAnnotation(IntPtr anno)
+        {
+            PdfViewerDeleteAnnotation(anno);
+        }
     }
 }

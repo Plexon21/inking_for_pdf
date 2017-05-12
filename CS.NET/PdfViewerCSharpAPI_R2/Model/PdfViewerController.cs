@@ -127,6 +127,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             Logger.LogInfo("Created Object instance");
         }
 
+        public IPdfCanvas GetCanvas()
+        {
+            return canvas;
+        }
+
         public void Initialize()
         {
             Logger.LogInfo("Initialize");

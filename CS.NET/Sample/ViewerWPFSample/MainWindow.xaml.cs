@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using PdfTools.PdfViewerWPF;
 using PdfTools.PdfViewerCSharpAPI.Model;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
-
+using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
+using static PdfTools.PdfViewerCSharpAPI.DocumentManagement.PdfDocument;
+using System.Runtime.InteropServices;
 
 namespace ViewerWPFSample
 {
@@ -26,7 +28,7 @@ namespace ViewerWPFSample
         public MainWindow()
         {
             InitializeComponent();
-            
+
             PdfViewer.SearchCompleted += OnSearchCompleted;
             PdfViewer.OpenCompleted += OnOpenCompletedEventHandler;
             PdfViewer.PreviewKeyDown += OnKeyDown;
@@ -42,6 +44,11 @@ namespace ViewerWPFSample
 
             //Contextmenu stuff 
             ContextMenu = new ContextMenu();
+
+            annotationMenuItem = new MenuItem();
+            annotationMenuItem.Header = "Annotation";
+            annotationMenuItem.Click += CreateAnnotation;
+            ContextMenu.Items.Add(annotationMenuItem);
 
             highlightMenuItem = new MenuItem();
             highlightMenuItem.Header = "Highlight";
@@ -89,15 +96,62 @@ namespace ViewerWPFSample
         MenuItem highlightMenuItem = null;
         MenuItem removeHighlightMenuItem = null;
         MenuItem copySelectedMenuItem = null;
+        MenuItem annotationMenuItem = null;
+
+        public void CreateAnnotation(object sender, RoutedEventArgs e) {
+
+            PdfDocument doc = (PdfDocument)this.PdfViewer.GetController().GetCanvas().DocumentManager.GetDocument();
+
+            double[] r = new double[4];
+
+            for (int i = 0; i < 2; i++)
+            {
+                r[i*2] = i*100;
+                r[i * 2 + 1] = i*200;
+            }
+
+            int count = 0;
+            
+            bool x = doc.GetAnnotations(1, out IntPtr pointer, ref count);
+
+            double[] color = new double[] { 255, 255, 0, 0 };
+
+            //doc.DeleteAnnotation(pointer[0]);
+
+            IntPtr t = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r, 4, color, 4, 10);
+
+            //x = doc.GetAnnotations(1, out pointer, ref count);
 
 
 
 
-        /// <summary>
-        /// Disposes of the internal viewer (important to prevent memory leaks).
-        /// </summary>
-        /// <param name="e">Event parameters.</param>
-        protected override void OnClosed(EventArgs e)
+
+            IntPtr[] pointers = new IntPtr[count];
+            IntPtr p = pointer;
+
+            for (int i = 0; i < count; i++)
+            {
+                pointers[i] = p;
+                p += Marshal.SizeOf(typeof(IntPtr));
+            }
+
+            TPdfAnnotation anno = (TPdfAnnotation)Marshal.PtrToStructure(t, typeof(TPdfAnnotation));
+            //TPdfAnnotation anno2 = (TPdfAnnotation)Marshal.PtrToStructure(pointers[count-1], typeof(TPdfAnnotation));
+
+            //doc.DeleteAnnotation(anno.annotationHandle);
+
+            x = doc.GetAnnotations(1, out pointer, ref count);
+
+            annotationMenuItem.Header = "done";
+
+        }
+
+
+    /// <summary>
+    /// Disposes of the internal viewer (important to prevent memory leaks).
+    /// </summary>
+    /// <param name="e">Event parameters.</param>
+    protected override void OnClosed(EventArgs e)
         {
             PdfViewer.Dispose();
             base.OnClosed(e);
