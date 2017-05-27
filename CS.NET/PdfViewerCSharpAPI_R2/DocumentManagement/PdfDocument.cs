@@ -511,8 +511,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             
             
             public IntPtr ptrSubtype;
-            
-            public string subType { get { return Marshal.PtrToStringUni(ptrSubtype); } }
+
+            public string subType { get { return Marshal.PtrToStringAnsi(ptrSubtype); } }
             
             
             public int nrOfColors;
@@ -556,15 +556,15 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             
             public int nrOfQuadPoints;
             public IntPtr ptrContents;
-            public string contents { get { return Marshal.PtrToStringUni(ptrContents); } }
+            public string contents { get { return Marshal.PtrToStringAnsi(ptrContents); } }
             [MarshalAs(UnmanagedType.I1)]
             public bool isLink;
             public IntPtr ptrActionType;
-            public string actionType { get { return Marshal.PtrToStringUni(ptrActionType); } }
+            public string actionType { get { return Marshal.PtrToStringAnsi(ptrActionType); } }
             [MarshalAs(UnmanagedType.I1)]
             public bool hasURI;
             public IntPtr ptrURI;
-            public string URI { get { return Marshal.PtrToStringUni(ptrURI); } }
+            public string URI { get { return Marshal.PtrToStringAnsi(ptrURI); } }
             int destType;
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.I1, SizeConst = 5)]
             public bool[] hasDestVal;
@@ -574,7 +574,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             [MarshalAs(UnmanagedType.I1)]
             public bool isMarkup;
             public IntPtr ptrTextLabel;
-            public string textLabel { get { return Marshal.PtrToStringUni(ptrTextLabel); } }
+            public string textLabel { get { return Marshal.PtrToStringAnsi(ptrTextLabel); } }
             [MarshalAs(UnmanagedType.I1)]
             public bool hasPopup;
             TPopupAnnotation m_pPopupAnnot;
@@ -710,6 +710,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         static extern IntPtr PdfViewerCreateAnnotation(IntPtr pHandle, TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
 
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern int PdfViewerUpdateAnnotation(IntPtr pDocument, IntPtr annot, int iPage, double[] r, string content, string label, double[] color, int nColors, double dBorderWidth);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern void PdfViewerDeleteAnnotation(IntPtr annot);
 
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
@@ -719,6 +722,11 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth)
         {
             return PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
+        }
+
+        public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color, int nColors, double dBorderWidth)
+        {
+            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, nColors, dBorderWidth);
         }
 
         public bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
