@@ -15,6 +15,7 @@ using System.Windows.Threading;
 using System.Text.RegularExpressions;
 using PdfTools.PdfViewerCSharpAPI.Model;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
+using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
 
 namespace PdfTools.PdfViewerWPF.CustomControls
 {
@@ -233,6 +234,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     case TMouseMode.eMouseMoveMode: this.Cursor = System.Windows.Input.Cursors.Hand; break;
                     case TMouseMode.eMouseMarkMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     case TMouseMode.eMouseZoomMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
+                    case TMouseMode.eMouseFreehandAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
                     default: this.Cursor = System.Windows.Input.Cursors.Arrow; break;
                 }   
             }
@@ -322,6 +324,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private bool middleMouseScrolling = false;
         private bool markingRectangle = false;
         private bool selectingText = false;
+        private bool drawingLineAnnotation = false;
         private Rect selectedRect = new Rect();
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
@@ -370,6 +373,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 controller.SetTextSelectionStartPoint(new PdfTargetPoint(lastMousePosition));
                 this.Cursor = Cursors.IBeam;
                 selectingText = true;
+            }
+            else if (MouseMode == TMouseMode.eMouseFreehandAnnotationMode)
+            {
+                lastMousePosition = e.GetPosition(this);
+                this.Cursor = Cursors.Pen;
+                drawingLineAnnotation = true;
             }
             else
             {
@@ -573,6 +582,21 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 if (TextSelected != null)
                     TextSelected(_selectedText);
                 this.InvalidateVisual();
+            }
+            else if (drawingLineAnnotation)
+            {
+                drawingLineAnnotation = false;
+
+                selectedRect = new Rect(lastMousePosition, e.GetPosition(this));
+
+                PdfSourceRect rect = controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect));
+
+                //this is not at the right place
+                double[] points = new double[] { rect.dX, rect.dY, rect.dRight, rect.dBottom };
+                double[] color = new double[] { 0, 0, 0, 1 };
+
+                controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, points, 4, color, 4, 10);
+                
             }
 
             e.Handled = true;

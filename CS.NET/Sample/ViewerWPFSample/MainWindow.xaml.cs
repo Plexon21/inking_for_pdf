@@ -100,7 +100,10 @@ namespace ViewerWPFSample
 
         public void CreateAnnotation(object sender, RoutedEventArgs e) {
 
+            PdfViewer.MouseMode = TMouseMode.eMouseFreehandAnnotationMode;
+
             PdfDocument doc = (PdfDocument)this.PdfViewer.GetController().GetCanvas().DocumentManager.GetDocument();
+
 
             double[] r1 = new double[] { 400, 400, 450, 400 };
             double[] r2 = new double[] { 450, 400, 450, 450 };
@@ -108,7 +111,7 @@ namespace ViewerWPFSample
             double[] r4 = new double[] { 400, 450, 400, 400 };
 
             double[] spline = new double[] { 200, 200, 300, 300, 100, 350 };
-            double[] dMark = new double[] { 500, 50, 550, 100 };
+            double[] dMark = new double[] { 50, 50 };
 
             int count = 0;
             
@@ -121,13 +124,13 @@ namespace ViewerWPFSample
 
             //doc.DeleteAnnotation(pointer[0]);
 
-            IntPtr markup = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, 1, dMark, 4, color4, 4, 10);
-            IntPtr tspline = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, spline, 6, color4, 4, 10);
+            //IntPtr markup = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, 1, dMark, 2, color4 ,4, 1);
+            //IntPtr tspline = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, spline, 6, color4, 4, 10);
             IntPtr t1 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r1, 4, color1, 4, 10);
             IntPtr t2 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r2, 4, color2, 4, 10);
             IntPtr t3 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r3, 4, color3, 4, 10);
             IntPtr t4 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r4, 4, color4, 4, 10);
-            //IntPtr t5 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r5, 10, color4, 4, 10);
+
 
             //x = doc.GetAnnotations(1, out pointer, ref count);
 
@@ -137,11 +140,11 @@ namespace ViewerWPFSample
 
 
 
-            TPdfAnnotation anno = (TPdfAnnotation)Marshal.PtrToStructure(markup, typeof(TPdfAnnotation));
+
             //TPdfAnnotation anno2 = (TPdfAnnotation)Marshal.PtrToStructure(pointers[count-1], typeof(TPdfAnnotation));
 
 
-            int asdf = doc.UpdateAnnotation(anno.annotationHandle, 1, null, "content", "label", color2, 4, -1);
+
 
 
             x = doc.GetAnnotations(1, out pointer, ref count);
@@ -155,12 +158,15 @@ namespace ViewerWPFSample
                 p += Marshal.SizeOf(typeof(IntPtr));
             }
 
+            TPdfAnnotation anno = (TPdfAnnotation)Marshal.PtrToStructure(pointers[0], typeof(TPdfAnnotation));
+            int asdf = doc.UpdateAnnotation(anno.annotationHandle, 1, null, "content", "label", color2, 4, -1);
+
             TPdfAnnotation anno2 = (TPdfAnnotation)Marshal.PtrToStructure(pointers[0], typeof(TPdfAnnotation));
 
             //doc.DeleteAnnotation(anno.annotationHandle);
 
 
-            annotationMenuItem.Header = "done";
+            //annotationMenuItem.Header = "done";
 
         }
 
