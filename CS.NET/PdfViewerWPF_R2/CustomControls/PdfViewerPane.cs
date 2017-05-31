@@ -589,14 +589,19 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 selectedRect = new Rect(lastMousePosition, e.GetPosition(this));
 
-                PdfSourceRect rect = controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect));
+                int page1 = 0;
+                int page2 = 0;
 
-                //this is not at the right place
-                double[] points = new double[] { rect.dX, rect.dY, rect.dRight, rect.dBottom };
+                PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(lastMousePosition), ref page1);
+                PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(e.GetPosition(this)), ref page2);
+
+                double[] points = new double[] { p1.dX, p1.dY, p2.dX, p2.dY };
                 double[] color = new double[] { 0, 0, 0, 1 };
 
-                controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, points, 4, color, 4, 10);
-                
+                if (page1 == page2 && page1 != 0)
+                {
+                    controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page1, points, 4, color, 4, 10);
+                }
             }
 
             e.Handled = true;
