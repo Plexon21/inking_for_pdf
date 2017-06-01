@@ -504,21 +504,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public struct TPdfAnnotation
         {
             
-            public IntPtr annotationHandle;
-
-           
-            public int pageNr;
-            
-            
+            public IntPtr annotationHandle;           
+            public int pageNr;    
             public IntPtr ptrSubtype;
-
-            public string subType { get { return Marshal.PtrToStringAnsi(ptrSubtype); } }
-            
-            
+            public string subType { get { return Marshal.PtrToStringAnsi(ptrSubtype); } }   
             public int nrOfColors;
-            
             public IntPtr ptrColors;
-            
             public double[] colors
             {
                 get
@@ -533,12 +524,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     return array;
                 }
             }
-            
             public int flags;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             public double[] rect;
             public IntPtr ptrQuadPoints;
-            
             public double[] quadPoints
             {
                 get
@@ -565,7 +554,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public bool hasURI;
             public IntPtr ptrURI;
             public string URI { get { return Marshal.PtrToStringAnsi(ptrURI); } }
-            int destType;
+            public int destType;
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.I1, SizeConst = 5)]
             public bool[] hasDestVal;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
@@ -577,7 +566,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public string textLabel { get { return Marshal.PtrToStringAnsi(ptrTextLabel); } }
             [MarshalAs(UnmanagedType.I1)]
             public bool hasPopup;
-            TPopupAnnotation m_pPopupAnnot;
+            public TPopupAnnotation m_pPopupAnnot;
         }
 
         [StructLayout(LayoutKind.Sequential)]

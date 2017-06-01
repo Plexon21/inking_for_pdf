@@ -8,6 +8,7 @@ namespace Playground
 {
     public abstract class Annotation
     {
-        public abstract string show();
+        public virtual string show()
+        { return "gugus"; }
     }
 }
