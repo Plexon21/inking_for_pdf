@@ -13,6 +13,7 @@ using PdfTools.PdfViewerCSharpAPI.Utilities;
 using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using PdfTools.PdfViewerCSharpAPI.Annotations;
 
 namespace PdfTools.PdfViewerCSharpAPI.Model
 {
@@ -46,6 +47,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private String filename = "";
         private String password = "";
         private byte[] fileMem = null;
+        private IList<PdfAnnotation> annotations;
 
         #endregion
 
@@ -263,7 +265,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public static bool SetLicenseKey(string key)
         {
-            
+
             lock (isInitializedLock)
             {
                 if (!bIsInitialized)
@@ -424,7 +426,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             set
             {
-                if(ignoringEmbeddedPreferences != value)
+                if (ignoringEmbeddedPreferences != value)
                     ignoringEmbeddedPreferences = value;
             }
             get
@@ -574,7 +576,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                     bIsInitialized = true;
                 }
             }
-            
+
             if (!PdfViewerGetLicenseIsValid())
             {
                 UIntPtr size = PdfViewerGetLastErrorMessageW(null, UIntPtr.Zero);
@@ -641,7 +643,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public void SetPageNo(int pageNo)
         {
             GoToDestination(pageNo);
-            
+
             FitAndUpdate(false);
         }
 
@@ -696,7 +698,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 if (canvas.BorderSize == value)
                     return;
                 canvas.BorderSize = value;
-                if(_shouldBecomeOpen)
+                if (_shouldBecomeOpen)
                 {
                     GoToDestination(FirstPageOnViewport);
                     FitAndUpdate(false);
@@ -709,8 +711,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public Resolution Resolution
         {
             get { return _resolution; }
-            set { 
-                if(_resolution.xdpi == value.xdpi && _resolution.ydpi == value.ydpi)
+            set
+            {
+                if (_resolution.xdpi == value.xdpi && _resolution.ydpi == value.ydpi)
                     return;
                 _resolution = value;
                 OnResolutionChanged(value);
@@ -720,8 +723,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private bool _scrollingToNextPageEnabled = true;
         public bool ScrollingToNextPageEnabled
         {
-            get {
-                return _scrollingToNextPageEnabled; 
+            get
+            {
+                return _scrollingToNextPageEnabled;
             }
             set
             {
@@ -746,17 +750,18 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
                 if (_shouldBecomeOpen)
                 {
-                    try {
-                    GoToDestination(FirstPageOnViewport);
-                    FitAndUpdate(false);
-                }
+                    try
+                    {
+                        GoToDestination(FirstPageOnViewport);
+                        FitAndUpdate(false);
+                    }
                     catch (PdfNoFileOpenedException)
                     {
                         Logger.LogInfo("Viewportupdates for PageLayoutMode failed, as no file was open");
                         return;
                     }
+                }
             }
-        }
         }
         private void ChangTPageLayoutMode(TPageLayoutMode value)
         {
@@ -780,7 +785,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 Logger.LogInfo("Setting FitMode");
                 ChangeFitMode(value);
                 int p = FirstPageOnViewport;
-                if(_shouldBecomeOpen)
+                if (_shouldBecomeOpen)
                 {
                     bool pageChanged = FitViewport(true);
                     if (value == FitMode.FitPage)
@@ -936,6 +941,48 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
         #endregion
 
+        #region annotation methods
+        public void AddAnnoation(PdfAnnotation annot)
+        {
+
+            if (annotations == null)
+            {
+                LoadAllAnnotationsOnPage(annot.PageNr);
+            }
+            annotations.Add(annot);
+        }
+
+
+
+        public PdfAnnotation GetAnnotation(long annotHandle)
+        {
+            if (annotations == null)
+            {
+                LoadAllAnnotations();
+            }
+            return annotations.FirstOrDefault(a => a.AnnotationHandle.Equals(annotHandle));
+        }
+
+        private void LoadAllAnnotations()
+        {
+        }
+        public void LoadAllAnnotationsOnPage(int pageNr)
+        {
+            canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
+        }
+
+        public bool DeleteAnnotation(PdfAnnotation annot)
+        {
+            return false;
+        }
+
+        public bool DeleteAnnotation(long annotHandle)
+        {
+            return false;
+        }
+        #endregion
+
+
         #region Update Helper Methods
         //private helper methods that are used for internal bitmap updating
 
@@ -966,7 +1013,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             switch (destination.Type)
             {
                 case TDestination.eDestinationXYZ:
-                    GoToDestination(InversePageOrder[destination.Page-1], (destinationRect.dLocation - pageRect.dLocation).GetTargetPoint(viewport.ZoomFactor));
+                    GoToDestination(InversePageOrder[destination.Page - 1], (destinationRect.dLocation - pageRect.dLocation).GetTargetPoint(viewport.ZoomFactor));
                     ZoomCenteredOnPosition(destinationRect.dLocation.GetTargetPoint(viewport.ZoomFactor), destination.Zoom(viewport.ZoomFactor) / viewport.ZoomFactor);
                     break;
                 case TDestination.eDestinationFitBV:
@@ -1390,7 +1437,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public void OnOpenCompleted(PdfViewerException ex)
         {
             Logger.LogInfo("Opening of document completed - starting visual updates");
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
                 if (ex != null)
                 {
@@ -1404,43 +1451,44 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 canvas.Rotation = 0;
                 viewport.ZoomCenteredOnViewportCenter(1.0);
                 OnRotationChanged(canvas.Rotation);
-                if(_shouldBecomeOpen)//it might be that there was already another close call before the open completed
+                if (_shouldBecomeOpen)//it might be that there was already another close call before the open completed
                 {
-                    try {
-                    if (!ignoringEmbeddedPreferences)
+                    try
                     {
-                        Logger.LogInfo("Load embedded preferences");
-                        TPageLayoutMode pageLayout = canvas.DocumentManager.RequestPageLayout().Wait().output;
-                        if (pageLayout != TPageLayoutMode.None)
+                        if (!ignoringEmbeddedPreferences)
                         {
-                            //We directly call the change method as we do not want to execute the goto's associated with the PageLayout Property
-                            ChangTPageLayoutMode(pageLayout);
-                        }
+                            Logger.LogInfo("Load embedded preferences");
+                            TPageLayoutMode pageLayout = canvas.DocumentManager.RequestPageLayout().Wait().output;
+                            if (pageLayout != TPageLayoutMode.None)
+                            {
+                                //We directly call the change method as we do not want to execute the goto's associated with the PageLayout Property
+                                ChangTPageLayoutMode(pageLayout);
+                            }
 
-                        PdfDestination destination = canvas.DocumentManager.RequestOpenActionDestination().Wait().output;
+                            PdfDestination destination = canvas.DocumentManager.RequestOpenActionDestination().Wait().output;
 
-                        if (destination.Type != TDestination.eDestinationInvalid)
-                        {
-                            GoToDestination(destination);
+                            if (destination.Type != TDestination.eDestinationInvalid)
+                            {
+                                GoToDestination(destination);
+                            }
+                            else
+                            {
+                                GoToDestination(FirstPageOnViewport);
+                            }
                         }
                         else
                         {
                             GoToDestination(FirstPageOnViewport);
                         }
-                    }
-                    else
-                    {
-                        GoToDestination(FirstPageOnViewport);
-                    }
 
-                    FitViewport(true);
-                    OnVisiblePageRangeChanged(FirstPageOnViewport, LastPageOnViewport);
-                    UpdateBitmapContent();
+                        FitViewport(true);
+                        OnVisiblePageRangeChanged(FirstPageOnViewport, LastPageOnViewport);
+                        UpdateBitmapContent();
 
-                    //set canvassize and stuff
-                    OnPageCountChanged(canvas.PageCount);
-                    OnOpenCompletedCall(ex);
-                }
+                        //set canvassize and stuff
+                        OnPageCountChanged(canvas.PageCount);
+                        OnOpenCompletedCall(ex);
+                    }
                     catch (PdfNoFileOpenedException)
                     {
                         Logger.LogInfo("Viewportupdates for Border failed, as no file was open");
@@ -1457,7 +1505,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
          */
         public void OnCloseCompleted(PdfViewerException ex)
         {
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
                 if (ex != null)
                 {
@@ -1483,7 +1531,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
          */
         public void OnDrawCompleted(PdfViewerException ex, WriteableBitmap bitmap)
         {
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
 
                 if (ex == null)
@@ -1508,7 +1556,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void OnPageOrderChangedCompleted(IList<int> pageOrder)
         {
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
                 OnPageOrderChanged(pageOrder);
             });
@@ -1533,6 +1581,15 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             UpdateBitmapContent();
         }
 
+        public void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation annot)
+        {
+        }
+
+        public void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput)
+        {
+            annotations = tupleOutput;
+        }
+
         #endregion
 
         #region Searcher configuration
@@ -1541,7 +1598,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             set
             {
-                if(searcher.MatchCase != value)
+                if (searcher.MatchCase != value)
                     searcher.MatchCase = value;
             }
             get
@@ -1553,7 +1610,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             set
             {
-                if(searcher.Wrap != value)
+                if (searcher.Wrap != value)
                     searcher.Wrap = value;
             }
             get
@@ -1565,7 +1622,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             set
             {
-                if(searcher.Previous != value)
+                if (searcher.Previous != value)
                     searcher.Previous = value;
             }
             get
@@ -1577,7 +1634,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             set
             {
-                if(searcher.UseRegex != value)
+                if (searcher.UseRegex != value)
                     searcher.UseRegex = value;
             }
             get
@@ -1617,7 +1674,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         #region ThumbnailRelated methods
 
         private int thumbnailWidth = 50, thumbnailHeight = 50;
-        
+
         public int ThumbnailWidth
         {
             set { thumbnailWidth = value; }
@@ -1650,7 +1707,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void OnThumbnailLoaded(int pdfPage, WriteableBitmap bitmap, PdfViewerException exception)
         {
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
                 ThumbnailsChangedArgs args = new ThumbnailsChangedArgs(pdfPage, bitmap, exception);
                 // If the corresponding page is still displayed somewhere in the viewer, execute the event callbacks
@@ -1679,7 +1736,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void OnOutlinesLoaded(PdfViewerException ex, int parentId, IList<PdfOutlineItem> outlineItems)
         {
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
                 OnOutlinesChanged(parentId, outlineItems, ex);
             }
@@ -1694,7 +1751,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private void OnViewportRectangleChanged(PdfTargetRect arg) { if (ViewportRectangleChanged != null) ViewportRectangleChanged(arg); }
 
         private void OnOpenCompletedCall(PdfViewerException arg) { _isOpen = (arg == null); _shouldBecomeOpen = (arg == null); if (OpenCompleted != null) OpenCompleted(arg); }
-        private void OnCloseCompletedCall(PdfViewerException arg) { if (CloseCompleted != null)CloseCompleted(arg); }
+        private void OnCloseCompletedCall(PdfViewerException arg) { if (CloseCompleted != null) CloseCompleted(arg); }
         private void OnVisiblePageRangeChanged(int arg1, int arg2) { if (VisiblePageRangeChanged != null) VisiblePageRangeChanged(arg1, arg2); }
         private void OnPageCountChanged(int arg) { if (PageCountChanged != null) PageCountChanged(arg); }
         private void OnFitModeChanged(FitMode arg) { if (FitModeChanged != null) FitModeChanged(arg); }
@@ -1706,16 +1763,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private void OnOutlinesChanged(int arg1, IList<PdfOutlineItem> arg2, PdfViewerException arg3) { if (OutlinesChanged != null) OutlinesChanged(arg1, arg2, arg3); }
         private void OnPageOrderChanged(IList<int> arg1) { if (PageOrderChanged != null) PageOrderChanged(arg1); }
         //private void OnThumbnailsChanged(int arg1, int arg2, WriteableBitmap arg3, PdfViewerException arg4) { if (OutlinesChanged != null) ThumbnailsChanged(arg1, arg2, arg3, arg4); }
-        private void OnThumbnailsChanged(ThumbnailsChangedArgs e) 
-        { 
-            EventHandler<ThumbnailsChangedArgs> handler = ThumbnailsChanged; 
-            if (handler != null) 
+        private void OnThumbnailsChanged(ThumbnailsChangedArgs e)
+        {
+            EventHandler<ThumbnailsChangedArgs> handler = ThumbnailsChanged;
+            if (handler != null)
             {
-                handler(this, e); 
-            } 
+                handler(this, e);
+            }
         }
-
-
         #endregion
 
         #region event redeclaration
@@ -1783,6 +1838,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         static extern TViewerError PdfViewerGetLastError();
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
+
+
         #endregion native imports
     }
 }

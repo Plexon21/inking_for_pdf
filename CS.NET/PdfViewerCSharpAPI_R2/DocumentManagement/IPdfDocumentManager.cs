@@ -98,5 +98,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         IPdfDocument GetDocument();
 
+        PdfLoadAnnotationsOnPageRequest LoadAnnotationsOnPage(int pageNr);
     }
 }

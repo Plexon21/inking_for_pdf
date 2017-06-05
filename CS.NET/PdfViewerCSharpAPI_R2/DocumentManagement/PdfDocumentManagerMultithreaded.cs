@@ -343,6 +343,22 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
+        #region Annotations
+
+        public PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args)
+        {
+            var request = new PdfCreateAnnotationRequest(args);
+            requestQueue.Add(request);
+            return request;
+        }
+        public PdfLoadAnnotationsOnPageRequest LoadAnnotationsOnPage(int pageNr)
+        {
+            PdfLoadAnnotationsOnPageArgs args = new PdfLoadAnnotationsOnPageArgs(pageNr);
+            var request = new PdfLoadAnnotationsOnPageRequest(args); requestQueue.Add(request);
+            return request;
+        }
+        #endregion
+
         private IList<int> _pageOrder;
         public IList<int> PageOrder
         {
@@ -447,6 +463,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         {
             return document;
         }
+
+       
 
         public event Action<int> PageRectLoaded
         {

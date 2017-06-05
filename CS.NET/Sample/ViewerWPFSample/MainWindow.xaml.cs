@@ -98,12 +98,14 @@ namespace ViewerWPFSample
         MenuItem copySelectedMenuItem = null;
         MenuItem annotationMenuItem = null;
 
-        public void CreateAnnotation(object sender, RoutedEventArgs e) {
+        public void CreateAnnotation(object sender, RoutedEventArgs e)
+        {
 
             PdfViewer.MouseMode = TMouseMode.eMouseFreehandAnnotationMode;
 
             PdfDocument doc = (PdfDocument)this.PdfViewer.GetController().GetCanvas().DocumentManager.GetDocument();
 
+            
 
             double[] r1 = new double[] { 400, 400, 450, 400 };
             double[] r2 = new double[] { 450, 400, 450, 450 };
@@ -114,10 +116,10 @@ namespace ViewerWPFSample
             double[] dMark = new double[] { 50, 50 };
 
             int count = 0;
-            
+
             bool x = doc.GetAnnotations(1, out IntPtr pointer, ref count);
 
-            double[] color1 = new double[] { 1, 0, 0, 0};
+            double[] color1 = new double[] { 1, 0, 0, 0 };
             double[] color2 = new double[] { 0, 1, 0, 0 };
             double[] color3 = new double[] { 0, 0, 1, 0 };
             double[] color4 = new double[] { 0, 0, 0, 1 };
@@ -167,15 +169,16 @@ namespace ViewerWPFSample
 
 
             //annotationMenuItem.Header = "done";
-
+            var cont = (PdfViewerController)this.PdfViewer.GetController();
+            cont.LoadAllAnnotationsOnPage(1);
         }
 
 
-    /// <summary>
-    /// Disposes of the internal viewer (important to prevent memory leaks).
-    /// </summary>
-    /// <param name="e">Event parameters.</param>
-    protected override void OnClosed(EventArgs e)
+        /// <summary>
+        /// Disposes of the internal viewer (important to prevent memory leaks).
+        /// </summary>
+        /// <param name="e">Event parameters.</param>
+        protected override void OnClosed(EventArgs e)
         {
             PdfViewer.Dispose();
             base.OnClosed(e);
@@ -221,7 +224,7 @@ namespace ViewerWPFSample
             }
             catch (PdfLicenseInvalidException ex)
             {
-                if(TryObtainValidLicense(ex))
+                if (TryObtainValidLicense(ex))
                     OpenFile(filename, password);
             }
         }
@@ -349,11 +352,11 @@ namespace ViewerWPFSample
             {
                 return;
             }
-            
+
             Logger.LogException(exception);
             if (exception is PdfLicenseInvalidException)
             {
-                if(TryObtainValidLicense((PdfLicenseInvalidException)exception))
+                if (TryObtainValidLicense((PdfLicenseInvalidException)exception))
                     OpenFile(filename, password);
             }
             else if (exception is PdfFileNotFoundException)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 using PdfTools.PdfViewerCSharpAPI.Model;
@@ -18,7 +19,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
             this.Annot = annot;
         }
     }
-    class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, PdfAnnotation>
+    public class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, PdfAnnotation>
     {
         public PdfCreateAnnotationRequest(CreateAnnotationArgs arguments)
             : base(arguments, 42)
@@ -39,10 +40,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, InOutTuple tuple, PdfViewerException ex)
         {
+            controller?.OnAnnotationCreated(ex, tuple.output);
         }
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, PdfViewerException ex)
         {
+            controller?.OnAnnotationCreated(ex, null);
         }
     }
 }

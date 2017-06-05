@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace PdfTools.PdfViewerCSharpAPI.Annotations
@@ -26,13 +27,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         public bool IsMarkup;
         public string TextLabel;
         public bool HasPopup;
-        public PdfDocument.TPopupAnnotation PopupAnnotation;
+        public IntPtr PopupAnnotation;
 
         public PdfAnnotation(PdfDocument.TPdfAnnotation annot)
         {
             this.AnnotationHandle = annot.annotationHandle;
             this.PageNr = annot.pageNr;
-            SubType = (PdfDocument.TPdfAnnotationType)Enum.Parse(typeof(PdfDocument.TPdfAnnotationType),annot.subType);
+            this.SubType = ConvertSubtype(annot.subType);
             this.Colors = annot.colors;
             this.Flags = annot.flags;
             this.Rect = annot.rect;
@@ -49,6 +50,18 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.TextLabel = annot.textLabel;
             this.HasPopup = annot.hasPopup;
             this.PopupAnnotation = annot.m_pPopupAnnot;
+        }
+
+        private PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)
+        {
+            switch (annotSubType)
+            {
+                case "Ink":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationInk;
+                    break;
+                default:
+                    return PdfDocument.TPdfAnnotationType.eAnntationUnknown;
+            }
         }
 
         public PdfAnnotation(PdfAnnotation annot)

@@ -9,6 +9,8 @@
  *                  
  ***************************************************************************/
 
+using PdfTools.PdfViewerCSharpAPI.Annotations;
+
 namespace PdfTools.PdfViewerCSharpAPI.Model
 {
     using System;
@@ -58,5 +60,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         event Action<IList<int>> PageOrderChanged;
         #endregion
 
+        void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation annot);
+        void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput);
     }
 }

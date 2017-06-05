@@ -10,6 +10,7 @@
  ***************************************************************************/
 
 
+using PdfTools.PdfViewerCSharpAPI.Annotations;
 
 namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 {
@@ -61,6 +62,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         TPageLayoutMode GetPageLayout();
         PdfDestination GetOpenActionDestination();
         IList<PdfOutlineItem> GetOutlines(int parentId);
+        IList<PdfAnnotation> LoadAnnotations(int argsPageNr);
+
 
         IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
         bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count);

@@ -9,6 +9,8 @@
  *                  
  ***************************************************************************/
 
+using PdfTools.PdfViewerCSharpAPI.Annotations;
+
 namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 {
     using System;
@@ -77,7 +79,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             {
                 Logger.LogInfo("Creating rendering engine");
                 GCHandle gchmemBlock = GCHandle.Alloc(fileMem, GCHandleType.Pinned);
-                documentHandle = PdfViewerCreateObjectW(filename, gchmemBlock.AddrOfPinnedObject(), (IntPtr)fileMem.Length, password);
+                documentHandle = PdfViewerCreateObjectW(filename, gchmemBlock.AddrOfPinnedObject(),
+                    (IntPtr)fileMem.Length, password);
                 gchmemBlock.Free();
                 Logger.LogInfo("Created rendering engine");
             }
@@ -100,7 +103,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     case TViewerError.eIllegalArgumentError: throw new ArgumentException(message);
                     case TViewerError.eUnsupportedFeatureError: throw new PdfUnsupportedFeatureException(message);
                     case TViewerError.eFileCorruptError: throw new PdfFileCorruptException(message);
-                    default: throw new PdfViewerException("Unknown Error when trying to open File. Message: \"" + message + "\"");
+                    default:
+                        throw new PdfViewerException("Unknown Error when trying to open File. Message: \"" + message +
+                                                     "\"");
                 }
             }
 
@@ -122,12 +127,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
 
         private int _pageCount;
+
         public int PageCount
         {
-            protected set
-            {
-                _pageCount = value;
-            }
+            protected set { _pageCount = value; }
             get
             {
                 if (!isOpen)
@@ -159,14 +162,16 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return rect;
         }
 
-        public WriteableBitmap LoadThumbnail(double sourceWidth, double sourceHeight, int targetWidth, int targetHeight, int page, Resolution resolution)
+        public WriteableBitmap LoadThumbnail(double sourceWidth, double sourceHeight, int targetWidth, int targetHeight,
+            int page, Resolution resolution)
         {
             if (!isOpen)
             {
                 throw new PdfNoFileOpenedException();
             }
             Logger.LogInfo("Loading thumbnail page " + page);
-            WriteableBitmap bitmap = new WriteableBitmap(targetWidth, targetHeight, resolution.xdpi, resolution.ydpi, PdfViewerController.pixelFormat, null);
+            WriteableBitmap bitmap = new WriteableBitmap(targetWidth, targetHeight, resolution.xdpi, resolution.ydpi,
+                PdfViewerController.pixelFormat, null);
             bitmap.Lock();
             PdfViewerDraw(documentHandle, page, bitmap.PixelWidth, bitmap.PixelHeight, bitmap.BackBuffer, 0,
                 0, 0, targetWidth, targetHeight,
@@ -178,7 +183,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         }
 
         /// <returns>Whether the page has been drawn or queued to lists for drawing. Returns false if no valid information about previous drawRequest</returns>
-        private bool CalculateSourceTargetRects(WriteableBitmap bitmap, int rotation, int page, PdfSourceRect pageRect, IList<int> pages, IList<PdfSourceRect> sourceRects, IList<PdfTargetRect> targetRects, PdfSourceRect visibleRectOnPage, PdfViewerController.Viewport viewport)
+        private bool CalculateSourceTargetRects(WriteableBitmap bitmap, int rotation, int page, PdfSourceRect pageRect,
+            IList<int> pages, IList<PdfSourceRect> sourceRects, IList<PdfTargetRect> targetRects,
+            PdfSourceRect visibleRectOnPage, PdfViewerController.Viewport viewport)
         {
             if (!lastVisiblePages.Contains(page) || visibleRectOnPage.IsEmpty)
                 return false;
@@ -189,10 +196,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             while (true)
             {
                 reusableTargetRect = GetTargetRect(reusableRectOnPage, pageRect, viewport);
-                reusableTargetRectOnLastBitmap = GetTargetRect(reusableRectOnPage, lastPageRects[lastIndex], lastViewport);
+                reusableTargetRectOnLastBitmap =
+                    GetTargetRect(reusableRectOnPage, lastPageRects[lastIndex], lastViewport);
                 if (reusableTargetRectOnLastBitmap.IsEmpty)
                     return false; //if we cant reuse anything, there is nothing to do    
-                if (reusableTargetRect.iWidth != reusableTargetRectOnLastBitmap.iWidth || reusableTargetRect.iHeight != reusableTargetRectOnLastBitmap.iHeight)
+                if (reusableTargetRect.iWidth != reusableTargetRectOnLastBitmap.iWidth ||
+                    reusableTargetRect.iHeight != reusableTargetRectOnLastBitmap.iHeight)
                 {
                     //Console.WriteLine("Inconsistent reusableTargetRect sizes: {0} vs. {1}  and  {2} vs. {3}", reusableTargetRect.iWidth, reusableTargetRectOnLastBitmap.iWidth, reusableTargetRect.iHeight, reusableTargetRectOnLastBitmap.iHeight);
                     reusableRectOnPage.Shrink(0.99);
@@ -206,10 +215,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             //calculate the area to copy
             int bytesPerPixel = (lastBitmap.Format.BitsPerPixel + 7) / 8;
             int stride = reusableTargetRectOnLastBitmap.iWidth * bytesPerPixel;
-            byte[] pixels = new byte[reusableTargetRectOnLastBitmap.iWidth * reusableTargetRectOnLastBitmap.iHeight * bytesPerPixel];
+            byte[] pixels = new byte[reusableTargetRectOnLastBitmap.iWidth * reusableTargetRectOnLastBitmap.iHeight *
+                                     bytesPerPixel];
 
             //read from last bitmap
-            lastBitmap.CopyPixels(reusableTargetRectOnLastBitmap.GetInt32Rect(), pixels, stride, 0); //(lastBitmap.PixelWidth * (reusableTargetRectOnLastBitmap.iY - 1) + reusableTargetRectOnLastBitmap.iX - 1) * bytesPerPixel);
+            lastBitmap.CopyPixels(reusableTargetRectOnLastBitmap.GetInt32Rect(), pixels, stride,
+                0); //(lastBitmap.PixelWidth * (reusableTargetRectOnLastBitmap.iY - 1) + reusableTargetRectOnLastBitmap.iX - 1) * bytesPerPixel);
 
             //write to new bitmap
             bitmap.Lock();
@@ -233,7 +244,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return true;
         }
 
-        private PdfSourceRect GetSourceFromTargetRect(PdfTargetRect targetRect, PdfSourceRect pageRect, PdfViewerController.Viewport viewport)
+        private PdfSourceRect GetSourceFromTargetRect(PdfTargetRect targetRect, PdfSourceRect pageRect,
+            PdfViewerController.Viewport viewport)
         {
             PdfTargetRect targetClone = targetRect.Clone();
             targetClone.Offset(viewport.Rectangle.iX, viewport.Rectangle.iY);
@@ -248,7 +260,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return GetSourceRect(null, pageRect, viewport);
         }
 
-        private PdfSourceRect GetSourceRect(PdfSourceRect rectOnPage, PdfSourceRect pageRect, PdfViewerController.Viewport viewport)
+        private PdfSourceRect GetSourceRect(PdfSourceRect rectOnPage, PdfSourceRect pageRect,
+            PdfViewerController.Viewport viewport)
         {
             PdfSourceRect pageSubRect;
             if (rectOnPage == null)
@@ -256,9 +269,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             else
             {
                 pageSubRect = rectOnPage.Clone();
-                pageSubRect.Offset(pageRect.dX, pageRect.dY);//yes we have to translate forth and back to ensure that viewport clipping is always done in the exact same manner (rounding errors!)
+                pageSubRect.Offset(pageRect.dX,
+                    pageRect
+                        .dY); //yes we have to translate forth and back to ensure that viewport clipping is always done in the exact same manner (rounding errors!)
             }
-            PdfSourceRect sourceRect = pageSubRect.intersectDouble(viewport.Rectangle.GetSourceRect(viewport.ZoomFactor));
+            PdfSourceRect sourceRect =
+                pageSubRect.intersectDouble(viewport.Rectangle.GetSourceRect(viewport.ZoomFactor));
             // translate sourcePdfRect, to be relative to page instead of relative to the canvas
             sourceRect.Offset(-pageRect.dX, -pageRect.dY);
             // translate origin from top/left to bottom/left
@@ -273,7 +289,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         //we ought to ensure, that the size of the resulting target rect is independent of the viewport offset
         //the problem is, that sometimes the rectOnPage is not entirely within the viewport and it thus gets cropped a bit by one of the viewports, yielding inconsistent size
-        private PdfTargetRect GetTargetRect(PdfSourceRect rectOnPage, PdfSourceRect pageRect, PdfViewerController.Viewport viewport)
+        private PdfTargetRect GetTargetRect(PdfSourceRect rectOnPage, PdfSourceRect pageRect,
+            PdfViewerController.Viewport viewport)
         {
             PdfSourceRect pageSubRect;
             if (rectOnPage == null)
@@ -291,7 +308,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         }
 
         // source and targetrects may be empty! (due to crops with pages etc.)
-        public void Draw(WriteableBitmap bitmap, int rotation, IList<KeyValuePair<int, PdfSourceRect>> pageRectsDict, PdfViewerController.Viewport viewport)
+        public void Draw(WriteableBitmap bitmap, int rotation, IList<KeyValuePair<int, PdfSourceRect>> pageRectsDict,
+            PdfViewerController.Viewport viewport)
         {
             Logger.LogInfo("Drawing bitmap");
             if (!isOpen)
@@ -316,12 +334,15 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     visiblePages.Add(page);
                 // crop the page with viewport  //Note that the size of the resulting rectangle may vary depending on viewport/pageRect offsets, due to rounding issues
                 //PdfSourceRect visibleRectOnPage = pageRect.intersectDouble(viewport.Rectangle.GetSourceRect(viewport.ZoomFactor));
-                PdfTargetRect visibleTargetRect = pageRect.GetTargetRect(viewport.ZoomFactor).intersectInt(viewport.Rectangle);
+                PdfTargetRect visibleTargetRect = pageRect.GetTargetRect(viewport.ZoomFactor)
+                    .intersectInt(viewport.Rectangle);
                 PdfSourceRect visibleRectOnPage = visibleTargetRect.GetSourceRect(viewport.ZoomFactor);
                 visibleRectOnPage.Offset(-pageRect.dX, -pageRect.dY);
                 bool insertedRectanglesToDraw = false;
-                if (lastBitmap != null && lastRotation == rotation && Math.Abs(lastViewport.ZoomFactor / viewport.ZoomFactor - 1.0) < 0.01)
-                    insertedRectanglesToDraw = CalculateSourceTargetRects(bitmap, rotation, page, pageRect, pages, sourceRects, targetRects, visibleRectOnPage, viewport);
+                if (lastBitmap != null && lastRotation == rotation &&
+                    Math.Abs(lastViewport.ZoomFactor / viewport.ZoomFactor - 1.0) < 0.01)
+                    insertedRectanglesToDraw = CalculateSourceTargetRects(bitmap, rotation, page, pageRect, pages,
+                        sourceRects, targetRects, visibleRectOnPage, viewport);
                 if (!insertedRectanglesToDraw)
                 {
                     //i just have to do the same thing in here as calculateSourceTargetRects would do
@@ -373,12 +394,13 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             Logger.LogInfo("Drew bitmap using " + drewThisManyTimes + " native calls");
         }
 
-        private void visualizeDraw(WriteableBitmap bitmap, int rotation, IList<int> pages, IList<PdfSourceRect> sourceRects, IList<PdfTargetRect> targetRects, IList<int> newPages)
+        private void visualizeDraw(WriteableBitmap bitmap, int rotation, IList<int> pages,
+            IList<PdfSourceRect> sourceRects, IList<PdfTargetRect> targetRects, IList<int> newPages)
         {
             var bmp = new System.Drawing.Bitmap(bitmap.PixelWidth, bitmap.PixelHeight,
-                                     bitmap.BackBufferStride,
-                                     PixelFormat.Format32bppPArgb,
-                                     bitmap.BackBuffer);
+                bitmap.BackBufferStride,
+                PixelFormat.Format32bppPArgb,
+                bitmap.BackBuffer);
 
             Graphics g = System.Drawing.Graphics.FromImage(bmp);
             Color color = Color.HotPink;
@@ -437,7 +459,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             double right = Double.NaN;
             double bottom = Double.NaN;
             double zoom = Double.NaN;
-            TDestination s = PdfViewerGetOpenActionDestination(documentHandle, ref page, ref left, ref top, ref right, ref bottom, ref zoom);
+            TDestination s = PdfViewerGetOpenActionDestination(documentHandle, ref page, ref left, ref top, ref right,
+                ref bottom, ref zoom);
             Logger.LogInfo("Returning Open Action");
             return new PdfDestination(page, s, left, top, right, bottom, zoom);
         }
@@ -446,19 +469,29 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         [StructLayout(LayoutKind.Sequential)]
         public struct Point
         {
-            public Point(double x, double y) { this.x = x; this.y = y; }
-            public double x;    // Horizontal coordinate.
-            public double y;    // Vertical coordinate.
+            public Point(double x, double y)
+            {
+                this.x = x;
+                this.y = y;
+            }
+
+            public double x; // Horizontal coordinate.
+            public double y; // Vertical coordinate.
         }
+
         [StructLayout(LayoutKind.Sequential)]
         private struct PIOutlineItem
         {
             public int id;
             public int level;
-            [MarshalAs(UnmanagedType.I1)]
-            public bool descendants;
+            [MarshalAs(UnmanagedType.I1)] public bool descendants;
             public IntPtr stringPtr;
-            public string title { get { return Marshal.PtrToStringUni(stringPtr); } }
+
+            public string title
+            {
+                get { return Marshal.PtrToStringUni(stringPtr); }
+            }
+
             public int pageNo;
             public Point pt;
             public double zoom;
@@ -467,19 +500,30 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public double right;
             public double bottom;
             public IntPtr destPtr;
-            public string destType { get { return Marshal.PtrToStringUni(destPtr); } }
+
+            public string destType
+            {
+                get { return Marshal.PtrToStringUni(destPtr); }
+            }
         }
+
         [StructLayout(LayoutKind.Sequential)]
         public struct NativeTextFragment
         {
             public IntPtr p;
-            public string m_szTextA { get { return Marshal.PtrToStringUni(p); } }
+
+            public string m_szTextA
+            {
+                get { return Marshal.PtrToStringUni(p); }
+            }
+
             public int m_textLength;
             public double m_dX;
-            public double m_dY;//from bottom of page
+            public double m_dY; //from bottom of page
             public double m_dWidth;
             public double m_dHeight;
             public IntPtr m_pdGlyphPositionNative;
+
             public double[] m_pdGlyphPosition
             {
                 get
@@ -495,6 +539,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     ;
                 }
             }
+
             public int m_nGlyphPositionSize;
         }
 
@@ -503,13 +548,19 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         [StructLayout(LayoutKind.Sequential)]
         public struct TPdfAnnotation
         {
-            
-            public IntPtr annotationHandle;           
-            public int pageNr;    
+
+            public IntPtr annotationHandle;
+            public int pageNr;
             public IntPtr ptrSubtype;
-            public string subType { get { return Marshal.PtrToStringAnsi(ptrSubtype); } }   
+
+            public string subType
+            {
+                get { return Marshal.PtrToStringAnsi(ptrSubtype); }
+            }
+
             public int nrOfColors;
             public IntPtr ptrColors;
+
             public double[] colors
             {
                 get
@@ -524,10 +575,11 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     return array;
                 }
             }
+
             public int flags;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public double[] rect;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public double[] rect;
             public IntPtr ptrQuadPoints;
+
             public double[] quadPoints
             {
                 get
@@ -542,43 +594,63 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                     return array;
                 }
             }
-            
+
             public int nrOfQuadPoints;
             public IntPtr ptrContents;
-            public string contents { get { return Marshal.PtrToStringAnsi(ptrContents); } }
-            [MarshalAs(UnmanagedType.I1)]
-            public bool isLink;
+
+            public string contents
+            {
+                get { return Marshal.PtrToStringAnsi(ptrContents); }
+            }
+
+            [MarshalAs(UnmanagedType.I1)] public bool isLink;
             public IntPtr ptrActionType;
-            public string actionType { get { return Marshal.PtrToStringAnsi(ptrActionType); } }
-            [MarshalAs(UnmanagedType.I1)]
-            public bool hasURI;
+
+            public string actionType
+            {
+                get { return Marshal.PtrToStringAnsi(ptrActionType); }
+            }
+
+            [MarshalAs(UnmanagedType.I1)] public bool hasURI;
             public IntPtr ptrURI;
-            public string URI { get { return Marshal.PtrToStringAnsi(ptrURI); } }
+
+            public string URI
+            {
+                get { return Marshal.PtrToStringAnsi(ptrURI); }
+            }
+
             public int destType;
+
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.I1, SizeConst = 5)]
             public bool[] hasDestVal;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
-            public double[] destArray;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)] public double[] destArray;
             int destPage;
-            [MarshalAs(UnmanagedType.I1)]
-            public bool isMarkup;
+            [MarshalAs(UnmanagedType.I1)] public bool isMarkup;
             public IntPtr ptrTextLabel;
-            public string textLabel { get { return Marshal.PtrToStringAnsi(ptrTextLabel); } }
-            [MarshalAs(UnmanagedType.I1)]
-            public bool hasPopup;
-            public TPopupAnnotation m_pPopupAnnot;
+
+            public string textLabel
+            {
+                get { return Marshal.PtrToStringAnsi(ptrTextLabel); }
+            }
+
+            [MarshalAs(UnmanagedType.I1)] public bool hasPopup;
+            public IntPtr m_pPopupAnnot;
+            public IntPtr offset;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct TPopupAnnotation
         {
             public IntPtr popupAnnotationHandle;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
-            public double[] rect;
-            [MarshalAs(UnmanagedType.I1)]
-            public bool isOpen;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public double[] rect;
+            [MarshalAs(UnmanagedType.I1)] public bool isOpen;
             public IntPtr ptrSubtype;
-            public string subType { get { return Marshal.PtrToStringUni(ptrSubtype); } }
+
+            public string subType
+            {
+                get { return Marshal.PtrToStringUni(ptrSubtype); }
+            }
         }
 
         public IList<PdfTextFragment> LoadTextFragments(int pageNo)
@@ -600,7 +672,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             PdfTextFragment lastFrag = null;
             for (int i = 0; i < count; i++)
             {
-                NativeTextFragment textFragment = (NativeTextFragment)Marshal.PtrToStructure(pTextFragment, typeof(NativeTextFragment));
+                NativeTextFragment textFragment =
+                    (NativeTextFragment)Marshal.PtrToStructure(pTextFragment, typeof(NativeTextFragment));
                 lastFrag = new PdfTextFragment(textFragment, pageNo, lastFrag);
                 textFragments.Add(lastFrag);
                 pTextFragment = new IntPtr(pTextFragment.ToInt64() + textFragmentSize);
@@ -609,6 +682,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             Logger.LogInfo("Loaded textFragments of page " + pageNo);
             return textFragments;
         }
+
+
 
         public IList<PdfOutlineItem> GetOutlines(int parentId)
         {
@@ -634,7 +709,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                 outlineItem.descendants = piOutlineItem.descendants;
                 outlineItem.title = piOutlineItem.title;
                 outlineItem.dest = new PdfDestination(piOutlineItem.pageNo, TDestination.eDestinationXYZ,
-                                       piOutlineItem.pt.x, piOutlineItem.pt.y, 0, 0, piOutlineItem.zoom);
+                    piOutlineItem.pt.x, piOutlineItem.pt.y, 0, 0, piOutlineItem.zoom);
                 outlineItems.Add(outlineItem);
                 pItem = new IntPtr(pItem.ToInt64() + piItemSize);
             }
@@ -647,7 +722,14 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         private enum TViewerError
         {
-            eLicenseError = 0, ePasswordError = 1, eFileNotFoundError = 2, eUnknownError = 3, eIllegalArgumentError = 4, eOutOfMemoryError = 5, eFileCorruptError = 6, eUnsupportedFeatureError = 7
+            eLicenseError = 0,
+            ePasswordError = 1,
+            eFileNotFoundError = 2,
+            eUnknownError = 3,
+            eIllegalArgumentError = 4,
+            eOutOfMemoryError = 5,
+            eFileCorruptError = 6,
+            eUnsupportedFeatureError = 7
         };
 
         public enum TPdfAnnotationType
@@ -662,60 +744,102 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             eAnnotationWidet = 20
         }
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern IntPtr PdfViewerCreateObjectW(string filename, IntPtr fileMem, IntPtr fileMemLength, string password);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern IntPtr PdfViewerCreateObjectW(string filename, IntPtr fileMem, IntPtr fileMemLength,
+            string password);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern void PdfViewerDestroyObject(IntPtr handle);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern int PdfViewerGetPageCount(IntPtr handle);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern IntPtr PdfViewerGetPageRect(IntPtr handle, int page, ref double width, ref double height);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern int PdfViewerGetRotation(IntPtr handle, int page);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerDraw(IntPtr handle, int iPage,
             int iWidth, int iHeight, IntPtr pBuffer, int iRotation,
             int iTargetX, int iTargetY, int iTargetWidth, int iTargetHeight,
             double dSourceX, double dSourceY, double dSourceWidth, double dSourceHeight);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern TPageLayoutMode PdfViewerGetPageLayout(IntPtr handle);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern TDestination PdfViewerGetOpenActionDestination(IntPtr handle, ref int page, ref double left, ref double top, ref double right, ref double bottom, ref double zoom);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern bool PdfViewerGetOutlineItems(IntPtr handle, int parentID, ref IntPtr outlineItems, ref int count);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern TDestination PdfViewerGetOpenActionDestination(IntPtr handle, ref int page, ref double left,
+            ref double top, ref double right, ref double bottom, ref double zoom);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerGetOutlineItems(IntPtr handle, int parentID, ref IntPtr outlineItems,
+            ref int count);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerDisposeOutlineItems(IntPtr outlineItems, int count);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern bool PdfViewerExtractTextFragments(IntPtr handle, int pageNo, ref IntPtr textFragments, ref int count);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerExtractTextFragments(IntPtr handle, int pageNo, ref IntPtr textFragments,
+            ref int count);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerDisposeTextFragments(IntPtr textFragments, int nCount);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern TViewerError PdfViewerGetLastError();
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern IntPtr PdfViewerCreateAnnotation(IntPtr pHandle, TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer,
+            UIntPtr errorMessageBufferSize);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern int PdfViewerUpdateAnnotation(IntPtr pDocument, IntPtr annot, int iPage, double[] r, string content, string label, double[] color, int nColors, double dBorderWidth);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern IntPtr PdfViewerCreateAnnotation(IntPtr pHandle, TPdfAnnotationType eType, int iPage, double[] r,
+            int iLen, double[] color, int nColors, double dBorderWidth);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern int PdfViewerUpdateAnnotation(IntPtr pDocument, IntPtr annot, int iPage, double[] r,
+            string content, string label, double[] color, int nColors, double dBorderWidth);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
         static extern void PdfViewerDeleteAnnotation(IntPtr annot);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
-        static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations, ref int count);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations,
+            ref int count);
+
         #endregion
 
-        public IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth)
+        public IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color,
+            int nColors, double dBorderWidth)
         {
             return PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
         }
 
-        public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color, int nColors, double dBorderWidth)
+        public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,
+            int nColors, double dBorderWidth)
         {
-            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, nColors, dBorderWidth);
+            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, nColors,
+                dBorderWidth);
         }
 
         public bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
@@ -726,6 +850,24 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public void DeleteAnnotation(IntPtr anno)
         {
             PdfViewerDeleteAnnotation(anno);
+        }
+
+        public IList<PdfAnnotation> LoadAnnotations(int pageNo)
+        {
+            var count = 0;
+            if (!GetAnnotations(pageNo, out IntPtr pointer, ref count))
+                return null;
+            var annotations = new List<PdfAnnotation>();
+            var p = pointer;
+            var annotSize = Marshal.SizeOf(typeof(TPdfAnnotation));
+            for (int i = 0; i < count; i++)
+            {
+                var annot = (TPdfAnnotation)Marshal.PtrToStructure(p, typeof(TPdfAnnotation));
+                var lastAnnot = new PdfAnnotation(annot);
+                annotations.Add(lastAnnot);
+                p = new IntPtr(p.ToInt64() + annotSize);
+            }
+            return annotations;
         }
     }
 }
