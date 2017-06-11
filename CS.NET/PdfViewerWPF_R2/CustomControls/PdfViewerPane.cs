@@ -327,6 +327,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private bool drawingLineAnnotation = false;
         private Rect selectedRect = new Rect();
 
+        //annotation points
+        private List<System.Windows.Point> annotationPoints;
+
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
         {
             if (!controller.IsOpen)
@@ -376,7 +379,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
             else if (MouseMode == TMouseMode.eMouseFreehandAnnotationMode)
             {
-                lastMousePosition = e.GetPosition(this);
+                //lastMousePosition = e.GetPosition(this);
+                annotationPoints = new List<Point>();
+                annotationPoints.Add(e.GetPosition(this));
                 this.Cursor = Cursors.Pen;
                 drawingLineAnnotation = true;
             }
@@ -543,6 +548,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     }
                 _selectedText = textBuilder.ToString();
                 this.InvalidateVisual();
+            } else if (drawingLineAnnotation)
+            {
+                annotationPoints.Add(e.GetPosition(this));
+
+                //update temporary drawn line
             }
             e.Handled = true;
         }
@@ -587,21 +597,25 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 drawingLineAnnotation = false;
 
-                selectedRect = new Rect(lastMousePosition, e.GetPosition(this));
+                int pointCount = annotationPoints.Count;
 
-                int page1 = 0;
-                int page2 = 0;
+                double[] points = new double[pointCount * 2];
 
-                PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(lastMousePosition), ref page1);
-                PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(e.GetPosition(this)), ref page2);
+                int page = 0;
 
-                double[] points = new double[] { p1.dX, p1.dY, p2.dX, p2.dY };
+                for (int i = 0; i < pointCount; i++)
+                {
+                    PdfSourcePoint p = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
+
+                    points[i * 2] = p.dX;
+                    points[i * 2 + 1] = p.dY;
+                }
+
                 double[] color = new double[] { 0, 0, 0, 1 };
 
-                if (page1 == page2 && page1 != 0)
-                {
-                    controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page1, points, 4, color, 4, 10);
-                }
+                controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, points.Length, color, 4, 10);
+
+                annotationPoints = null;
             }
 
             e.Handled = true;
