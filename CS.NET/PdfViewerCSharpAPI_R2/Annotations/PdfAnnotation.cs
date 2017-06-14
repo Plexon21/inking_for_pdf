@@ -29,6 +29,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         public bool HasPopup;
         public IntPtr PopupAnnotation;
 
+        public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r,
+            double[] color, double dBorderWidth = 0.0d)
+        {
+            this.SubType = eType;
+            this.PageNr = iPage;
+            this.Rect = r;
+        }
+
         public PdfAnnotation(PdfDocument.TPdfAnnotation annot)
         {
             this.AnnotationHandle = annot.annotationHandle;
@@ -58,7 +66,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             {
                 case "Ink":
                     return PdfDocument.TPdfAnnotationType.eAnnotationInk;
-                    break;
                 default:
                     return PdfDocument.TPdfAnnotationType.eAnntationUnknown;
             }

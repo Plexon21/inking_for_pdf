@@ -982,6 +982,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
         #endregion
 
+        public void SaveAs(string fileName)
+        {
+            canvas.DocumentManager.SaveAs(fileName);
+        }
 
         #region Update Helper Methods
         //private helper methods that are used for internal bitmap updating
@@ -1581,8 +1585,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             UpdateBitmapContent();
         }
 
-        public void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation annot)
+        //TODO: does not get called from request
+        public void OnAnnotationCreated(PdfAnnotation annot)
         {
+            FitAndUpdate(false);
+            int i = 0;
         }
 
         public void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput)

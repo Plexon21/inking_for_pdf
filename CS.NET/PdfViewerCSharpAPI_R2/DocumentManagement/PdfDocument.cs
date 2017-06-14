@@ -826,6 +826,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations,
             ref int count);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
+            CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerSaveAs(IntPtr documentHandle, string szPath);
 
         #endregion
 
@@ -850,6 +853,11 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public void DeleteAnnotation(IntPtr anno)
         {
             PdfViewerDeleteAnnotation(anno);
+        }
+
+        public bool SaveAs(string fileName)
+        {
+            return PdfViewerSaveAs(documentHandle, fileName);
         }
 
         public IList<PdfAnnotation> LoadAnnotations(int pageNo)

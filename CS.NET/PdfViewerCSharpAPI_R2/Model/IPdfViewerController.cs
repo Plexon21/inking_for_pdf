@@ -395,6 +395,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         #endregion Events
 
         IPdfCanvas GetCanvas();
+
+        void SaveAs(string fileName);
     }
 
 }

@@ -18,6 +18,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
         {
             this.Annot = annot;
         }
+
+        public CreateAnnotationArgs(PdfDocument.TPdfAnnotationType eType, 
+            int iPage, double[] r, double[] color, double dBorderWidth = 0.0d)
+        {
+            this.Annot = new PdfAnnotation(eType, iPage, r, color, dBorderWidth);
+        }
     }
     public class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, PdfAnnotation>
     {
@@ -40,12 +46,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, InOutTuple tuple, PdfViewerException ex)
         {
-            controller?.OnAnnotationCreated(ex, tuple.output);
         }
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, PdfViewerException ex)
         {
-            controller?.OnAnnotationCreated(ex, null);
         }
     }
 }

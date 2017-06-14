@@ -74,7 +74,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             controller.CloseCompleted += OnCloseCompletedEventHandler;
             controller.PageOrderChanged += OnPageOrderChangedEventHandler;
         }
-
         
         private void OnCloseCompletedEventHandler(PdfViewerException e)
         {
@@ -616,6 +615,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, points.Length, color, 4, 10);
 
                 annotationPoints = null;
+                controller.SaveAs("C:\\Users\\Plexon21\\Desktop\\Hanspeter.pdf");
             }
 
             e.Handled = true;

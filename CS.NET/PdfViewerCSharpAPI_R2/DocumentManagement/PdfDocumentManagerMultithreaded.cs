@@ -9,6 +9,8 @@
  *                  
  ***************************************************************************/
 
+using PdfTools.PdfViewerCSharpAPI.Annotations;
+
 namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 {
     using System;
@@ -175,6 +177,19 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                 // opening request failed doing nothing
             }
         }
+
+        private void OnAnnotationCreatedEventHandler(APdfRequest<CreateAnnotationArgs, PdfAnnotation>.InOutTuple o, PdfViewerException ex)
+        {
+            if (ex == null)
+            {
+                controller.OnAnnotationCreated(o.output);
+            }
+            else
+            {
+                // opening request failed doing nothing
+            }
+        }
+
 
         private void OnCloseCompletedEventHandler(APdfRequest<bool, object>.InOutTuple o, PdfViewerException ex)
         {
@@ -348,6 +363,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args)
         {
             var request = new PdfCreateAnnotationRequest(args);
+            request.Completed += OnAnnotationCreatedEventHandler;
             requestQueue.Add(request);
             return request;
         }
@@ -357,6 +373,14 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             var request = new PdfLoadAnnotationsOnPageRequest(args); requestQueue.Add(request);
             return request;
         }
+
+        public PdfSaveAsRequest SaveAs(string fileName)
+        {
+            var request =  new PdfSaveAsRequest(new SaveAsArguments(fileName));
+            requestQueue.Add(request);
+            return request;
+        }
+
         #endregion
 
         private IList<int> _pageOrder;

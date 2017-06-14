@@ -68,5 +68,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
         bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count);
         void DeleteAnnotation(IntPtr anno);
+        bool SaveAs( string fileName);
     }
 }
