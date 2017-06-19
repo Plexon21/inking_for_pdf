@@ -22,7 +22,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
     using System.Windows.Media.Imaging;
     using PdfTools.PdfViewerCSharpAPI.Utilities;
     using PdfTools.PdfViewerCSharpAPI.Model;
-    using static PdfTools.PdfViewerCSharpAPI.DocumentManagement.PdfDocument;
+    using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
 
     /// <summary>
     /// Interface of a Document, which represents a pdf file in its raw form
@@ -65,7 +65,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         IList<PdfAnnotation> LoadAnnotations(int argsPageNr);
 
 
-        IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
+        IntPtr CreateAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
         bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count);
         void DeleteAnnotation(IntPtr anno);
         bool SaveAs( string fileName);

@@ -103,6 +103,8 @@ namespace ViewerWPFSample
 
             PdfViewer.MouseMode = TMouseMode.eMouseFreehandAnnotationMode;
 
+            #region TESTING
+            /*
             PdfDocument doc = (PdfDocument)this.PdfViewer.GetController().GetCanvas().DocumentManager.GetDocument();
 
             
@@ -171,6 +173,8 @@ namespace ViewerWPFSample
             //annotationMenuItem.Header = "done";
             var cont = (PdfViewerController)this.PdfViewer.GetController();
             cont.LoadAllAnnotationsOnPage(1);
+            */
+#endregion TESTING
         }
 
 
