@@ -28,6 +28,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         public string TextLabel;
         public bool HasPopup;
         public IntPtr PopupAnnotation;
+        public double BorderWidth;
 
         public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r,
             double[] color, double dBorderWidth = 0.0d)
@@ -35,6 +36,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.SubType = eType;
             this.PageNr = iPage;
             this.Rect = r;
+            this.Colors = color;
+            this.BorderWidth = dBorderWidth;
         }
 
         public PdfAnnotation(PdfDocument.TPdfAnnotation annot)
@@ -92,6 +95,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             TextLabel = annot.TextLabel;
             HasPopup = annot.HasPopup;
             PopupAnnotation = annot.PopupAnnotation;
+            BorderWidth = annot.BorderWidth;
         }
     }
 }

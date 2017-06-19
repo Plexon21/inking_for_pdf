@@ -1585,16 +1585,22 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             UpdateBitmapContent();
         }
 
-        //TODO: does not get called from request
-        public void OnAnnotationCreated(PdfAnnotation annot)
+        public void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation tuple)
         {
-            FitAndUpdate(false);
-            int i = 0;
-        }
+            FireInvokeCallback(delegate ()
+            {
+                //TODO: canvas does not update
+                FitAndUpdate(false);
+                UpdateBitmapContent();
+            });
 
+        }
         public void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput)
         {
-            annotations = tupleOutput;
+            FireInvokeCallback(delegate ()
+            {
+                annotations = tupleOutput;
+            });
         }
 
         #endregion
