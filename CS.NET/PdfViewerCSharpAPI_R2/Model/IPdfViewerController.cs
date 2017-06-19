@@ -9,6 +9,8 @@
  *                  
  ***************************************************************************/
 
+using PdfTools.PdfViewerCSharpAPI.Annotations;
+
 namespace PdfTools.PdfViewerCSharpAPI.Model
 {
     using System;
@@ -400,6 +402,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         void SaveAs(string fileName);
 
         IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr);
+        void CreateAnnotation(PdfAnnotation pdfAnnotation);
     }
 
 }

@@ -35,7 +35,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         /// <param name="filename"></param>
         /// <param name="password"></param>
         void Open(string filename, byte[] fileMem, string password);
-
+       
         /// <summary>
         /// Closes the opened file. This document will not represent anything until a new file is opened
         /// </summary>
@@ -68,6 +68,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         IntPtr CreateAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
         bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count);
         void DeleteAnnotation(IntPtr anno);
+
+        int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,
+            double dBorderWidth);
+
         bool SaveAs( string fileName);
     }
 }

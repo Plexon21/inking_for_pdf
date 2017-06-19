@@ -64,6 +64,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.PopupAnnotation = annot.m_pPopupAnnot;
         }
 
+        public long GetHandleAsLong()
+        {
+            return AnnotationHandle.ToInt64();
+        }
+
+        public void SetHandleFromLong(long value)
+        {
+            this.AnnotationHandle = new IntPtr(value);
+        }
+
         private PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)
         {
             switch (annotSubType)

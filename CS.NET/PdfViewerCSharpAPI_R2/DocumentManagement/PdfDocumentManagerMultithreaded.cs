@@ -178,20 +178,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             }
         }
 
-        private void OnAnnotationCreatedEventHandler(APdfRequest<CreateAnnotationArgs, PdfAnnotation>.InOutTuple o, PdfViewerException ex)
-        {
-            if (ex == null)
-            {
-                controller.OnAnnotationCreated(ex,o.output);
-            }
-            else
-            {
-                // opening request failed doing nothing
-            }
-        }
-
-
-        private void OnCloseCompletedEventHandler(APdfRequest<bool, object>.InOutTuple o, PdfViewerException ex)
+       private void OnCloseCompletedEventHandler(APdfRequest<bool, object>.InOutTuple o, PdfViewerException ex)
         {
             if (ex == null)
             {
@@ -366,6 +353,21 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             requestQueue.Add(request);
             return request;
         }
+
+        public PdfDeleteAnnotationRequest DeleteAnnotation(DeleteAnnotationArgs args)
+        {
+            var request = new PdfDeleteAnnotationRequest(args);
+            requestQueue.Add(request);
+            return request;
+        }
+
+        public PdfUpdateAnnotaionRequest UpdateAnnotation(UpdateAnnotationArgs args)
+        {
+            var request = new PdfUpdateAnnotaionRequest(args);
+            requestQueue.Add(request);
+            return request;
+        }
+
         public PdfLoadAnnotationsOnPageRequest LoadAnnotationsOnPage(int pageNr)
         {
             PdfLoadAnnotationsOnPageArgs args = new PdfLoadAnnotationsOnPageArgs(pageNr);

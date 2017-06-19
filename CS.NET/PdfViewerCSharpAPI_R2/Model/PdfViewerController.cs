@@ -947,12 +947,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
             if (annotations == null)
             {
+                annotations = new List<PdfAnnotation>();
                 LoadAllAnnotationsOnPage(annot.PageNr);
             }
             annotations.Add(annot);
         }
 
-
+        public void CreateAnnotation(PdfAnnotation annot)
+        {
+            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
+        }
 
         public PdfAnnotation GetAnnotation(long annotHandle)
         {
@@ -960,7 +964,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 LoadAllAnnotations();
             }
-            return annotations.FirstOrDefault(a => a.AnnotationHandle.Equals(annotHandle));
+            return annotations.FirstOrDefault(a => a.GetHandleAsLong().Equals(annotHandle));
         }
 
         private void LoadAllAnnotations()
@@ -980,12 +984,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public bool DeleteAnnotation(PdfAnnotation annot)
         {
-            return false;
+             DeleteAnnotation(annot.GetHandleAsLong());
         }
 
-        public bool DeleteAnnotation(long annotHandle)
+        public void DeleteAnnotation(long annotHandle)
         {
-            return false;
+             canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annotHandle));
         }
         #endregion
 
@@ -1592,11 +1596,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             UpdateBitmapContent();
         }
 
-        public void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation tuple)
+        public void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation annot)
         {
             FireInvokeCallback(delegate ()
             {
                 //TODO: canvas does not update
+                AddAnnoation(annot);
                 FitAndUpdate(false);
                 UpdateBitmapContent();
             });
@@ -1607,6 +1612,20 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             FireInvokeCallback(delegate ()
             {
                 annotations = tupleOutput;
+            });
+        }
+        public void OnAnnotationUpdate(PdfViewerException pdfViewerException, int i)
+        {
+            FireInvokeCallback(delegate()
+            {
+
+            });
+        }
+        public void OnAnnotationDeleted(PdfViewerException pdfViewerException, object o)
+        {
+            FireInvokeCallback(delegate ()
+            {
+
             });
         }
 
@@ -1858,6 +1877,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         static extern TViewerError PdfViewerGetLastError();
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
+
+       
 
 
         #endregion native imports

@@ -87,6 +87,8 @@
     <Compile Include="DocumentManagement\IGenericCache.cs" />
     <Compile Include="DocumentManagement\IPdfDocument.cs" />
     <Compile Include="DocumentManagement\IPdfDocumentManager.cs" />
+    <Compile Include="DocumentManagement\Requests\PdfDeleteAnnotationRequest.cs" />
+    <Compile Include="DocumentManagement\Requests\PdfUpdateAnnotationRequest.cs" />
     <Compile Include="DocumentManagement\Requests\PdfLoadAnnotationsOnPageRequest.cs" />
     <Compile Include="DocumentManagement\Requests\PdfCreateAnnotationRequest.cs" />
     <Compile Include="DocumentManagement\Requests\PdfGetPageRectRequest.cs" />
