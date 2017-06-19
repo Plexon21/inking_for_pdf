@@ -982,7 +982,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             return annotations;
         }
 
-        public bool DeleteAnnotation(PdfAnnotation annot)
+        public void DeleteAnnotation(PdfAnnotation annot)
         {
              DeleteAnnotation(annot.GetHandleAsLong());
         }

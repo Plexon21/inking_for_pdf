@@ -88,9 +88,7 @@
       <DependentUpon>OutlinesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\PdfViewerComponent.xaml.cs" />
-    <Compile Include="..\..\..\..\Users\Plexon21\Desktop\PdfViewerPane.cs">
-      <Link>CustomControls\PdfViewerPane.cs</Link>
-    </Compile>
+    <Compile Include="CustomControls\PdfViewerPane.cs" />
     <Compile Include="CustomControls\ThumbnailView.xaml.cs">
       <DependentUpon>ThumbnailView.xaml</DependentUpon>
     </Compile>
