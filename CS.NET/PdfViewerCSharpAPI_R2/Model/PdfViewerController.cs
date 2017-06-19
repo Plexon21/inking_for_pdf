@@ -966,9 +966,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private void LoadAllAnnotations()
         {
         }
+
         public void LoadAllAnnotationsOnPage(int pageNr)
         {
             canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
+        }
+
+        public IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr)
+        {
+            LoadAllAnnotationsOnPage(pageNr);
+            return annotations;
         }
 
         public bool DeleteAnnotation(PdfAnnotation annot)

@@ -1,4 +1,5 @@
 ﻿using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
+using PdfTools.PdfViewerCSharpAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,6 +97,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             HasPopup = annot.HasPopup;
             PopupAnnotation = annot.PopupAnnotation;
             BorderWidth = annot.BorderWidth;
+        }
+
+        public bool IsContainedInRect(PdfSourceRect markedRect)
+        {
+            PdfSourceRect annotRect = new PdfSourceRect(Rect[0], Rect[1], Rect[2] - Rect[0], Rect[3] - Rect[1]);
+            return markedRect.contains(annotRect);
         }
     }
 }

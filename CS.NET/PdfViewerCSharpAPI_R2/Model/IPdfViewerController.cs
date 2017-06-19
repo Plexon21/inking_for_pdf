@@ -20,6 +20,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
     using System.Windows.Media.Imaging;
     using PdfTools.PdfViewerCSharpAPI.Utilities;
     using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
+    using PdfTools.PdfViewerCSharpAPI.Annotations;
 
 
     #region Configuration Enums
@@ -397,6 +398,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         IPdfCanvas GetCanvas();
 
         void SaveAs(string fileName);
+
+        IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr);
     }
 
 }
