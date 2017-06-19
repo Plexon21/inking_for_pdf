@@ -617,7 +617,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     page, points, color, 10)));
 
                 annotationPoints = null;
-                controller.SaveAs("C:\\Users\\"+ System.Security.Principal.WindowsIdentity.GetCurrent().Name + "\\Desktop\\Hanspeter.pdf");
+
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+
+                controller.SaveAs(path + "\\Test.pdf");
             }
 
             e.Handled = true;
