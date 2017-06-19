@@ -38,18 +38,20 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 
         protected override PdfAnnotation ExecuteNative(IPdfDocument document, CreateAnnotationArgs args)
         {
-            var newAnnot = document.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationFreeText,
-                args.Annot.PageNr, args.Annot.Rect, 0, args.Annot.Colors, args.Annot.Colors.Length, 0.0);
+            var newAnnot = document.CreateAnnotation(args.Annot.SubType,
+                args.Annot.PageNr, args.Annot.Rect, args.Annot.Rect.Length, args.Annot.Colors, args.Annot.Colors.Length, args.Annot.BorderWidth);
             args.Annot.AnnotationHandle = newAnnot;
             return new PdfAnnotation(arguments.Annot);
         }
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, InOutTuple tuple, PdfViewerException ex)
         {
+            controller.OnAnnotationCreated(ex, tuple.output);
         }
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, PdfViewerException ex)
         {
+            controller.OnAnnotationCreated(ex, null);
         }
     }
 }

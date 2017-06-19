@@ -13,9 +13,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
+using PdfTools.PdfViewerCSharpAPI.Annotations;
 using PdfTools.PdfViewerCSharpAPI.Model;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
 using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
+using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
 
 namespace PdfTools.PdfViewerWPF.CustomControls
 {
@@ -611,8 +613,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
 
                 double[] color = new double[] { 0, 0, 0, 1 };
+                controller.GetCanvas().DocumentManager.CreateAnnotation(new CreateAnnotationArgs(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk,
+                    page, points, color, 10)));
 
-                controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, points.Length, color, 4, 10);
+                //controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, points.Length, color, 4, 10);
 
                 annotationPoints = null;
                 controller.SaveAs("C:\\Users\\Plexon21\\Desktop\\Hanspeter.pdf");

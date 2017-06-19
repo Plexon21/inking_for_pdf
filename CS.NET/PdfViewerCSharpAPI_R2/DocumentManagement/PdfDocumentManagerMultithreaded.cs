@@ -182,7 +182,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         {
             if (ex == null)
             {
-                controller.OnAnnotationCreated(o.output);
+                controller.OnAnnotationCreated(ex,o.output);
             }
             else
             {
@@ -363,7 +363,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args)
         {
             var request = new PdfCreateAnnotationRequest(args);
-            request.Completed += OnAnnotationCreatedEventHandler;
             requestQueue.Add(request);
             return request;
         }

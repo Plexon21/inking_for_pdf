@@ -99,6 +99,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         IPdfDocument GetDocument();
 
         PdfLoadAnnotationsOnPageRequest LoadAnnotationsOnPage(int pageNr);
-        PdfSaveAsRequest SaveAs( string fileName);
+        PdfSaveAsRequest SaveAs(string fileName);
+        PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args);
     }
 }
