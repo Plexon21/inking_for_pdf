@@ -616,10 +616,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 controller.GetCanvas().DocumentManager.CreateAnnotation(new CreateAnnotationArgs(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk,
                     page, points, color, 10)));
 
-                //controller.GetCanvas().DocumentManager.GetDocument().CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, points.Length, color, 4, 10);
-
                 annotationPoints = null;
-                controller.SaveAs("C:\\Users\\Plexon21\\Desktop\\Hanspeter.pdf");
+                controller.SaveAs("C:\\Users\\"+ System.Security.Principal.WindowsIdentity.GetCurrent().Name + "\\Desktop\\Hanspeter.pdf");
             }
 
             e.Handled = true;
