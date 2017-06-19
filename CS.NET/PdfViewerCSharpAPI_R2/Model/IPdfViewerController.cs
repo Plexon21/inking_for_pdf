@@ -9,6 +9,8 @@
  *                  
  ***************************************************************************/
 
+using PdfTools.PdfViewerCSharpAPI.Annotations;
+
 namespace PdfTools.PdfViewerCSharpAPI.Model
 {
     using System;
@@ -397,6 +399,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         IPdfCanvas GetCanvas();
 
         void SaveAs(string fileName);
+        void CreateAnnotation(PdfAnnotation pdfAnnotation);
     }
 
 }

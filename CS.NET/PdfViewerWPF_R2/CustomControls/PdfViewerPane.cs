@@ -613,8 +613,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
 
                 double[] color = new double[] { 0, 0, 0, 1 };
-                controller.GetCanvas().DocumentManager.CreateAnnotation(new CreateAnnotationArgs(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk,
-                    page, points, color, 10)));
+
+                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk,
+                    page, points, color, 10));
 
                 annotationPoints = null;
 

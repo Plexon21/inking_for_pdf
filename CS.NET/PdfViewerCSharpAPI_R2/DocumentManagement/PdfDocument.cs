@@ -839,10 +839,16 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         }
 
         public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,
-            int nColors, double dBorderWidth)
+             double dBorderWidth)
         {
-            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, nColors,
+            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, color.Length,
                 dBorderWidth);
+        }
+      
+
+        public void DeleteAnnotation(IntPtr anno)
+        {
+            PdfViewerDeleteAnnotation(anno);
         }
 
         public bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
@@ -850,10 +856,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return PdfViewerGetAnnotationsOnPage(documentHandle, pageNo, out pdfAnnotations, ref count);
         }
 
-        public void DeleteAnnotation(IntPtr anno)
-        {
-            PdfViewerDeleteAnnotation(anno);
-        }
 
         public bool SaveAs(string fileName)
         {
