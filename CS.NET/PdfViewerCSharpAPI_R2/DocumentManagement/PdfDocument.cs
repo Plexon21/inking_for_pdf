@@ -857,7 +857,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return PdfViewerGetAnnotationsOnPage(documentHandle, pageNo, out pdfAnnotations, ref count);
         }
 
-
         public bool SaveAs(string fileName)
         {
             return PdfViewerSaveAs(documentHandle, fileName);

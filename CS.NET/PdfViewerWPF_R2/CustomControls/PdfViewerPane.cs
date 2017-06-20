@@ -11,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
 using System.Windows.Ink;
@@ -637,22 +636,32 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     controller.ZoomToRectangle(new PdfTargetRect(selectedRect));
                 }
-                else if (MouseMode == TMouseMode.eMouseMarkMode /*&& selectedRectangleOnCanvas != null*/)
+                else if (MouseMode == TMouseMode.eMouseMarkMode /*&& selectedRectangleOnCanvas != null*/) //TODO uncomment this
                 {
-                    int page = 1;
+                    int page = controller.FirstPageOnViewport;
 
-                    PdfSourceRect markedRect = controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect));
-                    PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.TopLeft), ref page);
-                    PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.BottomRight), ref page);
-                    markedRect = new PdfSourceRect(p1.dX, p2.dY, p2.dX - p1.dX, p1.dY - p2.dY);
+                    try // TODO: handle points outside of page correctly
+                    {
+                        //PdfSourceRect markedRect = controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect));
+                        PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.TopLeft), ref page);
+                        PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.BottomRight), ref page);
 
-                    IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(1);
+                        if (page != 0)
+                        {
+                            PdfSourceRect markedRect = new PdfSourceRect(p1.dX, p2.dY, p2.dX - p1.dX, p1.dY - p2.dY);
 
-                    IList<PdfAnnotation> markedAnnotations = annotations.Where(annot => annot.IsContainedInRect(markedRect)).ToList<PdfAnnotation>();
+                            IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(page);
+
+                            IList<PdfAnnotation> markedAnnotations = annotations?.Where(annot => annot.IsContainedInRect(markedRect)).ToList<PdfAnnotation>();
 
 
-                    //selectedRectangleOnCanvas(controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect)));
+                            //selectedRectangleOnCanvas(controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect)));
+                        }
+                    } catch { }
+
+
                 }
+
                 InvalidateVisual();
             }
             else if (selectingText)
@@ -673,20 +682,24 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 double[] points = new double[pointCount * 2];
 
-                int page = 0;
+                int page = 0; // TODO: get right page
+                int borderwidth = 1; // TODO: get right borderwidth
 
-                for (int i = 0; i < pointCount; i++)
+                try // TODO: handle points outside of the page correctly
                 {
-                    PdfSourcePoint p = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
+                    for (int i = 0; i < pointCount; i++)
+                    {
+                        PdfSourcePoint p = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
 
-                    points[i * 2] = p.dX;
-                    points[i * 2 + 1] = p.dY;
-                }
+                        points[i * 2] = p.dX;
+                        points[i * 2 + 1] = p.dY;
+                    }
+                } catch { }
+
 
                 double[] color = new double[] { 0, 0, 0, 1 };
 
-                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk,
-                    page, points, color, 10));
+                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, borderwidth / controller.ZoomFactor));
 
                 annotationPoints = null;
 
