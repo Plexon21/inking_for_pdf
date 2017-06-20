@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
+using System.Windows.Ink;
 using System.Windows.Input.StylusPlugIns;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 using PdfTools.PdfViewerCSharpAPI.Model;
@@ -32,6 +33,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private IPdfViewerController controller;
 
         private DispatcherTimer inertiaScrollDispatchTimer;
+        private StylusPointCollection stylusPoints;
+        private InkPresenter ip;
 
 
         public PdfViewerPane()
@@ -43,11 +46,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             UseLayoutRounding = true;
 
             AllowDrop = true;
-            var ip = new InkPresenter();
             var dr = new DynamicRenderer();
+            ip = new InkPresenter();
             this.Background = Brushes.Transparent;
             this.Cursor = Cursors.Arrow;
             this.Content = ip;
+            this.
 
             ip.AttachVisuals(dr.RootVisual, dr.DrawingAttributes);
             this.StylusPlugIns.Add(dr);
@@ -83,7 +87,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             controller.CloseCompleted += OnCloseCompletedEventHandler;
             controller.PageOrderChanged += OnPageOrderChangedEventHandler;
         }
-        
+
         private void OnCloseCompletedEventHandler(PdfViewerException e)
         {
             clearRects();
@@ -139,7 +143,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         protected override void OnRender(DrawingContext dc)
         {
             //Utilities.DebugLogger.Log("Start OnRender");
-            
+
             //draw background
             Rect panelRect = new Rect(0.0, 0.0, this.ActualWidth, this.ActualHeight);
             dc.PushClip(new RectangleGeometry(panelRect));
@@ -166,9 +170,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
                 if (drawingFreeHandAnnotation)
                 {
-                    Brush freehandBrush = new SolidColorBrush(Color.FromRgb(0,0,0)); // TODO: use right color
+                    Brush freehandBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0)); // TODO: use right color
                     freehandBrush.Opacity = 1.0;
-                    for (int i = 0; i < annotationPoints.Count-1; i++)
+                    for (int i = 0; i < annotationPoints.Count - 1; i++)
                     {
                         dc.DrawLine(new Pen(freehandBrush, 1), annotationPoints[i], annotationPoints[i + 1]); // TODO: use right width
                     }
@@ -212,7 +216,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 _overrideMouseModeToWait = value;
                 SetCursorAccordingToMouseMode();
             }
-            get{
+            get
+            {
                 return _overrideMouseModeToWait;
             }
         }
@@ -244,8 +249,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         {
             if (OverrideMouseModeToWait)
                 this.Cursor = System.Windows.Input.Cursors.Wait;
-            else {
-                switch(_mouseMode)
+            else
+            {
+                switch (_mouseMode)
                 {
                     case TMouseMode.eMouseSelectMode: this.Cursor = System.Windows.Input.Cursors.IBeam; break;
                     case TMouseMode.eMouseMoveMode: this.Cursor = System.Windows.Input.Cursors.Hand; break;
@@ -253,7 +259,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     case TMouseMode.eMouseZoomMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     case TMouseMode.eMouseFreehandAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
                     default: this.Cursor = System.Windows.Input.Cursors.Arrow; break;
-                }   
+                }
             }
         }
 
@@ -283,9 +289,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             rotationFromManipulation += e.DeltaManipulation.Rotation;
             if (rotationFromManipulation > 90.0)
             {
-                try{
-                controller.Rotate = 90;
-                }catch(PdfNoFileOpenedException)
+                try
+                {
+                    controller.Rotate = 90;
+                }
+                catch (PdfNoFileOpenedException)
                 {
                 }
                 rotationFromManipulation = 0.0;
@@ -294,7 +302,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 try
                 {
-                controller.Rotate = -90;
+                    controller.Rotate = -90;
                 }
                 catch (PdfNoFileOpenedException)
                 {
@@ -499,7 +507,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
             else if (selectingText)
             {
-                
+
                 PdfTargetPoint p2 = new PdfTargetPoint(e.GetPosition(this));
                 double s1 = 0.0, s2 = 0.0;
                 //IList<PdfTextFragment> frags = controller.GetTextWithinSelection(new PdfTargetPoint(lastMousePosition), p2, ref s1, ref s2);
@@ -521,51 +529,52 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 // If there are no fragments return;
                 if (!frags.Any())
                     return;
-                
+
                 //special treatment for first and last element
                 PdfTextFragment first = frags[0];
                 PdfTextFragment last = frags[frags.Count - 1];
                 int firstIndex = first.GetIndexOfClosestGlyph(s1);
                 int lastIndex = last.GetIndexOfClosestGlyph(s2);
-                int firstPageNo = controller.InversePageOrder[first.PageNo-1];
-                int lastPageNo = controller.InversePageOrder[last.PageNo-1];
+                int firstPageNo = controller.InversePageOrder[first.PageNo - 1];
+                int lastPageNo = controller.InversePageOrder[last.PageNo - 1];
 
-                    if (frags.Count == 1)
+                if (frags.Count == 1)
+                {
+                    //It might be that start and end point are in wrong order, as they are only ordered by textfragment and there is only one in this collection
+                    if (lastIndex < firstIndex)
                     {
-                        //It might be that start and end point are in wrong order, as they are only ordered by textfragment and there is only one in this collection
-                        if (lastIndex < firstIndex)
-                        {
-                            int tmp = lastIndex;
-                            lastIndex = firstIndex;
-                            firstIndex = tmp;
-                        }
-                        selectedRects.Add(firstPageNo, new List<PdfSourceRect>() { first.GetRectOnUnrotatedPage(firstIndex, lastIndex) });
-                        textBuilder.Append(first.Text.Substring(firstIndex, lastIndex - firstIndex)).Append(" ");
+                        int tmp = lastIndex;
+                        lastIndex = firstIndex;
+                        firstIndex = tmp;
                     }
-                    else
-                    {
-                        selectedRects.Add(firstPageNo, new List<PdfSourceRect>() { first.GetRectOnUnrotatedPage(firstIndex, int.MaxValue) });
-                        textBuilder.Append(first.Text.Substring(firstIndex, first.Text.Length - firstIndex)).Append(" ");
-                        if (firstPageNo != lastPageNo)
-                            selectedRects.Add(lastPageNo, new List<PdfSourceRect>());
-                        selectedRects[lastPageNo].Add(last.GetRectOnUnrotatedPage(0, lastIndex));
+                    selectedRects.Add(firstPageNo, new List<PdfSourceRect>() { first.GetRectOnUnrotatedPage(firstIndex, lastIndex) });
+                    textBuilder.Append(first.Text.Substring(firstIndex, lastIndex - firstIndex)).Append(" ");
+                }
+                else
+                {
+                    selectedRects.Add(firstPageNo, new List<PdfSourceRect>() { first.GetRectOnUnrotatedPage(firstIndex, int.MaxValue) });
+                    textBuilder.Append(first.Text.Substring(firstIndex, first.Text.Length - firstIndex)).Append(" ");
+                    if (firstPageNo != lastPageNo)
+                        selectedRects.Add(lastPageNo, new List<PdfSourceRect>());
+                    selectedRects[lastPageNo].Add(last.GetRectOnUnrotatedPage(0, lastIndex));
 
-                        //remove first and last
-                        frags.RemoveAt(0);
-                        frags.RemoveAt(frags.Count - 1);
-                        foreach (PdfTextFragment frag in frags)
-                        {
-                            int fragPageNo = controller.InversePageOrder[frag.PageNo-1];
-                                if (!selectedRects.ContainsKey(fragPageNo))
-                                    selectedRects.Add(fragPageNo, new List<PdfSourceRect>());
-                            selectedRects[fragPageNo].Add(frag.RectOnUnrotatedPage);
-                            textBuilder.Append(frag.Text).Append(" ");
-                        }
-                        textBuilder.Append(last.Text.Substring(0, lastIndex));
+                    //remove first and last
+                    frags.RemoveAt(0);
+                    frags.RemoveAt(frags.Count - 1);
+                    foreach (PdfTextFragment frag in frags)
+                    {
+                        int fragPageNo = controller.InversePageOrder[frag.PageNo - 1];
+                        if (!selectedRects.ContainsKey(fragPageNo))
+                            selectedRects.Add(fragPageNo, new List<PdfSourceRect>());
+                        selectedRects[fragPageNo].Add(frag.RectOnUnrotatedPage);
+                        textBuilder.Append(frag.Text).Append(" ");
                     }
+                    textBuilder.Append(last.Text.Substring(0, lastIndex));
+                }
                 _selectedText = textBuilder.ToString();
                 this.InvalidateVisual();
-            } else if (drawingFreeHandAnnotation)
+            }
+            else if (drawingFreeHandAnnotation)
             {
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
@@ -710,8 +719,55 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             //Utilities.DebugLogger.Log("End Updating Viewport Dimensions");
         }
 
+        protected override void OnStylusDown(StylusDownEventArgs e)
+        {
+            Stylus.Capture(this);
+
+            stylusPoints = new StylusPointCollection();
+            StylusPointCollection eventPoints =
+                e.GetStylusPoints(this, stylusPoints.Description);
+            stylusPoints.Add(eventPoints);
+
+
+        }
+        protected override void OnStylusMove(StylusEventArgs e)
+        {
+            if (stylusPoints == null)
+            {
+                return;
+            }
+            StylusPointCollection newStylusPoints = e.GetStylusPoints(this, stylusPoints.Description);
+            stylusPoints.Add(newStylusPoints);
+        }
+        protected override void OnStylusUp(StylusEventArgs e)
+        {
+            if (stylusPoints == null)
+            {
+                return;
+            }
+
+            // Add the StylusPoints that have come in since the 
+            // last call to OnStylusMove.
+            StylusPointCollection newStylusPoints =
+                e.GetStylusPoints(this, stylusPoints.Description);
+            stylusPoints.Add(newStylusPoints);
+
+            // Create a new stroke from all the StylusPoints since OnStylusDown.
+            Stroke stroke = new Stroke(stylusPoints);
+
+            // Add the new stroke to the Strokes collection of the InkPresenter.
+            ip.Strokes.Add(stroke);
+
+            // Clear the StylusPointsCollection.
+            stylusPoints = null;
+
+            // Release stylus capture.
+            Stylus.Capture(null);
+        }
+
+
         #endregion EventHandlers
 
-        
+
     }
 }

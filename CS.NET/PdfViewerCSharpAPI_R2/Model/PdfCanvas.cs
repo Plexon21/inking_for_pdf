@@ -5,7 +5,8 @@ using System.Text;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Collections.Concurrent;
-
+using System.Windows.Ink;
+using System.Windows.Input;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
 using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
 
@@ -574,5 +575,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
 
         public event Action<PdfSourceRect, PdfSourceRect, int> CanvasRectChanged;
+
     }
 }
