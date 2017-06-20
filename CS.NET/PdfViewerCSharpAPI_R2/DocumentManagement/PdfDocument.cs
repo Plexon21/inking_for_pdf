@@ -835,6 +835,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color,
             int nColors, double dBorderWidth)
         {
+            lastVisiblePages.Clear();
+            
             return PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
         }
 

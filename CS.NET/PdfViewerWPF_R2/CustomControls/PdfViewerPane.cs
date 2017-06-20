@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
+using System.Windows.Input.StylusPlugIns;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 using PdfTools.PdfViewerCSharpAPI.Model;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
@@ -42,8 +43,14 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             UseLayoutRounding = true;
 
             AllowDrop = true;
+            var ip = new InkPresenter();
+            var dr = new DynamicRenderer();
             this.Background = Brushes.Transparent;
             this.Cursor = Cursors.Arrow;
+            this.Content = ip;
+
+            ip.AttachVisuals(dr.RootVisual, dr.DrawingAttributes);
+            this.StylusPlugIns.Add(dr);
 
             inertiaScrollDispatchTimer = new DispatcherTimer(new TimeSpan(100000), DispatcherPriority.Normal, new EventHandler(inertiaScrollDispatchTimer_Tick), Application.Current.Dispatcher);
             inertiaScrollDispatchTimer.Stop();
