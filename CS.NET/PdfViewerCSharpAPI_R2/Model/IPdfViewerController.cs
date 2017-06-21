@@ -53,7 +53,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         eDestinationInvalid = 0, eDestinationFit = 1, eDestinationFitH = 2, eDestinationFitV = 3, eDestinationFitR = 4, eDestinationFitB = 5, eDestinationFitBH = 6, eDestinationFitBV = 7, eDestinationXYZ = 8
     };
 
-    public enum TMouseMode { eMouseUndefMode, eMouseMoveMode, eMouseZoomMode, eMouseMarkMode, eMouseSelectMode, eMouseFreehandAnnotationMode };
+    public enum TMouseMode { eMouseUndefMode, eMouseMoveMode, eMouseZoomMode, eMouseMarkMode, eMouseSelectMode, eMouseFreehandAnnotationMode, eMouseDeleteAnnotationMode };
 
     public enum TViewerTab { eOutlineTab, eThumbnailTab, eNone };
 
@@ -403,6 +403,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr);
         void CreateAnnotation(PdfAnnotation pdfAnnotation);
+        void DeleteAnnotation(PdfAnnotation annot);
     }
 
 }

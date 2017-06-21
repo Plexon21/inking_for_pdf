@@ -1600,7 +1600,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             FireInvokeCallback(delegate ()
             {
-                //TODO: canvas does not update
                 AddAnnoation(annot);
                 FitAndUpdate(false);
                 UpdateBitmapContent();
@@ -1625,7 +1624,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             FireInvokeCallback(delegate ()
             {
-
+                LoadAllAnnotationsOnPage(FirstPageOnViewport);
+                FitAndUpdate(false);
+                UpdateBitmapContent();
             });
         }
 

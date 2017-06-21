@@ -50,6 +50,11 @@ namespace ViewerWPFSample
             annotationMenuItem.Click += CreateAnnotation;
             ContextMenu.Items.Add(annotationMenuItem);
 
+            removeAnnotationMenuItem = new MenuItem();
+            removeAnnotationMenuItem.Header = "Remove Annotation";
+            removeAnnotationMenuItem.Click += DeleteAnnotation;
+            ContextMenu.Items.Add(removeAnnotationMenuItem);
+
             highlightMenuItem = new MenuItem();
             highlightMenuItem.Header = "Highlight";
             //highlightMenuItem.Click += MoveSelectedRectsToHighlightedRects;
@@ -97,6 +102,7 @@ namespace ViewerWPFSample
         MenuItem removeHighlightMenuItem = null;
         MenuItem copySelectedMenuItem = null;
         MenuItem annotationMenuItem = null;
+        MenuItem removeAnnotationMenuItem = null;
 
         public void CreateAnnotation(object sender, RoutedEventArgs e)
         {
@@ -175,6 +181,11 @@ namespace ViewerWPFSample
             cont.LoadAllAnnotationsOnPage(1);
             */
 #endregion TESTING
+        }
+
+        private void DeleteAnnotation(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.MouseMode = TMouseMode.eMouseDeleteAnnotationMode;
         }
 
 

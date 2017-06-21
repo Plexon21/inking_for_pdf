@@ -260,6 +260,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     case TMouseMode.eMouseMarkMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     case TMouseMode.eMouseZoomMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     case TMouseMode.eMouseFreehandAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
+                    case TMouseMode.eMouseDeleteAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     default: this.Cursor = System.Windows.Input.Cursors.Arrow; break;
                 }
             }
@@ -374,6 +375,13 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 controller.Scroll(0, e.Delta);
             }
+
+            RecognizeText();
+
+        }
+
+        private void RecognizeText()
+        {
             using (MemoryStream ms = new MemoryStream())
             {
                 strokes.Save(ms);
@@ -419,7 +427,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             if (middleMouseScrolling)
                 return; //handled by middlemousedown
 
-            if (MouseMode == TMouseMode.eMouseZoomMode || MouseMode == TMouseMode.eMouseMarkMode)
+            if (MouseMode == TMouseMode.eMouseZoomMode || MouseMode == TMouseMode.eMouseMarkMode || MouseMode == TMouseMode.eMouseDeleteAnnotationMode)
             {
                 //start marking rectangle
                 lastMousePosition = e.GetPosition(this);
@@ -636,7 +644,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     controller.ZoomToRectangle(new PdfTargetRect(selectedRect));
                 }
-                else if (MouseMode == TMouseMode.eMouseMarkMode /*&& selectedRectangleOnCanvas != null*/) //TODO uncomment this
+                else if (MouseMode == TMouseMode.eMouseMarkMode && selectedRectangleOnCanvas != null)
+                {
+                    selectedRectangleOnCanvas(controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect)));
+                }
+                else if (MouseMode == TMouseMode.eMouseDeleteAnnotationMode)
                 {
                     int page = controller.FirstPageOnViewport;
 
@@ -654,12 +666,13 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                             IList<PdfAnnotation> markedAnnotations = annotations?.Where(annot => annot.IsContainedInRect(markedRect)).ToList<PdfAnnotation>();
 
-
-                            //selectedRectangleOnCanvas(controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect)));
+                            foreach (PdfAnnotation anno in markedAnnotations)
+                            {
+                                controller.DeleteAnnotation(anno);
+                            }
                         }
-                    } catch { }
-
-
+                    }
+                    catch { }
                 }
 
                 InvalidateVisual();
@@ -708,6 +721,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
                 controller.SaveAs(path + "\\Test.pdf");
+
+                //MouseMode = TMouseMode.eMouseUndefMode;
             }
 
             e.Handled = true;

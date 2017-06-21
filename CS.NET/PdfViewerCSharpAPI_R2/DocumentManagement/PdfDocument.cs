@@ -842,6 +842,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,
              double dBorderWidth)
         {
+            lastVisiblePages.Clear();
             return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, color.Length,
                 dBorderWidth);
         }
@@ -849,6 +850,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         public void DeleteAnnotation(IntPtr anno)
         {
+            lastVisiblePages.Clear();
             PdfViewerDeleteAnnotation(anno);
         }
 
