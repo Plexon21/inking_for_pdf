@@ -173,13 +173,28 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     outlineBrush.Opacity = 1.0;
                     dc.DrawRectangle(_markBrush, new Pen(outlineBrush, 1.0), selectedRect);
                 }
-                if (drawingFreeHandAnnotation)
+                if (drawingFreeHandAnnotation || textRecognitionActive)
                 {
                     Brush freehandBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0)); // TODO: use right color
                     freehandBrush.Opacity = 1.0;
-                    for (int i = 0; i < annotationPoints.Count - 1; i++)
+
+                    if (annotationPoints != null)
                     {
-                        dc.DrawLine(new Pen(freehandBrush, 1), annotationPoints[i], annotationPoints[i + 1]); // TODO: use right width
+                        for (int i = 0; i < annotationPoints.Count - 1; i++)
+                        {
+                            dc.DrawLine(new Pen(freehandBrush, 1), annotationPoints[i], annotationPoints[i + 1]); // TODO: use right width
+                        }
+                    }
+
+                    if (strokes != null)
+                    {
+                        foreach (Stroke s in strokes)
+                        {
+                            for (int i = 0; i < s.StylusPoints.Count - 1; i++)
+                            {
+                                dc.DrawLine(new Pen(freehandBrush, 1), s.StylusPoints[i].ToPoint(), s.StylusPoints[i + 1].ToPoint()); // TODO: use right width
+                            }
+                        }
                     }
                 }
                 if (selectedRects.Count > 0)
@@ -357,6 +372,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private bool selectingText = false;
         private bool drawingFreeHandAnnotation = false;
         private Rect selectedRect = new Rect();
+        private bool textRecognitionActive = false;
 
         //annotation points
         private List<System.Windows.Point> annotationPoints;
@@ -380,7 +396,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
 
             RecognizeText();
-
+             
         }
 
         private void RecognizeText()
@@ -452,6 +468,13 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 this.Cursor = Cursors.Pen;
                 drawingFreeHandAnnotation = true;
 
+                StylusPlugIns.First().Enabled = true;
+            } else if (MouseMode == TMouseMode.eMouseTextRecognitionMode)
+            {
+                textRecognitionActive = true;
+                annotationPoints = new List<Point>();
+                annotationPoints.Add(e.GetPosition(this));
+                this.Cursor = Cursors.Pen;
                 StylusPlugIns.First().Enabled = true;
             }
             else
@@ -618,12 +641,25 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 _selectedText = textBuilder.ToString();
                 this.InvalidateVisual();
             }
-            else if (drawingFreeHandAnnotation)
+            else if (drawingFreeHandAnnotation || textRecognitionActive)
             {
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
                 //update temporary drawn line
             }
+
+            if (MouseMode == TMouseMode.eMouseEndTextRecognitionMode) // TODO: do this better not with MouseMode
+            {
+                textRecognitionActive = false;
+                MouseMode = TMouseMode.eMouseUndefMode;
+
+                MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
+
+
+                strokes = new StrokeCollection();
+
+            }
+
             e.Handled = true;
         }
 
@@ -675,6 +711,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                             foreach (PdfAnnotation anno in markedAnnotations)
                             {
                                 controller.DeleteAnnotation(anno);
+                                if (annotations.Contains(anno)) annotations.Remove(anno);
                             }
                         }
                     }
@@ -693,8 +730,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             else if (drawingFreeHandAnnotation)
             {
                 drawingFreeHandAnnotation = false;
-                var s = new Stroke(new StylusPointCollection(annotationPoints));
-                strokes.Add(s);
 
                 StylusPlugIns.First().Enabled = false;
 
@@ -730,6 +765,16 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 controller.SaveAs(path + "\\Test.pdf");
 
                 //MouseMode = TMouseMode.eMouseUndefMode;
+            }
+            else if (textRecognitionActive)
+            {
+                var s = new Stroke(new StylusPointCollection(annotationPoints));
+                strokes.Add(s);
+
+                StylusPlugIns.First().Enabled = false;
+
+                annotationPoints = null;
+                textRecognitionActive = false;
             }
 
             e.Handled = true;

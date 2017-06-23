@@ -55,6 +55,16 @@ namespace ViewerWPFSample
             removeAnnotationMenuItem.Click += DeleteAnnotation;
             ContextMenu.Items.Add(removeAnnotationMenuItem);
 
+            startTextRecognitionMenuItem = new MenuItem();
+            startTextRecognitionMenuItem.Header = "Start Text Recognition";
+            startTextRecognitionMenuItem.Click += StartTextRecognition;
+            ContextMenu.Items.Add(startTextRecognitionMenuItem);
+
+            recognizeTextMenuItem = new MenuItem();
+            recognizeTextMenuItem.Header = "Recognize Text";
+            recognizeTextMenuItem.Click += RecognizeText;
+            ContextMenu.Items.Add(recognizeTextMenuItem);
+
             highlightMenuItem = new MenuItem();
             highlightMenuItem.Header = "Highlight";
             //highlightMenuItem.Click += MoveSelectedRectsToHighlightedRects;
@@ -103,6 +113,8 @@ namespace ViewerWPFSample
         MenuItem copySelectedMenuItem = null;
         MenuItem annotationMenuItem = null;
         MenuItem removeAnnotationMenuItem = null;
+        MenuItem startTextRecognitionMenuItem = null;
+        MenuItem recognizeTextMenuItem = null;
 
         public void CreateAnnotation(object sender, RoutedEventArgs e)
         {
@@ -186,6 +198,16 @@ namespace ViewerWPFSample
         private void DeleteAnnotation(object sender, RoutedEventArgs e)
         {
             PdfViewer.MouseMode = TMouseMode.eMouseDeleteAnnotationMode;
+        }
+
+        private void RecognizeText(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.MouseMode = TMouseMode.eMouseEndTextRecognitionMode;
+        }
+
+        private void StartTextRecognition(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.MouseMode = TMouseMode.eMouseTextRecognitionMode;
         }
 
 

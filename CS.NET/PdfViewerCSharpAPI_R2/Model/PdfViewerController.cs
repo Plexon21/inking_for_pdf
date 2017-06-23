@@ -50,6 +50,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private String filename = "";
         private String password = "";
         private byte[] fileMem = null;
+
         private IList<PdfAnnotation> annotations;
 
         private CompositionContainer container;
@@ -981,7 +982,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 annotations = new List<PdfAnnotation>();
                 LoadAllAnnotationsOnPage(annot.PageNr);
             }
-            annotations.Add(annot);
+            annotations?.Add(annot);
         }
 
         public void CreateAnnotation(PdfAnnotation annot)
@@ -995,11 +996,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 LoadAllAnnotations();
             }
-            return annotations.FirstOrDefault(a => a.GetHandleAsLong().Equals(annotHandle));
+            return annotations?.FirstOrDefault(a => a.GetHandleAsLong().Equals(annotHandle));
         }
 
         private void LoadAllAnnotations()
         {
+            // TODO: implement
         }
 
         public void LoadAllAnnotationsOnPage(int pageNr)
