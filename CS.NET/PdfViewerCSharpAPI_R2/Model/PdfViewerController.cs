@@ -55,6 +55,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private CompositionContainer container;
         [ImportMany]
         public IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> textConverters;
+        [ImportMany]
+        public IEnumerable<Lazy<IPdfAnnotationReworker, IPdfAnnotationReworkerMetadata>> annotationReworkers;
 
         #endregion
 
@@ -116,6 +118,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public PdfViewerController(Action<Action> invokeCallbackDelegate)
         {
             InitializeTextConverters();
+            InitializeAnnotationReworkers();
             Logger.LogInfo("Creating Object instance");
             this.FireInvokeCallback = invokeCallbackDelegate;
             this.viewport = new Viewport(ZoomFactorChangedMethod);
@@ -143,6 +146,28 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             //An aggregate catalog that combines multiple catalogs
             var catalog = new AggregateCatalog();
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TextConverters");
+            //Check the directory exists
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
+            container = new CompositionContainer(catalog);
+            try
+            {
+                this.container.ComposeParts(this);
+            }
+            catch (CompositionException compositionException)
+            {
+                Console.WriteLine(compositionException.ToString());
+            }
+        }
+        private void InitializeAnnotationReworkers()
+        {
+
+            //An aggregate catalog that combines multiple catalogs
+            var catalog = new AggregateCatalog();
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AnnotationReworkers");
             //Check the directory exists
             if (!Directory.Exists(path))
             {
@@ -986,6 +1011,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation annot)
         {
+            var newPoints = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals("DummyReworker"))?.Value
+                ?.ReworkPoints(annot.Rect);
+            annot.Rect = newPoints;
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
         }
 
