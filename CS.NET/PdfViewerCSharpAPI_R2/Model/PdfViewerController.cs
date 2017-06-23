@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Text;
 using PdfTools.PdfViewerCSharpAPI.Model;
@@ -8,11 +10,12 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Windows.Threading;
 using System.Drawing;
-
+using System.IO;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
 using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
+using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 
 namespace PdfTools.PdfViewerCSharpAPI.Model
@@ -48,6 +51,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private String password = "";
         private byte[] fileMem = null;
         private IList<PdfAnnotation> annotations;
+
+        private CompositionContainer container;
+        [ImportMany]
+        public IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> textConverters;
 
         #endregion
 
@@ -108,6 +115,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public PdfViewerController(Action<Action> invokeCallbackDelegate)
         {
+            InitializeTextConverters();
             Logger.LogInfo("Creating Object instance");
             this.FireInvokeCallback = invokeCallbackDelegate;
             this.viewport = new Viewport(ZoomFactorChangedMethod);
@@ -127,6 +135,29 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             }*/
             PageLayoutMode = (PageLayoutMode == TPageLayoutMode.None) ? TPageLayoutMode.OneColumn : PageLayoutMode;
             Logger.LogInfo("Created Object instance");
+        }
+
+        private void InitializeTextConverters()
+        {
+
+            //An aggregate catalog that combines multiple catalogs
+            var catalog = new AggregateCatalog();
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TextConverters");
+            //Check the directory exists
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
+            container = new CompositionContainer(catalog);
+            try
+            {
+                this.container.ComposeParts(this);
+            }
+            catch (CompositionException compositionException)
+            {
+                Console.WriteLine(compositionException.ToString());
+            }
         }
 
         public IPdfCanvas GetCanvas()
@@ -193,10 +224,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 }
             }
 
-            private ZoomFactorChanged zoomFactorChanged;
+            private PdfViewerController.ZoomFactorChanged zoomFactorChanged;
 
-            public Viewport(ZoomFactorChanged zoomFactorChanged) : this(new PdfTargetRect(), 1.0, zoomFactorChanged) { }
-            public Viewport(PdfTargetRect rectangle, double zoomFactor, ZoomFactorChanged zoomFactorChanged)
+            public Viewport(PdfViewerController.ZoomFactorChanged zoomFactorChanged) : this(new PdfTargetRect(), 1.0, zoomFactorChanged) { }
+            public Viewport(PdfTargetRect rectangle, double zoomFactor, PdfViewerController.ZoomFactorChanged zoomFactorChanged)
             {
                 this._rectangle = rectangle;
                 this.ZoomFactor = zoomFactor;
@@ -984,13 +1015,25 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void DeleteAnnotation(PdfAnnotation annot)
         {
-             DeleteAnnotation(annot.GetHandleAsLong());
+            DeleteAnnotation(annot.GetHandleAsLong());
         }
 
         public void DeleteAnnotation(long annotHandle)
         {
-             canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annotHandle));
+            canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annotHandle));
         }
+
+        public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots, string converterName = "WindowsInk")
+        {
+            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value?.ToText(annots);
+        }
+        public string ConvertAnnotations(StrokeCollection annots, string converterName = "WindowsInk")
+        {
+            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value
+                ?.ToText(annots);
+            //return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value?.ToText(annots);
+        }
+
         #endregion
 
         public void SaveAs(string fileName)
@@ -1615,7 +1658,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
         public void OnAnnotationUpdate(PdfViewerException pdfViewerException, int i)
         {
-            FireInvokeCallback(delegate()
+            FireInvokeCallback(delegate ()
             {
 
             });
@@ -1879,7 +1922,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
 
-       
+
 
 
         #endregion native imports

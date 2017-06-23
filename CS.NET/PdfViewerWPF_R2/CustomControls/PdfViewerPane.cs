@@ -54,9 +54,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             this.Background = Brushes.Transparent;
             this.Cursor = Cursors.Arrow;
             this.Content = ip;
+            ip.IsEnabled = false;
 
+            dr.Enabled = false;
             ip.AttachVisuals(dr.RootVisual, dr.DrawingAttributes);
             this.StylusPlugIns.Add(dr);
+            StylusPlugIns.First().Enabled = false;
 
             inertiaScrollDispatchTimer = new DispatcherTimer(new TimeSpan(100000), DispatcherPriority.Normal, new EventHandler(inertiaScrollDispatchTimer_Tick), Application.Current.Dispatcher);
             inertiaScrollDispatchTimer.Stop();
@@ -382,7 +385,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         private void RecognizeText()
         {
-            using (MemoryStream ms = new MemoryStream())
+            MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
+            /*using (MemoryStream ms = new MemoryStream())
             {
                 strokes.Save(ms);
                 var myInkCollector = new InkCollector();
@@ -407,7 +411,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     else
                         MessageBox.Show("No stroke detected");
                 }
-            }
+            }*/
         }
 
         private void RightMouseDownEventHandler(Object sender, MouseEventArgs e)
@@ -447,6 +451,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 annotationPoints.Add(e.GetPosition(this));
                 this.Cursor = Cursors.Pen;
                 drawingFreeHandAnnotation = true;
+
+                StylusPlugIns.First().Enabled = true;
             }
             else
             {
@@ -690,6 +696,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 var s = new Stroke(new StylusPointCollection(annotationPoints));
                 strokes.Add(s);
 
+                StylusPlugIns.First().Enabled = false;
 
                 int pointCount = annotationPoints.Count;
 

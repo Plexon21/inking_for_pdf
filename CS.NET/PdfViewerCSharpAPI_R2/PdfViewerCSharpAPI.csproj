@@ -71,6 +71,8 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
@@ -96,10 +98,12 @@
     <Compile Include="DocumentManagement\Requests\IPdfRequest.cs" />
     <Compile Include="DocumentManagement\Requests\PdfSaveAsRequest.cs" />
     <Compile Include="Model\PdfSearcher.cs" />
+    <Compile Include="Utilities\IPdfTextConverterMetadata.cs" />
     <Compile Include="Utilities\PdfSourcePoint.cs" />
     <Compile Include="Utilities\PdfTargetPoint.cs" />
     <Compile Include="Utilities\PdfSourceRect.cs" />
     <Compile Include="Utilities\PdfTargetRect.cs" />
+    <Compile Include="Utilities\IPdfTextConverter.cs" />
     <Compile Include="Utilities\PdfTextFragment.cs" />
     <Compile Include="DocumentManagement\Requests\PdfLoadThumbnailRequest.cs" />
     <Compile Include="Utilities\PdfOutlineItem.cs" />

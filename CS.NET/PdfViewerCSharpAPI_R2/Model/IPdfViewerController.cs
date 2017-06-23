@@ -9,6 +9,7 @@
  *                  
  ***************************************************************************/
 
+using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 
 namespace PdfTools.PdfViewerCSharpAPI.Model
@@ -404,6 +405,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr);
         void CreateAnnotation(PdfAnnotation pdfAnnotation);
         void DeleteAnnotation(PdfAnnotation annot);
+
+        string ConvertAnnotations(IEnumerable<PdfAnnotation> annots, string converterName);
+        string ConvertAnnotations(StrokeCollection annots, string converterName);
     }
 
 }
