@@ -394,9 +394,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 controller.Scroll(0, e.Delta);
             }
-
-            RecognizeText();
-             
         }
 
         private void RecognizeText()
@@ -653,8 +650,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 textRecognitionActive = false;
                 MouseMode = TMouseMode.eMouseUndefMode;
 
-                MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
-
+                //MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
+                RecognizeText();
 
                 strokes = new StrokeCollection();
 

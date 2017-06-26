@@ -53,7 +53,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         private IList<PdfAnnotation> annotations;
 
-        private CompositionContainer container;
+        private IList<string> extensionFolders;
+        private CompositionContainer extensionContainer;
         [ImportMany]
         public IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> textConverters;
         [ImportMany]
@@ -118,8 +119,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public PdfViewerController(Action<Action> invokeCallbackDelegate)
         {
-            InitializeTextConverters();
-            InitializeAnnotationReworkers();
+            
+            InitializeExtensions();
             Logger.LogInfo("Creating Object instance");
             this.FireInvokeCallback = invokeCallbackDelegate;
             this.viewport = new Viewport(ZoomFactorChangedMethod);
@@ -141,44 +142,30 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             Logger.LogInfo("Created Object instance");
         }
 
-        private void InitializeTextConverters()
+        private void InitializeExtensions()
         {
+            extensionFolders = new List<string>();
+            extensionFolders.Add("TextConverters");
+            extensionFolders.Add("AnnotationReworkers");
+
 
             //An aggregate catalog that combines multiple catalogs
             var catalog = new AggregateCatalog();
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TextConverters");
-            //Check the directory exists
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
-            container = new CompositionContainer(catalog);
-            try
-            {
-                this.container.ComposeParts(this);
-            }
-            catch (CompositionException compositionException)
-            {
-                Console.WriteLine(compositionException.ToString());
-            }
-        }
-        private void InitializeAnnotationReworkers()
-        {
 
-            //An aggregate catalog that combines multiple catalogs
-            var catalog = new AggregateCatalog();
-            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AnnotationReworkers");
-            //Check the directory exists
-            if (!Directory.Exists(path))
+            foreach (var s in extensionFolders)
             {
-                Directory.CreateDirectory(path);
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s);
+                //Check the directory exists
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
             }
-            catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
-            container = new CompositionContainer(catalog);
+            extensionContainer = new CompositionContainer(catalog);
             try
             {
-                this.container.ComposeParts(this);
+                this.extensionContainer.ComposeParts(this);
             }
             catch (CompositionException compositionException)
             {
@@ -1059,9 +1046,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
         public string ConvertAnnotations(StrokeCollection annots, string converterName = "WindowsInk")
         {
-            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value
-                ?.ToText(annots);
-            //return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value?.ToText(annots);
+            var conv = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName));
+            var val = conv?.Value;
+            var res = val?.ToText(annots);
+            return res;
+            /*return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value
+                ?.ToText(annots);*/
         }
 
         #endregion
