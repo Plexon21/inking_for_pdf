@@ -999,7 +999,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation annot)
         {
-            var newPoints = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals("DummyReworker"))?.Value
+            var newPoints = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals("NoChangeReworker"))?.Value
                 ?.ReworkPoints(annot.Rect);
             annot.Rect = newPoints;
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));

@@ -154,6 +154,14 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             dc.PushClip(new RectangleGeometry(panelRect));
             dc.DrawRectangle(this.Background, null, panelRect);
 
+            //set pen for annotations
+            Brush freehandBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0)); // TODO: use right color
+            freehandBrush.Opacity = 1.0;
+            double width = zoomRelativeAnnotationStrokeWidth ? annotationStrokeWidth : annotationStrokeWidth * controller.ZoomFactor;
+            Pen annotPen = new Pen(freehandBrush, width);
+            annotPen.EndLineCap = PenLineCap.Round;
+            annotPen.StartLineCap = PenLineCap.Round;
+
             //Draw bitmap
             if (bitmap != null)
             {
@@ -175,14 +183,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
                 if (drawingFreeHandAnnotation || textRecognitionActive)
                 {
-                    Brush freehandBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0)); // TODO: use right color
-                    freehandBrush.Opacity = 1.0;
-
                     if (annotationPoints != null)
                     {
                         for (int i = 0; i < annotationPoints.Count - 1; i++)
                         {
-                            dc.DrawLine(new Pen(freehandBrush, 1), annotationPoints[i], annotationPoints[i + 1]); // TODO: use right width
+                            dc.DrawLine(annotPen, annotationPoints[i], annotationPoints[i + 1]);
                         }
                     }
 
@@ -192,7 +197,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         {
                             for (int i = 0; i < s.StylusPoints.Count - 1; i++)
                             {
-                                dc.DrawLine(new Pen(freehandBrush, 1), s.StylusPoints[i].ToPoint(), s.StylusPoints[i + 1].ToPoint()); // TODO: use right width
+                                dc.DrawLine(annotPen, s.StylusPoints[i].ToPoint(), s.StylusPoints[i + 1].ToPoint());
                             }
                         }
                     }
@@ -374,9 +379,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private Rect selectedRect = new Rect();
         private bool textRecognitionActive = false;
 
-        //annotation points
+        //annotation
         private List<System.Windows.Point> annotationPoints;
         private StrokeCollection strokes = new StrokeCollection();
+
+        private bool zoomRelativeAnnotationStrokeWidth = false;
+        private double annotationStrokeWidth = 10;
         
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
@@ -396,7 +404,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        private void RecognizeText()
+        private void RecognizeText() // TODO: clean
         {
             MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
             /*using (MemoryStream ms = new MemoryStream())
@@ -459,10 +467,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
             else if (MouseMode == TMouseMode.eMouseFreehandAnnotationMode)
             {
-                //lastMousePosition = e.GetPosition(this);
                 annotationPoints = new List<Point>();
                 annotationPoints.Add(e.GetPosition(this));
-                this.Cursor = Cursors.Pen;
                 drawingFreeHandAnnotation = true;
 
                 StylusPlugIns.First().Enabled = true;
@@ -471,7 +477,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 textRecognitionActive = true;
                 annotationPoints = new List<Point>();
                 annotationPoints.Add(e.GetPosition(this));
-                this.Cursor = Cursors.Pen;
                 StylusPlugIns.First().Enabled = true;
             }
             else
@@ -642,7 +647,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
-                //update temporary drawn line
             }
 
             if (MouseMode == TMouseMode.eMouseEndTextRecognitionMode) // TODO: do this better not with MouseMode
@@ -689,20 +693,21 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
                 else if (MouseMode == TMouseMode.eMouseDeleteAnnotationMode)
                 {
-                    int page = controller.FirstPageOnViewport;
+                    // TODO: handle points outside of page correctly
 
-                    try // TODO: handle points outside of page correctly
+                    int page1 = 0;
+                    int page2 = 0;
+
+                    try
                     {
-                        //PdfSourceRect markedRect = controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect));
-                        PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.TopLeft), ref page);
-                        PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.BottomRight), ref page);
+                        PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.TopLeft), ref page1);
+                        PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.BottomRight), ref page2);
 
-                        if (page != 0)
+                        if (page1 != 0 && page2 != 0 && page1 == page2)
                         {
                             PdfSourceRect markedRect = new PdfSourceRect(p1.dX, p2.dY, p2.dX - p1.dX, p1.dY - p2.dY);
 
-                            IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(page);
-
+                            IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(page1);
                             IList<PdfAnnotation> markedAnnotations = annotations?.Where(annot => annot.IsContainedInRect(markedRect)).ToList<PdfAnnotation>();
 
                             foreach (PdfAnnotation anno in markedAnnotations)
@@ -734,8 +739,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 double[] points = new double[pointCount * 2];
 
-                int page = 0; // TODO: get right page
-                int borderwidth = 1; // TODO: get right borderwidth
+                int page = 0;
 
                 try // TODO: handle points outside of the page correctly
                 {
@@ -746,22 +750,19 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         points[i * 2] = p.dX;
                         points[i * 2 + 1] = p.dY;
                     }
-                } catch { }
+                }
+                catch { }
 
 
-                double[] color = new double[] { 0, 0, 0, 1 };
+                double[] color = new double[] { 0, 0, 0, 1 }; // TODO: get right color
+                double width = zoomRelativeAnnotationStrokeWidth ? annotationStrokeWidth / controller.ZoomFactor : annotationStrokeWidth;
 
-                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, borderwidth / controller.ZoomFactor));
+                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
 
                 annotationPoints = null;
 
-                IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(1);
-
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-                controller.SaveAs(path + "\\Test.pdf");
-
-                //MouseMode = TMouseMode.eMouseUndefMode;
+                //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                //controller.SaveAs(path + "\\Test.pdf");
             }
             else if (textRecognitionActive)
             {
