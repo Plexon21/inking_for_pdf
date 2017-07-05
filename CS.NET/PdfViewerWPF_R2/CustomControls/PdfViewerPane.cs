@@ -23,6 +23,7 @@ using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
 using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
 using Cursors = System.Windows.Input.Cursors;
 using Stroke = System.Windows.Ink.Stroke;
+using System.Windows.Shapes;
 
 namespace PdfTools.PdfViewerWPF.CustomControls
 {
@@ -36,7 +37,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private IPdfViewerController controller;
 
         private DispatcherTimer inertiaScrollDispatchTimer;
-        private StylusPointCollection stylusPoints;
         private InkPresenter ip;
 
 
@@ -155,12 +155,13 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             dc.DrawRectangle(this.Background, null, panelRect);
 
             //set pen for annotations
-            Brush freehandBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0)); // TODO: use right color
+            Brush freehandBrush = new SolidColorBrush(AnnotationColor);
             freehandBrush.Opacity = 1.0;
-            double width = zoomRelativeAnnotationStrokeWidth ? annotationStrokeWidth : annotationStrokeWidth * controller.ZoomFactor;
+            double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth : AnnotationStrokeWidth * controller.ZoomFactor;
             Pen annotPen = new Pen(freehandBrush, width);
             annotPen.EndLineCap = PenLineCap.Round;
             annotPen.StartLineCap = PenLineCap.Round;
+
 
             //Draw bitmap
             if (bitmap != null)
@@ -181,8 +182,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     outlineBrush.Opacity = 1.0;
                     dc.DrawRectangle(_markBrush, new Pen(outlineBrush, 1.0), selectedRect);
                 }
-                if (drawingFreeHandAnnotation || textRecognitionActive)
+                if (drawingFreeHandAnnotation || MouseMode == TMouseMode.eMouseTextRecognitionMode)
                 {
+
                     if (annotationPoints != null)
                     {
                         for (int i = 0; i < annotationPoints.Count - 1; i++)
@@ -247,6 +249,45 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
+        private bool _zoomRelativeAnnotationStrokeWidth = false;
+        public bool ZoomRelativeAnnotationStrokeWidth
+        {
+            set
+            {
+                _zoomRelativeAnnotationStrokeWidth = value;
+            }
+            get
+            {
+                return _zoomRelativeAnnotationStrokeWidth;
+            }
+        }
+
+        private double _annotationStrokeWidth = 1;
+        public double AnnotationStrokeWidth
+        {
+            set
+            {
+                _annotationStrokeWidth = value;
+            }
+            get
+            {
+                return _annotationStrokeWidth;
+            }
+        }
+
+        private Color _annotationColor = Colors.Black;
+        public Color AnnotationColor
+        {
+            set
+            {
+                _annotationColor = value;
+            }
+            get
+            {
+                return _annotationColor;
+            }
+        }
+
         private TMouseMode _mouseMode = TMouseMode.eMouseUndefMode;
         public TMouseMode MouseMode
         {
@@ -263,6 +304,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 _mouseMode = value;
                 SetCursorAccordingToMouseMode();
                 InvalidateVisual();
+                UpdateTextRecognition(value);
                 OnMouseModeChanged(value);
             }
             get
@@ -284,8 +326,25 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     case TMouseMode.eMouseZoomMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     case TMouseMode.eMouseFreehandAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
                     case TMouseMode.eMouseDeleteAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
+                    case TMouseMode.eMouseTextRecognitionMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
                     default: this.Cursor = System.Windows.Input.Cursors.Arrow; break;
                 }
+            }
+        }
+
+        private void UpdateTextRecognition(TMouseMode value)
+        {
+            if (value != TMouseMode.eMouseEndTextRecognitionMode)
+            {
+                strokes = new StrokeCollection();
+            } else
+            {
+                textRecognitionActive = false;
+
+                //MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
+                RecognizeText();
+
+                MouseMode = TMouseMode.eMouseUndefMode;
             }
         }
 
@@ -382,9 +441,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         //annotation
         private List<System.Windows.Point> annotationPoints;
         private StrokeCollection strokes = new StrokeCollection();
-
-        private bool zoomRelativeAnnotationStrokeWidth = false;
-        private double annotationStrokeWidth = 10;
         
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
@@ -404,35 +460,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        private void RecognizeText() // TODO: clean
+        public void RecognizeText()
         {
-            MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
-            /*using (MemoryStream ms = new MemoryStream())
-            {
-                strokes.Save(ms);
-                var myInkCollector = new InkCollector();
-                var ink = new Ink();
-                ink.Load(ms.ToArray());
-
-                using (RecognizerContext context = new RecognizerContext())
-                {
-                    if (ink.Strokes.Count > 0)
-                    {
-                        context.Strokes = ink.Strokes;
-                        RecognitionStatus status;
-
-                        var result = context.Recognize(out status);
-
-                        if (status == RecognitionStatus.NoError)
-                            MessageBox.Show(result.TopString);
-                        else
-                            MessageBox.Show("Recognition failed");
-
-                    }
-                    else
-                        MessageBox.Show("No stroke detected");
-                }
-            }*/
+            MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk")); //TODO: exclude "WindowsInk"
         }
 
         private void RightMouseDownEventHandler(Object sender, MouseEventArgs e)
@@ -648,18 +678,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
             }
-
-            if (MouseMode == TMouseMode.eMouseEndTextRecognitionMode) // TODO: do this better not with MouseMode
-            {
-                textRecognitionActive = false;
-                MouseMode = TMouseMode.eMouseUndefMode;
-
-                //MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
-                RecognizeText();
-
-                strokes = new StrokeCollection();
-
-            }
+            else if (MouseMode == TMouseMode.eMouseFreehandAnnotationMode || MouseMode == TMouseMode.eMouseTextRecognitionMode) InvalidateVisual();
 
             e.Handled = true;
         }
@@ -754,8 +773,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 catch { }
 
 
-                double[] color = new double[] { 0, 0, 0, 1 }; // TODO: get right color
-                double width = zoomRelativeAnnotationStrokeWidth ? annotationStrokeWidth / controller.ZoomFactor : annotationStrokeWidth;
+                double[] color = PdfUtils.ConvertRGBToCYMK(AnnotationColor); // TODO: get right color
+                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
 

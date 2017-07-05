@@ -33,12 +33,12 @@
             <TextBlock Text="{x:Static props:MainWindowRes.page}" Margin="10, 0, 0, 0"   />
             <TextBlock Text="{Binding ElementName=PdfViewer, Path=PageNo}" Padding="0" />
 
-          
+
             <TextBlock Text="/" Margin="0"  Padding="0" />
             <TextBlock Text="{Binding ElementName=PdfViewer, Path=PageCount}" Margin="0, 0, 10, 0" Padding="0"/>
 
             <Separator Width="1"  />
-            
+
             <TextBlock Text="{x:Static props:MainWindowRes.zoom}" Margin="10, 0, 0, 0"  Padding="0" />
             <TextBlock Text="{Binding ElementName=PdfViewer, Path=Zoom, StringFormat=N2}" Margin="0, 0, 10, 0" Padding="0" />
 
@@ -55,7 +55,7 @@
 
             <TextBlock Text="{x:Static props:MainWindowRes.fit}" Margin="10, 0, 0, 0" Padding="0" />
             <TextBlock Text="{Binding ElementName=PdfViewer, Path=FitMode, Converter={StaticResource FitModeConverter}}" Margin="0, 0, 10, 0" Padding="0" />
-            
+
             <Separator Width="1"  />
 
             <TextBlock Text="{x:Static props:MainWindowRes.page_display}" Margin="10, 0, 0, 0" Padding="0" />
@@ -71,14 +71,14 @@
 
             <Separator Width="1"  />
             <TextBlock Text="{Binding ElementName=PdfViewer, Path=SelectedText, StringFormat=\&quot;\{0\}\&quot;}" Margin="0, 0, 10, 0" Padding="0" />
-            
+
             <Separator Width="1"  />
             <TextBlock Text="" Name="DocumentName"  Margin="0, 0, 10, 0" Padding="0" />
 
         </StatusBar>
 
         <Grid>
-            <Grid.RowDefinitions> 
+            <Grid.RowDefinitions>
                 <RowDefinition Height="35" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
@@ -160,14 +160,14 @@
                     <Button Click="ShadowOnOff_Click" x:Name="ShadowOnOff_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.shadow_on_off}">
                         <Image Source="{StaticResource shadow_on_off}" />
                     </Button>
-                    
+
                     <Separator BorderBrush="DarkBlue" BorderThickness="0.5"/>
-                    
+
                     <TextBlock Text="Search" VerticalAlignment="Center" Margin="10, 0, 10, 0"/>
                     <TextBox Width="100" Name="SearchTextBox" TextChanged="SearchTextBox_OnTextChanged" KeyDown="SearchTextBox_OnKeyDown" x:FieldModifier="public"/>
                     <Button Click="NextSearchClick" Height="30"  Name="NextSearchButton" ToolTip="{x:Static props:MainWindowRes.search}"  x:FieldModifier="public">
                         <Image Source="{StaticResource search}" />
-                     </Button>
+                    </Button>
                     <Button Click="CancelSearchClick" Height="30" ToolTip="{x:Static props:MainWindowRes.end_search}" >
                         <Image Source="{StaticResource cancel}" />
                     </Button>
@@ -177,13 +177,14 @@
                     <Button Click="TextSelectionClick" x:Name="TextSelection_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.textSelection}"  x:FieldModifier="public">
                         <Image Source="{StaticResource textSelection}" />
                     </Button>
+                    <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="107" Margin="0,4,0,0" ValueChanged="AnnotationWidth_Slider_ValueChanged" Minimum="1" Maximum="100" LargeChange="10" Value="1"/>
                 </ToolBar>
 
             </ToolBarPanel>
             <custom:PdfViewerWPF Name="PdfViewer" Grid.Row="1" IgnoreEmbeddedPreferences="True"  FitMode="FitWidth" ShowThumbnails="True" ShowOutlines="True" PageLayoutMode="TwoColumnLeft" Border="8" Rotate="0" x:FieldModifier="public"/>
 
         </Grid>
-        
+
     </DockPanel>
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"

@@ -10,6 +10,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Utilities
     using System.Windows.Media.Imaging;
     
     using PdfTools.PdfViewerCSharpAPI.Model;
+    using System.Windows.Media;
 
     /// <summary>
     /// Library of utility methods used by PdfViewer
@@ -162,6 +163,20 @@ namespace PdfTools.PdfViewerCSharpAPI.Utilities
                 default:
                     throw new ArgumentException();
             }
+        }
+
+        public static double[] ConvertRGBToCYMK(Color color)
+        {
+            double red = color.R / 255.0;
+            double green = color.G / 255.0;
+            double blue = color.B / 255.0;
+
+            double black = Math.Min(1 - red, Math.Min(1 - green, 1 - blue));
+            double cyan = (1 - red - black) / (1 - black);
+            double magenta = (1 - green - black) / (1 - black);
+            double yellow = (1 - blue - black) / (1 - black);
+
+            return new double[] { cyan, magenta, yellow, black };
         }
 
     }

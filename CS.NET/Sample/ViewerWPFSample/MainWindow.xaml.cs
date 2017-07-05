@@ -45,26 +45,6 @@ namespace ViewerWPFSample
             //Contextmenu stuff 
             ContextMenu = new ContextMenu();
 
-            annotationMenuItem = new MenuItem();
-            annotationMenuItem.Header = "Annotation";
-            annotationMenuItem.Click += CreateAnnotation;
-            ContextMenu.Items.Add(annotationMenuItem);
-
-            removeAnnotationMenuItem = new MenuItem();
-            removeAnnotationMenuItem.Header = "Remove Annotation";
-            removeAnnotationMenuItem.Click += DeleteAnnotation;
-            ContextMenu.Items.Add(removeAnnotationMenuItem);
-
-            startTextRecognitionMenuItem = new MenuItem();
-            startTextRecognitionMenuItem.Header = "Start Text Recognition";
-            startTextRecognitionMenuItem.Click += StartTextRecognition;
-            ContextMenu.Items.Add(startTextRecognitionMenuItem);
-
-            recognizeTextMenuItem = new MenuItem();
-            recognizeTextMenuItem.Header = "Recognize Text";
-            recognizeTextMenuItem.Click += RecognizeText;
-            ContextMenu.Items.Add(recognizeTextMenuItem);
-
             highlightMenuItem = new MenuItem();
             highlightMenuItem.Header = "Highlight";
             //highlightMenuItem.Click += MoveSelectedRectsToHighlightedRects;
@@ -104,6 +84,10 @@ namespace ViewerWPFSample
                 case TMouseMode.eMouseMoveMode: return "Hand tool";
                 case TMouseMode.eMouseSelectMode: return "Text selection tool";
                 case TMouseMode.eMouseZoomMode: return "Zoom tool";
+                case TMouseMode.eMouseFreehandAnnotationMode: return "Draw Annotation tool";
+                case TMouseMode.eMouseDeleteAnnotationMode: return "Delete Annotation tool";
+                case TMouseMode.eMouseTextRecognitionMode: return "Start text recognition tool";
+                case TMouseMode.eMouseEndTextRecognitionMode: return "End text recognition tool";
                 default: return "undefined mouse mode";
             }
         }
@@ -111,105 +95,6 @@ namespace ViewerWPFSample
         MenuItem highlightMenuItem = null;
         MenuItem removeHighlightMenuItem = null;
         MenuItem copySelectedMenuItem = null;
-        MenuItem annotationMenuItem = null;
-        MenuItem removeAnnotationMenuItem = null;
-        MenuItem startTextRecognitionMenuItem = null;
-        MenuItem recognizeTextMenuItem = null;
-
-        public void CreateAnnotation(object sender, RoutedEventArgs e)
-        {
-
-            PdfViewer.MouseMode = TMouseMode.eMouseFreehandAnnotationMode;
-
-            #region TESTING
-            /*
-            PdfDocument doc = (PdfDocument)this.PdfViewer.GetController().GetCanvas().DocumentManager.GetDocument();
-
-            
-
-            double[] r1 = new double[] { 400, 400, 450, 400 };
-            double[] r2 = new double[] { 450, 400, 450, 450 };
-            double[] r3 = new double[] { 450, 450, 400, 450 };
-            double[] r4 = new double[] { 400, 450, 400, 400 };
-
-            double[] spline = new double[] { 200, 200, 300, 300, 100, 350 };
-            double[] dMark = new double[] { 50, 50 };
-
-            int count = 0;
-
-            bool x = doc.GetAnnotations(1, out IntPtr pointer, ref count);
-
-            double[] color1 = new double[] { 1, 0, 0, 0 };
-            double[] color2 = new double[] { 0, 1, 0, 0 };
-            double[] color3 = new double[] { 0, 0, 1, 0 };
-            double[] color4 = new double[] { 0, 0, 0, 1 };
-
-            //doc.DeleteAnnotation(pointer[0]);
-
-            //IntPtr markup = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, 1, dMark, 2, color4 ,4, 1);
-            //IntPtr tspline = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, spline, 6, color4, 4, 10);
-            IntPtr t1 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r1, 4, color1, 4, 10);
-            IntPtr t2 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r2, 4, color2, 4, 10);
-            IntPtr t3 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r3, 4, color3, 4, 10);
-            IntPtr t4 = doc.CreateAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, r4, 4, color4, 4, 10);
-
-
-            //x = doc.GetAnnotations(1, out pointer, ref count);
-
-
-
-
-
-
-
-
-            //TPdfAnnotation anno2 = (TPdfAnnotation)Marshal.PtrToStructure(pointers[count-1], typeof(TPdfAnnotation));
-
-
-
-
-
-            x = doc.GetAnnotations(1, out pointer, ref count);
-
-            IntPtr[] pointers = new IntPtr[count];
-            IntPtr p = pointer;
-
-            for (int i = 0; i < count; i++)
-            {
-                pointers[i] = p;
-                p += Marshal.SizeOf(typeof(IntPtr));
-            }
-
-            TPdfAnnotation anno = (TPdfAnnotation)Marshal.PtrToStructure(pointers[0], typeof(TPdfAnnotation));
-            int asdf = doc.UpdateAnnotation(anno.annotationHandle, 1, null, "content", "label", color2, 4, -1);
-
-            TPdfAnnotation anno2 = (TPdfAnnotation)Marshal.PtrToStructure(pointers[0], typeof(TPdfAnnotation));
-
-            //doc.DeleteAnnotation(anno.annotationHandle);
-
-
-            //annotationMenuItem.Header = "done";
-            var cont = (PdfViewerController)this.PdfViewer.GetController();
-            cont.LoadAllAnnotationsOnPage(1);
-            */
-#endregion TESTING
-        }
-
-        private void DeleteAnnotation(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.MouseMode = TMouseMode.eMouseDeleteAnnotationMode;
-        }
-
-        private void RecognizeText(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.MouseMode = TMouseMode.eMouseEndTextRecognitionMode;
-        }
-
-        private void StartTextRecognition(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.MouseMode = TMouseMode.eMouseTextRecognitionMode;
-        }
-
 
         /// <summary>
         /// Disposes of the internal viewer (important to prevent memory leaks).
@@ -730,6 +615,14 @@ namespace ViewerWPFSample
             highlightMenuItem.IsEnabled = false;
             removeHighlightMenuItem.IsEnabled = false;
             copySelectedMenuItem.IsEnabled = (PdfViewer.SelectedText.Length > 0);
+        }
+
+        private void AnnotationWidth_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (PdfViewer != null)
+            {
+                PdfViewer.AnnotationStrokeWidth = e.NewValue;
+            }
         }
     }
 }

@@ -807,6 +807,19 @@ namespace PdfTools.PdfViewerWPF
             }
         }
 
+        public double AnnotationStrokeWidth
+        {
+            get
+            {
+                return pane.AnnotationStrokeWidth;
+            }
+            set
+            {
+                pane.AnnotationStrokeWidth = value;
+            }
+        }
+
+
         bool _showOutlines = true;
         /// <summary>
         /// Determines if the Outlines tab is available
