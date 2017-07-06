@@ -783,6 +783,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 annotationPoints = null;
 
+                IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
+
                 //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 //controller.SaveAs(path + "\\Test.pdf");
             }
