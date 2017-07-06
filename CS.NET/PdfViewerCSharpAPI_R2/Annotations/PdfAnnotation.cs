@@ -1,10 +1,12 @@
 ﻿using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
+using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Media;
 
 namespace PdfTools.PdfViewerCSharpAPI.Annotations
 {
@@ -113,6 +115,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         {
             PdfSourceRect annotRect = new PdfSourceRect(Rect[0], Rect[1], Rect[2] - Rect[0], Rect[3] - Rect[1]);
             return markedRect.contains(annotRect);
+        }
+
+        public UpdateAnnotationArgs UpdateColor(Color color)
+        {
+            return new UpdateAnnotationArgs(this, null, null, null, PdfUtils.ConvertRGBToCYMK(color), -1);
         }
     }
 }

@@ -404,6 +404,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr);
         void CreateAnnotation(PdfAnnotation pdfAnnotation);
+        void UpdateAnnotation(UpdateAnnotationArgs args);
         void DeleteAnnotation(PdfAnnotation annot);
 
         string ConvertAnnotations(IEnumerable<PdfAnnotation> annots, string converterName);

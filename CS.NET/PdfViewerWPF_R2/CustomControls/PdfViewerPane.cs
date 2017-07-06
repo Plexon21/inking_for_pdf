@@ -341,8 +341,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 textRecognitionActive = false;
 
-                //MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));
+                //MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));//TODO: remove?
                 RecognizeText();
+
+                //TODO: remove and use in update
+                //IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport);
+                //controller.UpdateAnnotation(annotations[0].UpdateColor(Colors.Orange));
 
                 MouseMode = TMouseMode.eMouseUndefMode;
             }
@@ -732,7 +736,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                             foreach (PdfAnnotation anno in markedAnnotations)
                             {
                                 controller.DeleteAnnotation(anno);
-                                if (annotations.Contains(anno)) annotations.Remove(anno);
                             }
                         }
                     }

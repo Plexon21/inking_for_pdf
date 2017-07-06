@@ -13,16 +13,27 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
     public struct UpdateAnnotationArgs
     {
         public PdfAnnotation Annot;
+        public double[] r;
+        public string content;
+        public string label;
+        public double[] color;
+        public double dBorderWidth;
 
-        public UpdateAnnotationArgs(PdfAnnotation annot)
+
+        public UpdateAnnotationArgs(PdfAnnotation annot, double[] r, string content, string label, double[] color, double dBorderWidth)
         {
             this.Annot = annot;
+            this.r = r;
+            this.content = content;
+            this.label = label;
+            this.color = color;
+            this.dBorderWidth = dBorderWidth;
         }
     }
     public class PdfUpdateAnnotaionRequest : APdfRequest<UpdateAnnotationArgs, int>
     {
         public PdfUpdateAnnotaionRequest(UpdateAnnotationArgs arguments)
-            : base(arguments, 43)
+            : base(arguments, 43) //TODO: why 43
         {
         }
         public PdfUpdateAnnotaionRequest(UpdateAnnotationArgs arguments, int priority)
@@ -33,8 +44,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
         protected override int ExecuteNative(IPdfDocument document, UpdateAnnotationArgs args)
         {
             var result = document.UpdateAnnotation(args.Annot.AnnotationHandle,
-                args.Annot.PageNr, args.Annot.Rect, args.Annot.Contents, args.Annot.TextLabel, args.Annot.Colors,
-                args.Annot.BorderWidth);
+                args.Annot.PageNr, args.r, args.content, args.label, args.color,
+                args.dBorderWidth);
             return result;
         }
 

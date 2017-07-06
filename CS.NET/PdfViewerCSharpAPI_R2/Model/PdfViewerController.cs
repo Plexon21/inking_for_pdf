@@ -1005,6 +1005,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
         }
 
+        public void UpdateAnnotation(UpdateAnnotationArgs args)
+        {
+            canvas.DocumentManager.UpdateAnnotation(args);
+        }
+
         public PdfAnnotation GetAnnotation(long annotHandle)
         {
             if (annotations == null)
