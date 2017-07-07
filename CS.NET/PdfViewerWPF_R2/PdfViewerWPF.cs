@@ -1044,11 +1044,6 @@ namespace PdfTools.PdfViewerWPF
 
         #endregion PropertyForwarding
 
-        public IPdfViewerController GetController()
-        {
-            return controller;
-        }
-
         private void OnOpenCompleted(PdfViewerException ex)
         {
             Logger.LogInfo("Open Completed");

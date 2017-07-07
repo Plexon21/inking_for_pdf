@@ -843,7 +843,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
              double dBorderWidth)
         {
             lastVisiblePages.Clear();
-            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, color.Length,
+
+            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, color != null ? color.Length : 0,
                 dBorderWidth);
         }
       

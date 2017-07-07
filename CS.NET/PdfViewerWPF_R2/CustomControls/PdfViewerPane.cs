@@ -345,8 +345,16 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 RecognizeText();
 
                 //TODO: remove and use in update
-                //IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport);
-                //controller.UpdateAnnotation(annotations[0].UpdateColor(Colors.Orange));
+                /*
+                IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport);
+
+                controller.UpdateAnnotation(annotations[0].Move(10,10));
+                controller.UpdateAnnotation(annotations[0].Scale(2));
+                controller.UpdateAnnotation(annotations[0].UpdateColor(Colors.AliceBlue));
+                controller.UpdateAnnotation(annotations[0].UpdateContent("newContent"));
+                controller.UpdateAnnotation(annotations[0].UpdateLabel("newLabel"));
+                controller.UpdateAnnotation(annotations[0].UpdateWidth(2.75));
+                */
 
                 MouseMode = TMouseMode.eMouseUndefMode;
             }

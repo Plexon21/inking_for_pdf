@@ -178,6 +178,5 @@ namespace PdfTools.PdfViewerCSharpAPI.Utilities
 
             return new double[] { cyan, magenta, yellow, black };
         }
-
     }
 }

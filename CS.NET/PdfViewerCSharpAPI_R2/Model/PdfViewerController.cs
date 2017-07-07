@@ -173,11 +173,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             }
         }
 
-        public IPdfCanvas GetCanvas()
-        {
-            return canvas;
-        }
-
         public void Initialize()
         {
             Logger.LogInfo("Initialize");
@@ -1685,14 +1680,15 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             FireInvokeCallback(delegate ()
             {
-
+                FitAndUpdate(false);
+                UpdateBitmapContent();
             });
         }
         public void OnAnnotationDeleted(PdfViewerException pdfViewerException, object o)
         {
             FireInvokeCallback(delegate ()
             {
-                LoadAllAnnotationsOnPage(FirstPageOnViewport);
+                LoadAllAnnotationsOnPage(FirstPageOnViewport); // TODO: find out why this is important
                 FitAndUpdate(false);
                 UpdateBitmapContent();
             });

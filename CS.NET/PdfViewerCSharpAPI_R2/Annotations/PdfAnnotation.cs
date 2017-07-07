@@ -117,9 +117,48 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             return markedRect.contains(annotRect);
         }
 
+        public UpdateAnnotationArgs Move(double x, double y)
+        {
+            double[] rect = new double[] { Rect[0] + x, Rect[1] + y, Rect[2] + x, Rect[3] + y };
+
+            return new UpdateAnnotationArgs(this, rect, null, null, null, -1);
+        }
+
+        public UpdateAnnotationArgs Scale(double factor) //this is just to test... TODO: delete
+        {
+            double width = Rect[2] - Rect[0];
+            double height = Rect[3] - Rect[1];
+            double newWidth = width * factor;
+            double newHeight = height * factor;
+
+            double[] rect = new double[] {
+                Rect[0] + (width/2) - (newWidth/2),
+                Rect[1] + (height/2) - (newHeight/2),
+                Rect[2] - (width/2) + (newWidth/2),
+                Rect[3] - (height/2) + (newHeight/2)
+            };
+
+            return new UpdateAnnotationArgs(this, rect, null, null, null, -1);
+        }
+
+        public UpdateAnnotationArgs UpdateContent(string content)
+        {
+            return new UpdateAnnotationArgs(this, null, content, null, null, -1);
+        }
+
+        public UpdateAnnotationArgs UpdateLabel(string label)
+        {
+            return new UpdateAnnotationArgs(this, null, null, label, null, -1);
+        }
+
         public UpdateAnnotationArgs UpdateColor(Color color)
         {
             return new UpdateAnnotationArgs(this, null, null, null, PdfUtils.ConvertRGBToCYMK(color), -1);
+        }
+
+        public UpdateAnnotationArgs UpdateWidth(double width)
+        {
+            return new UpdateAnnotationArgs(this, null, null, null, null, width);
         }
     }
 }
