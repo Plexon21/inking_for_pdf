@@ -153,7 +153,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 
         public UpdateAnnotationArgs UpdateColor(Color color)
         {
-            return new UpdateAnnotationArgs(this, null, null, null, PdfUtils.ConvertRGBToCYMK(color), -1);
+            return new UpdateAnnotationArgs(this, null, null, null, PdfUtils.ConvertRGBToCMYK(color), -1);
         }
 
         public UpdateAnnotationArgs UpdateWidth(double width)

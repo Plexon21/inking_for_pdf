@@ -165,18 +165,18 @@ namespace PdfTools.PdfViewerCSharpAPI.Utilities
             }
         }
 
-        public static double[] ConvertRGBToCYMK(Color color)
+        public static double[] ConvertRGBToCMYK(Color color)
         {
             double red = color.R / 255.0;
             double green = color.G / 255.0;
             double blue = color.B / 255.0;
 
-            double black = Math.Min(1 - red, Math.Min(1 - green, 1 - blue));
-            double cyan = (1 - red - black) / (1 - black);
-            double magenta = (1 - green - black) / (1 - black);
-            double yellow = (1 - blue - black) / (1 - black);
+            double key = Math.Min(1 - red, Math.Min(1 - green, 1 - blue));
+            double cyan = (1 - red - key) / (1 - key);
+            double magenta = (1 - green - key) / (1 - key);
+            double yellow = (1 - blue - key) / (1 - key);
 
-            return new double[] { cyan, magenta, yellow, black };
+            return new double[] { cyan, magenta, yellow, key };
         }
     }
 }

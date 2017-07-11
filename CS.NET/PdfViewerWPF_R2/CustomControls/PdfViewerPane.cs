@@ -453,6 +453,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         //annotation
         private List<System.Windows.Point> annotationPoints;
         private StrokeCollection strokes = new StrokeCollection();
+        private List<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
         
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
@@ -784,7 +785,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 catch { }
 
 
-                double[] color = PdfUtils.ConvertRGBToCYMK(AnnotationColor); // TODO: get right color
+                double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor); // TODO: get right color
                 double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
