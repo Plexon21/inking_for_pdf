@@ -552,6 +552,32 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public IntPtr annotationHandle;
             public int pageNr;
             public IntPtr ptrSubtype;
+            public int nrOfColors;
+            public IntPtr ptrColors;
+            public int flags;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public double[] rect;
+            public IntPtr ptrQuadPoints;
+            public int nrOfQuadPoints;
+            public IntPtr ptrContents;
+            public Int32 isLink;
+            public IntPtr ptrActionType;
+            public Int32 hasURI;
+            public IntPtr ptrURI;
+            public int destType;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+            public Int32[] hasDestVal;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+            public double[] destArray;
+            int destPage;
+            public Int32 isMarkup;
+            public IntPtr ptrTextLabel;
+            public Int32 hasPopup;
+            public IntPtr m_pPopupAnnot;
+
+            /* TODO : Delete this if not needed
+            public IntPtr annotationHandle;
+            public int pageNr;
+            public IntPtr ptrSubtype;
 
             public string subType
             {
@@ -637,6 +663,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             [MarshalAs(UnmanagedType.I1)] public bool hasPopup;
             public IntPtr m_pPopupAnnot;
             public IntPtr offset;
+
+    */
         }
 
         [StructLayout(LayoutKind.Sequential)]

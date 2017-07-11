@@ -47,22 +47,40 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         {
             this.AnnotationHandle = annot.annotationHandle;
             this.PageNr = annot.pageNr;
-            this.SubType = ConvertSubtype(annot.subType);
-            this.Colors = annot.colors;
+            this.SubType = ConvertSubtype(Marshal.PtrToStringAnsi(annot.ptrSubtype));
+
+            double[] colorArray = new double[annot.nrOfColors];
+            IntPtr pColorArray = annot.ptrColors;
+            for (int i = 0; i < annot.nrOfColors; i++)
+            {
+                colorArray[i] = (double)Marshal.PtrToStructure(pColorArray, typeof(double));
+                pColorArray += Marshal.SizeOf(typeof(double));
+            }
+
+            this.Colors = colorArray;
             this.Flags = annot.flags;
             this.Rect = annot.rect;
-            this.QuadPoints = annot.quadPoints;
-            this.Contents = annot.contents;
-            this.IsLink = annot.isLink;
-            this.ActionType = annot.actionType;
-            this.HasUri = annot.hasURI;
-            this.Uri = annot.URI;
+
+            double[] quadPointArray = new double[annot.nrOfQuadPoints];
+            IntPtr pQuadPoints = annot.ptrQuadPoints;
+            for (int i = 0; i < annot.nrOfQuadPoints; i++)
+            {
+                quadPointArray[i] = (double)Marshal.PtrToStructure(pColorArray, typeof(double));
+                pColorArray += Marshal.SizeOf(typeof(double));
+            }
+
+            this.QuadPoints = quadPointArray;
+            this.Contents = Marshal.PtrToStringAnsi(annot.ptrContents);
+            this.IsLink = annot.isLink == 1;
+            this.ActionType = Marshal.PtrToStringAnsi(annot.ptrActionType);
+            this.HasUri = annot.hasURI == 1;
+            this.Uri = Marshal.PtrToStringAnsi(annot.ptrURI);
             this.DestType = annot.destType;
-            this.HasDestVal = annot.hasDestVal;
+            this.HasDestVal = annot.hasDestVal.Select(num => num == 1).ToArray();
             this.DestArray = annot.destArray;
-            this.IsMarkup = annot.isMarkup;
-            this.TextLabel = annot.textLabel;
-            this.HasPopup = annot.hasPopup;
+            this.IsMarkup = annot.isMarkup == 1;
+            this.TextLabel = Marshal.PtrToStringAnsi(annot.ptrTextLabel);
+            this.HasPopup = annot.hasPopup == 1;
             this.PopupAnnotation = annot.m_pPopupAnnot;
         }
 
