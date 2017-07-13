@@ -400,6 +400,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         void SaveAs(string fileName);
 
+        PdfSourceRect TransformRectOnScreenToOnPage(Rect rectOnPage, out int page);
+        PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr);
+
         IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr);
         void CreateAnnotation(PdfAnnotation pdfAnnotation);
         void UpdateAnnotation(UpdateAnnotationArgs args);

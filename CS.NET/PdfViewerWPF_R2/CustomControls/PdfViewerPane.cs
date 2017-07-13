@@ -82,6 +82,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             this.ManipulationDelta += TouchManipulationDelta;
             this.ManipulationStarting += TouchManipulationStarting;
             this.ManipulationInertiaStarting += TouchManipulationInertiaStarting;
+
+            this.selectedRectangleOnCanvas += HandleSelectedRectangleOnCanvas;
         }
 
         public void SetController(IPdfViewerController controller)
@@ -204,6 +206,17 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         }
                     }
                 }
+                if (selectedAnnotations != null && selectedAnnotations.Count > 0)
+                {
+                    foreach (PdfAnnotation annot in selectedAnnotations)
+                    {
+                        PdfSourceRect rectOnPage = new PdfSourceRect(annot.Rect[0], annot.Rect[1], annot.Rect[2] - annot.Rect[0], annot.Rect[3] - annot.Rect[1]);
+
+                        Rect rectWin = controller.TransformRectPageToViewportWinRect(rectOnPage, annot.PageNr);
+
+                        dc.DrawRectangle(null, new Pen(new SolidColorBrush(Colors.Black), 1), rectWin);
+                    }
+                }
                 if (selectedRects.Count > 0)
                 {
                     lock (selectedRectsLock)
@@ -304,7 +317,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 _mouseMode = value;
                 SetCursorAccordingToMouseMode();
                 InvalidateVisual();
-                UpdateTextRecognition(value);
+                UpdateAnnotations(value);
                 OnMouseModeChanged(value);
             }
             get
@@ -332,7 +345,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        private void UpdateTextRecognition(TMouseMode value)
+        private void UpdateAnnotations(TMouseMode value)
         {
             if (value != TMouseMode.eMouseEndTextRecognitionMode)
             {
@@ -357,6 +370,36 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 */
 
                 MouseMode = TMouseMode.eMouseUndefMode;
+            }
+
+            selectedAnnotations = null;
+        }
+
+        private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
+        {
+            PdfSourceRect rectOnPage = controller.TransformRectOnCanvasToOnPage(rectOnCanvas, out int pageNr);
+
+            IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(pageNr);
+            IList<PdfAnnotation> markedAnnotations = annotations?.Where(annot => annot.IsContainedInRect(rectOnPage)).ToList<PdfAnnotation>();
+
+            switch (MouseMode)
+            {
+                case TMouseMode.eMouseMarkMode:
+
+                    selectedAnnotations = markedAnnotations;
+
+                    break;
+                case TMouseMode.eMouseDeleteAnnotationMode:
+
+                    if (rectOnPage != null && pageNr != 0)
+                    {
+                        foreach (PdfAnnotation annot in markedAnnotations)
+                        {
+                            controller.DeleteAnnotation(annot);
+                        }
+                    }
+
+                    break;
             }
         }
 
@@ -453,7 +496,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         //annotation
         private List<System.Windows.Point> annotationPoints;
         private StrokeCollection strokes = new StrokeCollection();
-        private List<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
+        private IList<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
         
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
@@ -719,36 +762,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     controller.ZoomToRectangle(new PdfTargetRect(selectedRect));
                 }
-                else if (MouseMode == TMouseMode.eMouseMarkMode && selectedRectangleOnCanvas != null)
+                else if ((MouseMode == TMouseMode.eMouseMarkMode || MouseMode == TMouseMode.eMouseDeleteAnnotationMode) && selectedRectangleOnCanvas != null)
                 {
                     selectedRectangleOnCanvas(controller.TransformOnScreenToOnCanvas(new PdfTargetRect(selectedRect)));
-                }
-                else if (MouseMode == TMouseMode.eMouseDeleteAnnotationMode)
-                {
-                    // TODO: handle points outside of page correctly
-
-                    int page1 = 0;
-                    int page2 = 0;
-
-                    try
-                    {
-                        PdfSourcePoint p1 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.TopLeft), ref page1);
-                        PdfSourcePoint p2 = controller.TransformOnScreenToOnPage(new PdfTargetPoint(selectedRect.BottomRight), ref page2);
-
-                        if (page1 != 0 && page2 != 0 && page1 == page2)
-                        {
-                            PdfSourceRect markedRect = new PdfSourceRect(p1.dX, p2.dY, p2.dX - p1.dX, p1.dY - p2.dY);
-
-                            IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(page1);
-                            IList<PdfAnnotation> markedAnnotations = annotations?.Where(annot => annot.IsContainedInRect(markedRect)).ToList<PdfAnnotation>();
-
-                            foreach (PdfAnnotation anno in markedAnnotations)
-                            {
-                                controller.DeleteAnnotation(anno);
-                            }
-                        }
-                    }
-                    catch { }
                 }
 
                 InvalidateVisual();

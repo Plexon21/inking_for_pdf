@@ -1773,6 +1773,42 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             page = GetPageContainingPoint(s);
             return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
         }
+        
+        public PdfSourceRect TransformRectOnScreenToOnPage(Rect rectOnPage, out int page)
+        {
+            // TODO: handle points outside of page correctly
+
+            int pagePoint1 = 0;
+            int pagePoint2 = 0;
+
+            PdfSourcePoint p1 = TransformOnScreenToOnPage(new PdfTargetPoint(rectOnPage.TopLeft), ref pagePoint1);
+            PdfSourcePoint p2 = TransformOnScreenToOnPage(new PdfTargetPoint(rectOnPage.BottomRight), ref pagePoint2);
+
+            if (pagePoint1 != 0 && pagePoint2 != 0 && pagePoint1 == pagePoint2)
+            {
+                page = pagePoint1;
+                return new PdfSourceRect(Math.Min(p1.dX, p2.dX), Math.Min(p1.dY, p2.dY), Math.Abs(p1.dX - p2.dX), Math.Abs(p1.dY - p2.dY));
+            }
+
+            page = 0;
+            return null;
+        }
+
+        public PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr)
+        {
+            PdfSourcePoint canvasTopLeft = new PdfSourcePoint(rectOnCanvas.dX, rectOnCanvas.dY);
+            PdfSourcePoint canvasBottomRight = new PdfSourcePoint(rectOnCanvas.dRight, rectOnCanvas.dBottom);
+
+            pageNr = GetPageContainingPoint(canvasTopLeft);
+
+            PdfSourceRect pageRect = GetPageRectGuess(pageNr);
+
+            PdfSourcePoint pagePoint1 = pageRect.GetOnPageCoordinates(canvasTopLeft, Rotate);
+            PdfSourcePoint pagePoint2 = pageRect.GetOnPageCoordinates(canvasBottomRight, Rotate);
+
+            return new PdfSourceRect(Math.Min(pagePoint1.dX, pagePoint2.dX), Math.Min(pagePoint1.dY, pagePoint2.dY), Math.Abs(pagePoint1.dX - pagePoint2.dX), Math.Abs(pagePoint1.dY - pagePoint2.dY));
+        }
+        
         #endregion
 
         #region ThumbnailRelated methods

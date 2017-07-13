@@ -906,7 +906,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                 var annot = (TPdfAnnotation)Marshal.PtrToStructure(p, typeof(TPdfAnnotation));
                 var lastAnnot = new PdfAnnotation(annot);
                 annotations.Add(lastAnnot);
-                p = new IntPtr(p.ToInt64() + annotSize);
+                p = new IntPtr(p.ToInt32() + annotSize);
             }
             return annotations;
         }
