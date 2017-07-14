@@ -374,7 +374,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
             selectedAnnotations = null;
         }
-
+            
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
         {
             PdfSourceRect rectOnPage = controller.TransformRectOnCanvasToOnPage(rectOnCanvas, out int pageNr);

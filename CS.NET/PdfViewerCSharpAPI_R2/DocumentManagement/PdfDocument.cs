@@ -175,7 +175,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             bitmap.Lock();
             PdfViewerDraw(documentHandle, page, bitmap.PixelWidth, bitmap.PixelHeight, bitmap.BackBuffer, 0,
                 0, 0, targetWidth, targetHeight,
-                0.0, 0.0, sourceWidth, sourceHeight);
+                0.0, 0.0, sourceWidth, sourceHeight, TPdfViewerModelPixelOrder.ePdfViewerModelPixelOrderBGRA);
             bitmap.AddDirtyRect(new Int32Rect(0, 0, targetWidth, targetHeight));
             bitmap.Unlock();
             Logger.LogInfo("Loaded thumbnail page " + page);
@@ -375,7 +375,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
                 PdfViewerDraw(documentHandle, p, bitmap.PixelWidth, bitmap.PixelHeight, bitmap.BackBuffer, rotation,
                     t.iX, t.iY, t.iWidth, t.iHeight,
-                    s.dX, s.dY, s.dWidth, s.dHeight);
+                    s.dX, s.dY, s.dWidth, s.dHeight, TPdfViewerModelPixelOrder.ePdfViewerModelPixelOrderBGRA);
                 drewThisManyTimes++;
                 Logger.LogInfo("Finished drawing page " + p);
 
@@ -680,6 +680,14 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                 get { return Marshal.PtrToStringUni(ptrSubtype); }
             }
         }
+        public enum TPdfViewerModelPixelOrder
+        {
+            ePdfViewerModelPixelOrderRGBA = 0,
+            ePdfViewerModelPixelOrderARGB = 1,
+            ePdfViewerModelPixelOrderBGRA = 2,
+            ePdfViewerModelPixelOrderABGR = 3,
+        };
+
 
         public IList<PdfTextFragment> LoadTextFragments(int pageNo)
         {
@@ -798,7 +806,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         static extern bool PdfViewerDraw(IntPtr handle, int iPage,
             int iWidth, int iHeight, IntPtr pBuffer, int iRotation,
             int iTargetX, int iTargetY, int iTargetWidth, int iTargetHeight,
-            double dSourceX, double dSourceY, double dSourceWidth, double dSourceHeight);
+            double dSourceX, double dSourceY, double dSourceWidth, double dSourceHeight,TPdfViewerModelPixelOrder pixelOrder);
 
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
