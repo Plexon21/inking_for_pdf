@@ -57,8 +57,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private CompositionContainer extensionContainer;
         [ImportMany]
         public IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> textConverters;
+
         [ImportMany]
         public IEnumerable<Lazy<IPdfAnnotationReworker, IPdfAnnotationReworkerMetadata>> annotationReworkers;
+
+        public string TextConverter { get; set; } = "WindowsInk";
+
+        public string AnnotationReworker { get; set; } = "NoChangeReworker";
 
         #endregion
 
@@ -994,7 +999,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation annot)
         {
-            var newPoints = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals("NoChangeReworker"))?.Value
+            var newPoints = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationReworker))?.Value
                 ?.ReworkPoints(annot.Rect);
             annot.Rect = newPoints;
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
@@ -1040,18 +1045,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annotHandle));
         }
 
-        public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots, string converterName = "WindowsInk")
+        public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots)
         {
-            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value?.ToText(annots);
+            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
         }
-        public string ConvertAnnotations(StrokeCollection annots, string converterName = "WindowsInk")
+        public string ConvertAnnotations(StrokeCollection annots)
         {
-            var conv = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName));
-            var val = conv?.Value;
-            var res = val?.ToText(annots);
-            return res;
-            /*return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(converterName))?.Value
-                ?.ToText(annots);*/
+            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
         }
 
         #endregion

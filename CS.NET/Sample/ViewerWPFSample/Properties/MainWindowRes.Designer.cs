@@ -124,6 +124,15 @@ namespace ViewerWPFSample.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dummy Text Recognizer.
+        /// </summary>
+        public static string dummy_reco {
+            get {
+                return ResourceManager.GetString("dummy_reco", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End search.
         /// </summary>
         public static string end_search {
@@ -259,6 +268,15 @@ namespace ViewerWPFSample.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No Change Reworker.
+        /// </summary>
+        public static string nochange_rework {
+            get {
+                return ResourceManager.GetString("nochange_rework", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not found.
         /// </summary>
         public static string not_found {
@@ -381,6 +399,15 @@ namespace ViewerWPFSample.Properties {
         public static string previous_page {
             get {
                 return ResourceManager.GetString("previous_page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rectangle Reworker.
+        /// </summary>
+        public static string rect_rework {
+            get {
+                return ResourceManager.GetString("rect_rework", resourceCulture);
             }
         }
         
@@ -552,6 +579,15 @@ namespace ViewerWPFSample.Properties {
         public static string window_title {
             get {
                 return ResourceManager.GetString("window_title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows Ink Text Recognizer.
+        /// </summary>
+        public static string windows_ink {
+            get {
+                return ResourceManager.GetString("windows_ink", resourceCulture);
             }
         }
         

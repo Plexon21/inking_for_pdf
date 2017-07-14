@@ -819,6 +819,17 @@ namespace PdfTools.PdfViewerWPF
             }
         }
 
+        public string TextConverter
+        {
+            get { return controller.TextConverter; }
+            set { controller.TextConverter = value; }
+        }
+        public string AnnotationReworker
+        {
+            get { return controller.AnnotationReworker; }
+            set { controller.AnnotationReworker = value; }
+        }
+
 
         bool _showOutlines = true;
         /// <summary>
@@ -1031,6 +1042,8 @@ namespace PdfTools.PdfViewerWPF
                 pane.HighlightBrush = value;
             }
         }
+        
+
 
         private void RaisePropertyChanged(string propName)
         {

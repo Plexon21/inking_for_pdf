@@ -294,4 +294,16 @@
   <data name="textSelection" xml:space="preserve">
     <value>Select text</value>
   </data>
+  <data name="dummy_reco" xml:space="preserve">
+    <value>Dummy Text Recognizer</value>
+  </data>
+  <data name="nochange_rework" xml:space="preserve">
+    <value>No Change Reworker</value>
+  </data>
+  <data name="rect_rework" xml:space="preserve">
+    <value>Rectangle Reworker</value>
+  </data>
+  <data name="windows_ink" xml:space="preserve">
+    <value>Windows Ink Text Recognizer</value>
+  </data>
 </root>

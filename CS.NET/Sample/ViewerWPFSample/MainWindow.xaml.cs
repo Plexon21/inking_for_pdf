@@ -624,5 +624,26 @@ namespace ViewerWPFSample
                 PdfViewer.AnnotationStrokeWidth = e.NewValue;
             }
         }
+
+        private void MEF_Changed(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as RadioButton;
+            if (btn == null || btn.IsChecked != true || PdfViewer == null) return;
+            switch (btn.Name)
+            {
+                case "WindowsInk":
+                    PdfViewer.TextConverter = "WindowsInk";
+                    break;
+                case "Dummy":
+                    PdfViewer.TextConverter = "DummyTextRecognizer";
+                    break;
+                case "NoChange":
+                    PdfViewer.AnnotationReworker = "NoChangeReworker";
+                    break;
+                case "Move":
+                    PdfViewer.AnnotationReworker = "MoveReworker";
+                    break;
+            }
+        }
     }
 }

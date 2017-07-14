@@ -205,6 +205,17 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             get;
         }
 
+        string TextConverter
+        {
+            set;
+            get;
+        }
+        string AnnotationReworker
+        {
+            set;
+            get;
+        }
+
         /// <summary>
         /// Retrieves all textfragments, that inersect with the given region
         /// </summary>
@@ -408,8 +419,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         void UpdateAnnotation(UpdateAnnotationArgs args);
         void DeleteAnnotation(PdfAnnotation annot);
 
-        string ConvertAnnotations(IEnumerable<PdfAnnotation> annots, string converterName);
-        string ConvertAnnotations(StrokeCollection annots, string converterName);
+        string ConvertAnnotations(IEnumerable<PdfAnnotation> annots);
+        string ConvertAnnotations(StrokeCollection annots);
     }
 
 }

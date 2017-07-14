@@ -518,7 +518,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         public void RecognizeText()
         {
-            MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk")); //TODO: exclude "WindowsInk"
+            MessageBox.Show(controller.ConvertAnnotations(strokes)); 
         }
 
         private void RightMouseDownEventHandler(Object sender, MouseEventArgs e)
