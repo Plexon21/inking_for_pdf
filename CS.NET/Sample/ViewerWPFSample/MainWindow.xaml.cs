@@ -617,11 +617,11 @@ namespace ViewerWPFSample
             copySelectedMenuItem.IsEnabled = (PdfViewer.SelectedText.Length > 0);
         }
 
-        private void AnnotationWidth_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void AnnotationWidth_Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             if (PdfViewer != null)
             {
-                PdfViewer.AnnotationStrokeWidth = e.NewValue;
+                PdfViewer.AnnotationStrokeWidth = AnnotationWidth_Slider.Value;
             }
         }
     }

@@ -177,7 +177,7 @@
                     <Button Click="TextSelectionClick" x:Name="TextSelection_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.textSelection}"  x:FieldModifier="public">
                         <Image Source="{StaticResource textSelection}" />
                     </Button>
-                    <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="107" Margin="0,4,0,0" ValueChanged="AnnotationWidth_Slider_ValueChanged" Minimum="1" Maximum="100" LargeChange="10" Value="1"/>
+                    <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="107" Margin="0,4,0,0" Minimum="1" Maximum="100" LargeChange="10" Value="1" Thumb.DragCompleted="AnnotationWidth_Slider_DragCompleted"/>
                 </ToolBar>
 
             </ToolBarPanel>
