@@ -780,11 +780,13 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 drawingFreeHandAnnotation = false;
 
-                StylusPlugIns.First().Enabled = false;
+                //StylusPlugIns.First().Enabled = false; //TODO: delete if not needed
 
                 int pointCount = annotationPoints.Count;
 
                 double[] points = new double[pointCount * 2];
+                double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor); // TODO: get right color
+                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 int page = 0;
 
@@ -797,14 +799,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         points[i * 2] = p.dX;
                         points[i * 2 + 1] = p.dY;
                     }
+
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
+
                 }
                 catch { }
-
-
-                double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor); // TODO: get right color
-                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
-
-                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
 
                 annotationPoints = null;
 
