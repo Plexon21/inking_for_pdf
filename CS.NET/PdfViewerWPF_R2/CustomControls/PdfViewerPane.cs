@@ -797,7 +797,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 int pointCount = annotationPoints.Count;
 
                 double[] points = new double[pointCount * 2];
-                double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor); // TODO: get right color
+                //double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor);
+                double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
+
                 double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 int page = 0;
