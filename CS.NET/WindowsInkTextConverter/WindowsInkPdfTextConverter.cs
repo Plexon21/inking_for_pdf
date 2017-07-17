@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
-using PdfTools.PdfViewerCSharpAPI.Utilities;
+using PdfTools.PdfViewerCSharpAPI.Extensibility;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Input.StylusPlugIns;

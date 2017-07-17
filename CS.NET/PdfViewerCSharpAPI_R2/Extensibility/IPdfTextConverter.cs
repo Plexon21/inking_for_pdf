@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 
-namespace PdfTools.PdfViewerCSharpAPI.Utilities
+namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
     public interface IPdfTextConverter
     {

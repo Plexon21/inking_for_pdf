@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
-using PdfTools.PdfViewerCSharpAPI.Utilities;
+using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
 namespace NoChangeAnnotationPointReworker
 {

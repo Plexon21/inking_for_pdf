@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PdfTools.PdfViewerCSharpAPI.Utilities
+namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
     public interface IPdfAnnotationReworker
     {
