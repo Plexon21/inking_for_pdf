@@ -645,5 +645,20 @@ namespace ViewerWPFSample
                     break;
             }
         }
+
+        private void colorBlack_Button_Click(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.AnnotationColor = Colors.Black;
+        }
+
+        private void colorRed_Button_Click(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.AnnotationColor = Colors.Red;
+        }
+
+        private void colorCustom_Button_Click(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.AnnotationColor = ((SolidColorBrush)(((Button)sender).Background)).Color;
+        }
     }
 }
