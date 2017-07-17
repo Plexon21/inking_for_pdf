@@ -576,7 +576,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                     return -1;  //We could not reduce the set of pages anymore. This implies that point is not on any page
             }
         }
-
+      
         #endregion
 
         #region Public Update Methods
@@ -1774,9 +1774,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
         }
         
-        public PdfSourceRect TransformRectOnScreenToOnPage(Rect rectOnPage, out int page)
+        public PdfSourceRect TransformRectOnScreenToOnPage(Rect rectOnPage, out int page) // TODO : delete if not used
         {
-            // TODO: handle points outside of page correctly
+            // TODO: handle points outside of page correctly UPDATE : does not seem to be possible
 
             int pagePoint1 = 0;
             int pagePoint2 = 0;

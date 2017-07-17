@@ -206,7 +206,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         }
                     }
                 }
-                if (selectedAnnotations != null && selectedAnnotations.Count > 0)
+                if (selectedAnnotations.Count > 0)
                 {
                     foreach (PdfAnnotation annot in selectedAnnotations)
                     {
@@ -281,6 +281,14 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             set
             {
                 _annotationStrokeWidth = value;
+
+                if (selectedAnnotations.Count > 0)
+                {
+                    foreach (PdfAnnotation annot in selectedAnnotations)
+                    {
+                        controller.UpdateAnnotation(annot.UpdateWidth(_annotationStrokeWidth));
+                    }
+                }
             }
             get
             {
@@ -372,7 +380,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 MouseMode = TMouseMode.eMouseUndefMode;
             }
 
-            selectedAnnotations = null;
+            selectedAnnotations.Clear();
         }
             
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
@@ -386,7 +394,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 case TMouseMode.eMouseMarkMode:
 
-                    selectedAnnotations = markedAnnotations;
+                    if (markedAnnotations != null)
+                    {
+                        selectedAnnotations = markedAnnotations;
+                    }
 
                     break;
                 case TMouseMode.eMouseDeleteAnnotationMode:
@@ -530,6 +541,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         {
             Keyboard.Focus(this);
             selectedRects.Clear();
+            selectedAnnotations.Clear();
             _selectedText = String.Empty;
             if (!controller.IsOpen)
                 return;
@@ -780,11 +792,15 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 drawingFreeHandAnnotation = false;
 
-                StylusPlugIns.First().Enabled = false;
+                //StylusPlugIns.First().Enabled = false; //TODO: delete if not needed
 
                 int pointCount = annotationPoints.Count;
 
                 double[] points = new double[pointCount * 2];
+                //double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor);
+                double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
+
+                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 int page = 0;
 
@@ -797,14 +813,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         points[i * 2] = p.dX;
                         points[i * 2 + 1] = p.dY;
                     }
+
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
+
                 }
                 catch { }
-
-
-                double[] color = PdfUtils.ConvertRGBToCMYK(AnnotationColor); // TODO: get right color
-                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
-
-                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
 
                 annotationPoints = null;
 
