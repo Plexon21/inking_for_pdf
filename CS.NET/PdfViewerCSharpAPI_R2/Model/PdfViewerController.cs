@@ -17,6 +17,7 @@ using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
+using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
 namespace PdfTools.PdfViewerCSharpAPI.Model
 {

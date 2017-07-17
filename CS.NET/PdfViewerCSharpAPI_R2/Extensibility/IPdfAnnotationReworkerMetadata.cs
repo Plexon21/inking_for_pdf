@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace PdfTools.PdfViewerCSharpAPI.Utilities
+namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
-    public interface IPdfTextConverterMetadata
+    public interface IPdfAnnotationReworkerMetadata
     {
         string Name { get; }
 
