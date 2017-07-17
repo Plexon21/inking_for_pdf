@@ -125,7 +125,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public PdfViewerController(Action<Action> invokeCallbackDelegate)
         {
-            
+
             InitializeExtensions();
             Logger.LogInfo("Creating Object instance");
             this.FireInvokeCallback = invokeCallbackDelegate;
@@ -577,7 +577,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                     return -1;  //We could not reduce the set of pages anymore. This implies that point is not on any page
             }
         }
-      
+
         #endregion
 
         #region Public Update Methods
@@ -1000,9 +1000,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation annot)
         {
-            var newPoints = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationReworker))?.Value
-                ?.ReworkPoints(annot.Rect);
-            annot.Rect = newPoints;
+            annot.Rect = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationReworker))?.Value
+                             ?.ReworkPoints(annot.Rect) ?? annot.Rect;
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
         }
 
@@ -1048,11 +1047,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots)
         {
-            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            var res = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            return res ?? $"No TextConverter with the name {TextConverter} found.";
         }
         public string ConvertAnnotations(StrokeCollection annots)
         {
-            return textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            var res = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            return res ?? $"No TextConverter with the name {TextConverter} found.";
         }
 
         #endregion
@@ -1660,11 +1661,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             UpdateBitmapContent();
         }
 
-        public void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation annot)
+        public void OnAnnotationCreated(PdfViewerException ex, IList<PdfAnnotation> annots)
         {
             FireInvokeCallback(delegate ()
             {
-                AddAnnoation(annot);
                 FitAndUpdate(false);
                 UpdateBitmapContent();
             });
@@ -1677,7 +1677,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 annotations = tupleOutput;
             });
         }
-        public void OnAnnotationUpdate(PdfViewerException pdfViewerException, int i)
+        public void OnAnnotationUpdate(PdfViewerException pdfViewerException, IList<int> i)
         {
             FireInvokeCallback(delegate ()
             {
@@ -1774,7 +1774,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             page = GetPageContainingPoint(s);
             return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
         }
-        
+
         public PdfSourceRect TransformRectOnScreenToOnPage(Rect rectOnPage, out int page) // TODO : delete if not used
         {
             // TODO: handle points outside of page correctly UPDATE : does not seem to be possible
@@ -1809,7 +1809,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
             return new PdfSourceRect(Math.Min(pagePoint1.dX, pagePoint2.dX), Math.Min(pagePoint1.dY, pagePoint2.dY), Math.Abs(pagePoint1.dX - pagePoint2.dX), Math.Abs(pagePoint1.dY - pagePoint2.dY));
         }
-        
+
         #endregion
 
         #region ThumbnailRelated methods

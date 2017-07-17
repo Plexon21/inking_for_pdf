@@ -12,18 +12,22 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 
     public struct DeleteAnnotationArgs
     {
-        public long annotationHandle;
+        public IList<long> annotationHandles;
 
         public DeleteAnnotationArgs(long handle)
         {
-            this.annotationHandle = handle;
+            this.annotationHandles = new List<long> { handle };
         }
-      
+        public DeleteAnnotationArgs(IList<long> handles)
+        {
+            this.annotationHandles = handles;
+        }
+
     }
-    public class PdfDeleteAnnotationRequest : APdfRequest<DeleteAnnotationArgs,long>
+    public class PdfDeleteAnnotationRequest : APdfRequest<DeleteAnnotationArgs, IList<long>>
     {
         public PdfDeleteAnnotationRequest(DeleteAnnotationArgs arguments)
-            : base(arguments, 42)
+            : base(arguments, 45)
         {
         }
         public PdfDeleteAnnotationRequest(DeleteAnnotationArgs arguments, int priority)
@@ -31,10 +35,13 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
         {
         }
 
-        protected override long ExecuteNative(IPdfDocument document, DeleteAnnotationArgs args)
+        protected override IList<long> ExecuteNative(IPdfDocument document, DeleteAnnotationArgs args)
         {
-            document.DeleteAnnotation(new IntPtr(args.annotationHandle));
-            return args.annotationHandle;
+            foreach (var handle in args.annotationHandles)
+            {
+                document.DeleteAnnotation(new IntPtr(handle));
+            }
+            return args.annotationHandles;
         }
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, InOutTuple tuple, PdfViewerException ex)

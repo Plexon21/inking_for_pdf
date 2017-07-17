@@ -60,9 +60,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         event Action<IList<int>> PageOrderChanged;
         #endregion
 
-        void OnAnnotationCreated(PdfViewerException ex, PdfAnnotation annot);
+        void OnAnnotationCreated(PdfViewerException ex, IList<PdfAnnotation> annots);
         void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput);
-        void OnAnnotationUpdate(PdfViewerException pdfViewerException, int i);
+        void OnAnnotationUpdate(PdfViewerException pdfViewerException, IList<int> i);
         void OnAnnotationDeleted(PdfViewerException pdfViewerException, object o);
     }
 }

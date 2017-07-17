@@ -22,7 +22,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
     public class PdfLoadAnnotationsOnPageRequest : APdfRequest<PdfLoadAnnotationsOnPageArgs, IList<PdfAnnotation>>
     {
         public PdfLoadAnnotationsOnPageRequest(PdfLoadAnnotationsOnPageArgs arguments)
-            : base(arguments, 42)
+            : base(arguments, 60)
         {
         }
         public PdfLoadAnnotationsOnPageRequest(PdfLoadAnnotationsOnPageArgs arguments, int priority)

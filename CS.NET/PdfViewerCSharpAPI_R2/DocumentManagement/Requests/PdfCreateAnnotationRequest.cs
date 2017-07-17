@@ -12,23 +12,27 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 
     public struct CreateAnnotationArgs
     {
-        public PdfAnnotation Annot;
+        public IList<PdfAnnotation> Annots;
 
         public CreateAnnotationArgs(PdfAnnotation annot)
         {
-            this.Annot = annot;
+            this.Annots = new List<PdfAnnotation> { annot };
+        }
+        public CreateAnnotationArgs(IList<PdfAnnotation> annots)
+        {
+            this.Annots = annots;
         }
 
-        public CreateAnnotationArgs(PdfDocument.TPdfAnnotationType eType, 
-            int iPage, double[] r, double[] color, double dBorderWidth = 0.0d)
+        public CreateAnnotationArgs(PdfDocument.TPdfAnnotationType eType,
+            int iPage, double[] r, double[] color, double dBorderWidth )
         {
-            this.Annot = new PdfAnnotation(eType, iPage, r, color, dBorderWidth);
+            this.Annots = new List<PdfAnnotation> { new PdfAnnotation(eType, iPage, r, color, dBorderWidth) };
         }
     }
-    public class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, PdfAnnotation>
+    public class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, IList<PdfAnnotation>>
     {
         public PdfCreateAnnotationRequest(CreateAnnotationArgs arguments)
-            : base(arguments, 42)
+            : base(arguments, 55)
         {
         }
         public PdfCreateAnnotationRequest(CreateAnnotationArgs arguments, int priority)
@@ -36,12 +40,18 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
         {
         }
 
-        protected override PdfAnnotation ExecuteNative(IPdfDocument document, CreateAnnotationArgs args)
+        protected override IList<PdfAnnotation> ExecuteNative(IPdfDocument document, CreateAnnotationArgs args)
         {
-            var newAnnot = document.CreateAnnotation(args.Annot.SubType,
-                args.Annot.PageNr, args.Annot.Rect, args.Annot.Rect.Length, args.Annot.Colors, args.Annot.Colors.Length, args.Annot.BorderWidth);
-            args.Annot.AnnotationHandle = newAnnot;
-            return new PdfAnnotation(arguments.Annot);
+            var res = new List<PdfAnnotation>();
+            foreach (var annot in args.Annots)
+            {
+                var newAnnot = document.CreateAnnotation(annot.SubType,
+                    annot.PageNr, annot.Rect, annot.Rect.Length, annot.Colors, annot.Colors.Length, annot.BorderWidth);
+                annot.AnnotationHandle = newAnnot;
+                res.Add(annot);
+            }
+
+            return res;
         }
 
         protected override void triggerControllerCallback(IPdfControllerCallbackManager controller, InOutTuple tuple, PdfViewerException ex)

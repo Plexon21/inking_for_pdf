@@ -28,7 +28,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
         /// Creates the SaveAsRequest
         /// </summary>
         public PdfSaveAsRequest(SaveAsArguments args)
-            :base(args, 40)
+            :base(args, 95)
         { }
 
         protected override bool ExecuteNative(IPdfDocument document, SaveAsArguments args)
