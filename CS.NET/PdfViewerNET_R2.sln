@@ -22,7 +22,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInkTextConverter", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoChangeAnnotationReworker", "DummyAnnotationPointReworker\NoChangeAnnotationReworker.csproj", "{0AC9D4AD-F938-4055-A17E-A2F9A3B64FB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyTextRecognizer", "DummyTextRecognizer\DummyTextRecognizer.csproj", "{A3A4227F-70A1-4E05-874C-7510C735C1BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyTextConverter", "DummyTextConverter\DummyTextConverter.csproj", "{A3A4227F-70A1-4E05-874C-7510C735C1BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Input.StylusPlugIns;
 
-namespace DummyTextRecognizer
+namespace DummyTextConverter
+
 {
     [Export(typeof(IPdfTextConverter)),
-     ExportMetadata("Name", "DummyTextRecognizer"),
+     ExportMetadata("Name", "DummyTextConverter"),
      ExportMetadata("Version", 1)]
     public class DummyTextConverter : IPdfTextConverter
     {

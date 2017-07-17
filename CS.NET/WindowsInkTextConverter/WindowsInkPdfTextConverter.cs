@@ -16,7 +16,7 @@ using Stroke = System.Windows.Ink.Stroke;
 namespace WindowsInkTextConverter
 {
     [Export(typeof(IPdfTextConverter)),
-     ExportMetadata("Name", "WindowsInk"),
+     ExportMetadata("Name", "WindowsInkTextConverter"),
      ExportMetadata("Version", 1)]
     public class WindowsInkPdfTextConverter : IPdfTextConverter
     {

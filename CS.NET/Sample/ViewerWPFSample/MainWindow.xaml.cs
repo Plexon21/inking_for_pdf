@@ -632,10 +632,10 @@ namespace ViewerWPFSample
             switch (btn.Name)
             {
                 case "WindowsInk":
-                    PdfViewer.TextConverter = "WindowsInk";
+                    PdfViewer.TextConverter = "WindowsInkTextConverter";
                     break;
                 case "Dummy":
-                    PdfViewer.TextConverter = "DummyTextRecognizer";
+                    PdfViewer.TextConverter = "DummyTextConverter";
                     break;
                 case "NoChange":
                     PdfViewer.AnnotationReworker = "NoChangeReworker";
