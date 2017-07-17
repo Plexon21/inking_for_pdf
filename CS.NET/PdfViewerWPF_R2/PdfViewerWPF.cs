@@ -819,6 +819,19 @@ namespace PdfTools.PdfViewerWPF
             }
         }
 
+        //TODO add comments
+        public Color AnnotationColor
+        {
+            get
+            {
+                return pane.AnnotationColor;
+            }
+            set
+            {
+                pane.AnnotationColor = value;
+            }
+        }
+
         public string TextConverter
         {
             get { return controller.TextConverter; }

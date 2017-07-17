@@ -302,6 +302,14 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             set
             {
                 _annotationColor = value;
+
+                if (selectedAnnotations.Count > 0)
+                {
+                    foreach (PdfAnnotation annot in selectedAnnotations)
+                    {
+                        controller.UpdateAnnotation(annot.UpdateColor(_annotationColor));
+                    }
+                }
             }
             get
             {
