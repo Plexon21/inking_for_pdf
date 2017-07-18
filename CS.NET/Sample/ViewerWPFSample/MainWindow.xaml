@@ -12,6 +12,7 @@
             <MenuItem Header="{x:Static props:MainWindowRes.file}"  >
                 <MenuItem Header="{x:Static props:MainWindowRes.open}" Click="Open_Click" />
                 <MenuItem Header="{x:Static props:MainWindowRes.close}" Click="Close_Click" />
+                <MenuItem Header="Save to Desktop" Click="SaveToDesktop_Click" />
             </MenuItem>
             <MenuItem Header="{x:Static props:MainWindowRes.view}"  >
                 <MenuItem Header="{x:Static props:MainWindowRes.view_outlines}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=ShowOutlines}"/>

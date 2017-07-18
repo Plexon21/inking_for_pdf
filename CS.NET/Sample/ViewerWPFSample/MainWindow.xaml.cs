@@ -660,5 +660,10 @@ namespace ViewerWPFSample
         {
             PdfViewer.AnnotationColor = ((SolidColorBrush)(((Button)sender).Background)).Color;
         }
+
+        private void SaveToDesktop_Click(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.SaveToDesktop();
+        }
     }
 }
