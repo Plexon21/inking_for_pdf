@@ -843,6 +843,12 @@ namespace PdfTools.PdfViewerWPF
             set { controller.AnnotationReworker = value; }
         }
 
+        public void SaveToDesktop()
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            controller.SaveAs(path + "\\Test.pdf");
+        }
+
 
         bool _showOutlines = true;
         /// <summary>

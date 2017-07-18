@@ -397,7 +397,58 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
             selectedAnnotations.Clear();
         }
-            
+
+        private void CreateAnnotation()
+        {
+
+            int pointCount = annotationPoints.Count;
+
+            if (pointCount >= 2)
+            {
+                double[] points = new double[pointCount * 2];
+
+                try
+                {
+                    int firstPage = 0;
+
+                    PdfSourcePoint firstPoint = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[0]), ref firstPage);
+
+                    points[0] = firstPoint.dX;
+                    points[1] = firstPoint.dY;
+
+                    for (int i = 1; i < pointCount; i++)
+                    {
+                        int page = 0;
+                        PdfSourcePoint point = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
+
+                        if (page != firstPage)
+                        {
+                            throw new ArgumentOutOfRangeException("page", "not all points are on the same page");
+                        }
+
+                        points[i * 2] = point.dX;
+                        points[i * 2 + 1] = point.dY;
+                    }
+
+                    double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
+                    double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
+
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
+
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    //TODO: handle exception
+                    //log
+                }
+            }
+
+            annotationPoints = null;
+            InvalidateVisual();
+
+            //IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
+        }
+
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
         {
             PdfSourceRect rectOnPage = controller.TransformRectOnCanvasToOnPage(rectOnCanvas, out int pageNr);
@@ -807,8 +858,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 drawingFreeHandAnnotation = false;
 
-                //StylusPlugIns.First().Enabled = false; //TODO: delete if not needed
-
                 int pointCount = annotationPoints.Count;
 
                 double[] points = new double[pointCount * 2];
@@ -817,26 +866,42 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
-                int page = 0;
-
                 try // TODO: handle points outside of the page correctly
                 {
-                    for (int i = 0; i < pointCount; i++)
-                    {
-                        PdfSourcePoint p = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
+                    int firstPage = 0;
 
-                        points[i * 2] = p.dX;
-                        points[i * 2 + 1] = p.dY;
+                    PdfSourcePoint firstPoint = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[0]), ref firstPage);
+
+                    points[0] = firstPoint.dX;
+                    points[1] = firstPoint.dY;
+
+                    for (int i = 1; i < pointCount; i++)
+                    {
+                        int page = 0;
+                        PdfSourcePoint point = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
+
+                        if (page != firstPage)
+                        {
+                            throw new ArgumentOutOfRangeException("page", "not all points are on the same page");
+                        }
+
+                        points[i * 2] = point.dX;
+                        points[i * 2 + 1] = point.dY;
                     }
 
-                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page, points, color, width));
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
 
                 }
-                catch { }
+                catch (ArgumentOutOfRangeException)
+                {
+                    //TODO: handle exception
+                    //log
+                }
 
                 annotationPoints = null;
+                InvalidateVisual();
 
-                IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
+                //IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
 
                 //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 //controller.SaveAs(path + "\\Test.pdf");
