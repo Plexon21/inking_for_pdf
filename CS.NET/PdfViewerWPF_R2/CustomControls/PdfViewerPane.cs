@@ -363,10 +363,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         private void UpdateAnnotations(TMouseMode value)
         {
-            if (value != TMouseMode.eMouseEndTextRecognitionMode)
-            {
-                strokes = new StrokeCollection();
-            } else
+            if (value == TMouseMode.eMouseEndTextRecognitionMode)
             {
                 textRecognitionActive = false;
 
@@ -393,6 +390,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
 
                 MouseMode = TMouseMode.eMouseUndefMode;
+            } else
+            {
+                strokes = new StrokeCollection();
             }
 
             selectedAnnotations.Clear();
@@ -403,18 +403,19 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
             int pointCount = annotationPoints.Count;
 
-            if (pointCount >= 2)
+            double[] points = new double[pointCount * 2];
+
+            try
             {
-                double[] points = new double[pointCount * 2];
+                int firstPage = 0;
 
-                try
+                PdfSourcePoint firstPoint = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[0]), ref firstPage);
+
+                points[0] = firstPoint.dX;
+                points[1] = firstPoint.dY;
+
+                if (pointCount >= 2)
                 {
-                    int firstPage = 0;
-
-                    PdfSourcePoint firstPoint = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[0]), ref firstPage);
-
-                    points[0] = firstPoint.dX;
-                    points[1] = firstPoint.dY;
 
                     for (int i = 1; i < pointCount; i++)
                     {
@@ -430,17 +431,18 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         points[i * 2 + 1] = point.dY;
                     }
 
-                    double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
-                    double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
-
-                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
-
                 }
-                catch (ArgumentOutOfRangeException)
-                {
-                    //TODO: handle exception
-                    //log
-                }
+
+                double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
+                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
+
+                controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
+
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                //TODO: handle exception
+                //log
             }
 
             annotationPoints = null;
@@ -858,6 +860,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 drawingFreeHandAnnotation = false;
 
+                CreateAnnotation();
+
+                /*
                 int pointCount = annotationPoints.Count;
 
                 double[] points = new double[pointCount * 2];
@@ -905,6 +910,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 //string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 //controller.SaveAs(path + "\\Test.pdf");
+                */
             }
             else if (textRecognitionActive)
             {
@@ -972,56 +978,36 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             controller.UpdateViewportDimensions((int)this.ActualWidth, (int)this.ActualHeight);
             //Utilities.DebugLogger.Log("End Updating Viewport Dimensions");
         }
-        /*
+
+        #endregion EventHandlers
+
+        #region StylusHandlers
         protected override void OnStylusDown(StylusDownEventArgs e)
         {
-            //Stylus.Capture(this);
-
-            stylusPoints = new StylusPointCollection();
-            StylusPointCollection eventPoints =
-                e.GetStylusPoints(this, stylusPoints.Description);
-            stylusPoints.Add(eventPoints);
-
 
         }
         protected override void OnStylusMove(StylusEventArgs e)
         {
-            if (stylusPoints == null)
-            {
-                return;
-            }
-            StylusPointCollection newStylusPoints = e.GetStylusPoints(this, stylusPoints.Description);
-            stylusPoints.Add(newStylusPoints);
+
         }
         protected override void OnStylusUp(StylusEventArgs e)
         {
-            if (stylusPoints == null)
-            {
-                return;
-            }
 
-            // Add the StylusPoints that have come in since the 
-            // last call to OnStylusMove.
-            StylusPointCollection newStylusPoints =
-                e.GetStylusPoints(this, stylusPoints.Description);
-            stylusPoints.Add(newStylusPoints);
+        }
 
-            // Create a new stroke from all the StylusPoints since OnStylusDown.
-            Stroke stroke = new Stroke(stylusPoints);
+        protected override void OnStylusEnter(StylusEventArgs e)
+        {
+            base.OnStylusEnter(e);
+            MouseMode = TMouseMode.eMouseFreehandAnnotationMode;
+        }
 
-            // Add the new stroke to the Strokes collection of the InkPresenter.
-            ip.Strokes.Add(stroke);
+        protected override void OnStylusLeave(StylusEventArgs e)
+        {
+            base.OnStylusLeave(e);
+            MouseMode = TMouseMode.eMouseSelectMode;
+        }
 
-            // Clear the StylusPointsCollection.
-            stylusPoints = null;
-
-            // Release stylus capture.
-            //Stylus.Capture(null);
-        }*/
-
-
-        #endregion EventHandlers
-
+        #endregion StylusHandlers
 
     }
 }
