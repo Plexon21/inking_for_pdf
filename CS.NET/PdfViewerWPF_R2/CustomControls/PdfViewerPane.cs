@@ -37,7 +37,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private IPdfViewerController controller;
 
         private DispatcherTimer inertiaScrollDispatchTimer;
-        private InkPresenter ip;
 
 
         public PdfViewerPane()
@@ -50,14 +49,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
             AllowDrop = true;
             var dr = new DynamicRenderer();
-            ip = new InkPresenter();
             this.Background = Brushes.Transparent;
             this.Cursor = Cursors.Arrow;
-            this.Content = ip;
-            ip.IsEnabled = false;
 
             dr.Enabled = false;
-            ip.AttachVisuals(dr.RootVisual, dr.DrawingAttributes);
             this.StylusPlugIns.Add(dr);
             StylusPlugIns.First().Enabled = false;
 
@@ -164,6 +159,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             annotPen.EndLineCap = PenLineCap.Round;
             annotPen.StartLineCap = PenLineCap.Round;
 
+            //set pen for selectedAnnotations
+            Pen selectedAnnotationsPen = new Pen(new SolidColorBrush(Colors.Blue), 0.5);
+
 
             //Draw bitmap
             if (bitmap != null)
@@ -214,7 +212,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                         Rect rectWin = controller.TransformRectPageToViewportWinRect(rectOnPage, annot.PageNr);
 
-                        dc.DrawRectangle(null, new Pen(new SolidColorBrush(Colors.Black), 1), rectWin);
+                        dc.DrawRectangle(null, selectedAnnotationsPen, rectWin);
                     }
                 }
                 if (selectedRects.Count > 0)
@@ -288,6 +286,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     {
                         controller.UpdateAnnotation(annot.UpdateWidth(_annotationStrokeWidth));
                     }
+
+                    InvalidateVisual();
                 }
             }
             get
@@ -371,7 +371,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 textRecognitionActive = false;
 
                 //MessageBox.Show(controller.ConvertAnnotations(strokes, "WindowsInk"));//TODO: remove?
-                RecognizeText();
+                //RecognizeText();
 
                 //TODO: remove and use in update
                 /*
@@ -379,11 +379,18 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 controller.UpdateAnnotation(annotations[0].Move(10,10));
                 controller.UpdateAnnotation(annotations[0].Scale(2));
-                controller.UpdateAnnotation(annotations[0].UpdateColor(Colors.AliceBlue));
                 controller.UpdateAnnotation(annotations[0].UpdateContent("newContent"));
                 controller.UpdateAnnotation(annotations[0].UpdateLabel("newLabel"));
-                controller.UpdateAnnotation(annotations[0].UpdateWidth(2.75));
                 */
+                Random rng = new Random();
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
+                    double[] points = new double[] { rng.NextDouble() * 200 + 100, rng.NextDouble() * 200 + 100, rng.NextDouble() * 200 + 100, rng.NextDouble() * 200 + 100 };
+
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, 1, points, color, 1));
+                }
 
                 MouseMode = TMouseMode.eMouseUndefMode;
             }
