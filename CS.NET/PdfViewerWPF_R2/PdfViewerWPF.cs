@@ -64,7 +64,7 @@ namespace PdfTools.PdfViewerWPF
         /// Empty string means no log file is written.
         /// Default is empty string.
         /// </summary>
-        public String LogFilePath
+        public static String LogFilePath
         {
             set
             {
@@ -88,6 +88,7 @@ namespace PdfTools.PdfViewerWPF
         /// </summary>
         public PdfViewerWPF()
         {
+            LogFilePath = AppDomain.CurrentDomain.BaseDirectory + "\\Log.log";
             Logger.LogInfo("Creating PdfViewerWPF instance");
 
             controller = new PdfViewerController(BeginInvokeCallbackOnDispatcher);
