@@ -189,7 +189,7 @@
                 </ToolBar>
 
             </ToolBarPanel>
-            <custom:PdfViewerWPF Name="PdfViewer" Grid.Row="1" IgnoreEmbeddedPreferences="True"  FitMode="FitWidth" ShowThumbnails="True" ShowOutlines="True" PageLayoutMode="TwoColumnLeft" Border="8" Rotate="0" x:FieldModifier="public"/>
+            <custom:PdfViewerWPF Name="PdfViewer" Grid.Row="1" IgnoreEmbeddedPreferences="True"  FitMode="FitWidth" ShowThumbnails="True" ShowOutlines="True" PageLayoutMode="TwoColumnLeft" Border="8" Rotate="0" x:FieldModifier="public" LogFilePath="C://Data/log.log"/>
 
         </Grid>
 

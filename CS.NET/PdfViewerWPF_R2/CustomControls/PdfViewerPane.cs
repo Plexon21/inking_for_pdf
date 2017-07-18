@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -882,6 +883,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                     for (int i = 1; i < pointCount; i++)
                     {
+
                         int page = 0;
                         PdfSourcePoint point = controller.TransformOnScreenToOnPage(new PdfTargetPoint(annotationPoints[i]), ref page);
 
@@ -894,13 +896,23 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         points[i * 2 + 1] = point.dY;
                     }
 
-                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage,
+                        points, color, width));
 
                 }
-                catch (ArgumentOutOfRangeException)
+                catch (CompositionContractMismatchException ex)
                 {
-                    //TODO: handle exception
-                    //log
+                    Logger.LogException(ex);
+                    MessageBox.Show(ex.Message, "Fehler beim verwenden einer Extension");
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    Logger.LogError("User tried to create annotation outside of page");
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogException(ex);
+                    MessageBox.Show(ex.Message);
                 }
 
                 annotationPoints = null;

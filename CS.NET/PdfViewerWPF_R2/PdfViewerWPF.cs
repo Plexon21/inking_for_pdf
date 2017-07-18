@@ -64,7 +64,7 @@ namespace PdfTools.PdfViewerWPF
         /// Empty string means no log file is written.
         /// Default is empty string.
         /// </summary>
-        public static String LogFilePath
+        public String LogFilePath
         {
             set
             {
@@ -75,6 +75,7 @@ namespace PdfTools.PdfViewerWPF
                 return Logger.FileName;
             }
         }
+        public string CurrentDirectoryPath => System.AppDomain.CurrentDomain.BaseDirectory;
 
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
