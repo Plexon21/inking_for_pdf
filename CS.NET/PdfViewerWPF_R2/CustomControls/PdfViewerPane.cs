@@ -447,9 +447,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
 
             annotationPoints = null;
+
+            controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
             InvalidateVisual();
 
-            //IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
         }
 
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
