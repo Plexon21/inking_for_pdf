@@ -62,7 +62,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         [ImportMany]
         public IEnumerable<Lazy<IPdfAnnotationReworker, IPdfAnnotationReworkerMetadata>> annotationReworkers;
 
-        public string TextConverter { get; set; } = "WindowsInk";
+        public string TextConverter { get; set; } = "WindowsInkTextConverter";
 
         public string AnnotationReworker { get; set; } = "NoChangeReworker";
 
