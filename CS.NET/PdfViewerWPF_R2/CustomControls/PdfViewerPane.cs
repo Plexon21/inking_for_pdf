@@ -891,7 +891,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         points[i * 2 + 1] = point.dY;
                     }
 
-                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, page,
+                    controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage,
                         points, color, width));
 
                 }
