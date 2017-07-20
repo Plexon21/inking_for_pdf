@@ -6,11 +6,13 @@ using System.Text;
 
 namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
-    public interface IPdfAnnotationReworkerMetadata
+    public interface IPdfAnnotationFormMapperMetadata
     {
         string Name { get; }
 
         [DefaultValue(1)]
         int Version { get; }
+        [DefaultValue("eAnnotationInk")]
+        string AnnotationType { get; }
     }
 }

@@ -5,8 +5,8 @@ using System.Text;
 
 namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
-    public interface IPdfAnnotationReworker
+    public interface IPdfAnnotationFormMapper
     {
-        double[] ReworkPoints(double[] annotationPoints);
+        IList<double[]> MapToForm(double[] annotationPoints);
     }
 }

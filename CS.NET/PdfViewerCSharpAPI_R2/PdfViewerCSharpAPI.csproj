@@ -98,8 +98,8 @@
     <Compile Include="DocumentManagement\Requests\IPdfRequest.cs" />
     <Compile Include="DocumentManagement\Requests\PdfSaveAsRequest.cs" />
     <Compile Include="Model\PdfSearcher.cs" />
-    <Compile Include="Extensibility\IPdfAnnotationReworker.cs" />
-    <Compile Include="Extensibility\IPdfAnnotationReworkerMetadata.cs" />
+    <Compile Include="Extensibility\IPdfAnnotationFormMapper.cs" />
+    <Compile Include="Extensibility\IPdfAnnotationFormMapperMetadata.cs" />
     <Compile Include="Extensibility\IPdfTextConverterMetadata.cs" />
     <Compile Include="Utilities\PdfSourcePoint.cs" />
     <Compile Include="Utilities\PdfTargetPoint.cs" />

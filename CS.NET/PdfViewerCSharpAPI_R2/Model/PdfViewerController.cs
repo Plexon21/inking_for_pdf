@@ -56,15 +56,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         private IList<string> extensionFolders;
         private CompositionContainer extensionContainer;
+
         [ImportMany]
         public IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> textConverters;
 
         [ImportMany]
-        public IEnumerable<Lazy<IPdfAnnotationReworker, IPdfAnnotationReworkerMetadata>> annotationReworkers;
+        public IEnumerable<Lazy<IPdfAnnotationFormMapper, IPdfAnnotationFormMapperMetadata>> annotationFormMappers;
 
         public string TextConverter { get; set; } = "WindowsInkTextConverter";
 
-        public string AnnotationReworker { get; set; } = "NoChangeReworker";
+        public string AnnotationFormMapper { get; set; } = "NoChangeFormMapper";
 
         #endregion
 
@@ -150,9 +151,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         private void InitializeExtensions()
         {
+            //TODO: Check for version and only take newest one.
             extensionFolders = new List<string>();
             extensionFolders.Add("TextConverters");
-            extensionFolders.Add("AnnotationReworkers");
+            extensionFolders.Add("AnnotationFormMappers");
 
 
             //An aggregate catalog that combines multiple catalogs
@@ -1000,8 +1002,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation annot)
         {
-            annot.Rect = annotationReworkers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationReworker))?.Value
-                             ?.ReworkPoints(annot.Rect) ?? annot.Rect;
+            //TODO: Check for non working newer version. Loop over versions from newest to oldest until one works. Log which one was used
+            annot.Rect = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
+                             ?.MapToForm(annot.Rect).FirstOrDefault() ?? annot.Rect;
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
         }
 

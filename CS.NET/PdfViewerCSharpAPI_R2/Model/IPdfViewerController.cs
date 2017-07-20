@@ -210,7 +210,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             set;
             get;
         }
-        string AnnotationReworker
+        string AnnotationFormMapper
         {
             set;
             get;
