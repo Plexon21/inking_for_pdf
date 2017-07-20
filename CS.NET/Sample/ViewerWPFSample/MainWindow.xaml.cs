@@ -638,10 +638,10 @@ namespace ViewerWPFSample
                     PdfViewer.TextConverter = "DummyTextConverter";
                     break;
                 case "NoChange":
-                    PdfViewer.AnnotationReworker = "NoChangeReworker";
+                    PdfViewer.AnnotationFormMapper = "NoChangeFormMapper";
                     break;
                 case "Move":
-                    PdfViewer.AnnotationReworker = "MoveReworker";
+                    PdfViewer.AnnotationFormMapper = "MoveFormMapper";
                     break;
             }
         }

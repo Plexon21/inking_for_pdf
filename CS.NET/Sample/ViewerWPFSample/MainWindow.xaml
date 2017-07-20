@@ -181,8 +181,8 @@
                     <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="69" Margin="0,4,0,0" Minimum="1" Maximum="100" LargeChange="10" Value="1" Thumb.DragCompleted="AnnotationWidth_Slider_DragCompleted"/>
                     <RadioButton x:Name="WindowsInk" GroupName="textRecognizer" Content="Ink" IsChecked="True" Checked="MEF_Changed"/>
                     <RadioButton x:Name="Dummy" GroupName="textRecognizer" Content="Dummy" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
-                    <RadioButton x:Name="NoChange" GroupName="annotationReworker" Content="NoChange" IsChecked="True" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
-                    <RadioButton x:Name="Move" GroupName="annotationReworker" Content="Move" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
+                    <RadioButton x:Name="NoChange" GroupName="annotationFormMapper" Content="NoChange" IsChecked="True" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
+                    <RadioButton x:Name="Move" GroupName="annotationFormMapper" Content="Move" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
                     <Button x:Name="colorBlack_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Black" Click="colorBlack_Button_Click"/>
                     <Button x:Name="colorRed_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Red" Click="colorRed_Button_Click"/>
                     <Button x:Name="colorCustom_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="#FF2581AF" Click="colorCustom_Button_Click"/>

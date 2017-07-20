@@ -839,10 +839,10 @@ namespace PdfTools.PdfViewerWPF
             get { return controller.TextConverter; }
             set { controller.TextConverter = value; }
         }
-        public string AnnotationReworker
+        public string AnnotationFormMapper
         {
-            get { return controller.AnnotationReworker; }
-            set { controller.AnnotationReworker = value; }
+            get { return controller.AnnotationFormMapper; }
+            set { controller.AnnotationFormMapper = value; }
         }
 
         public void SaveToDesktop()
