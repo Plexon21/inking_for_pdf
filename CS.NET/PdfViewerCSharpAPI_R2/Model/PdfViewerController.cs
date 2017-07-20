@@ -1797,17 +1797,27 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr)
         {
-            PdfSourcePoint canvasTopLeft = new PdfSourcePoint(rectOnCanvas.dX, rectOnCanvas.dY);
-            PdfSourcePoint canvasBottomRight = new PdfSourcePoint(rectOnCanvas.dRight, rectOnCanvas.dBottom);
+            PdfSourcePoint canvasMiddle = rectOnCanvas.dCenter;
+            pageNr = GetPageContainingPoint(canvasMiddle);
 
-            pageNr = GetPageContainingPoint(canvasTopLeft);
+            if (pageNr > 0)
+            {
+                PdfSourcePoint canvasTopLeft = new PdfSourcePoint(rectOnCanvas.dX, rectOnCanvas.dY);
+                PdfSourcePoint canvasBottomRight = new PdfSourcePoint(rectOnCanvas.dRight, rectOnCanvas.dBottom);
 
-            PdfSourceRect pageRect = GetPageRectGuess(pageNr);
+                PdfSourceRect pageRect = GetPageRectGuess(pageNr);
 
-            PdfSourcePoint pagePoint1 = pageRect.GetOnPageCoordinates(canvasTopLeft, Rotate);
-            PdfSourcePoint pagePoint2 = pageRect.GetOnPageCoordinates(canvasBottomRight, Rotate);
+                PdfSourcePoint pagePoint1 = pageRect.GetOnPageCoordinates(canvasTopLeft, Rotate);
+                PdfSourcePoint pagePoint2 = pageRect.GetOnPageCoordinates(canvasBottomRight, Rotate);
 
-            return new PdfSourceRect(Math.Min(pagePoint1.dX, pagePoint2.dX), Math.Min(pagePoint1.dY, pagePoint2.dY), Math.Abs(pagePoint1.dX - pagePoint2.dX), Math.Abs(pagePoint1.dY - pagePoint2.dY));
+                return new PdfSourceRect(Math.Min(pagePoint1.dX, pagePoint2.dX), Math.Min(pagePoint1.dY, pagePoint2.dY), Math.Abs(pagePoint1.dX - pagePoint2.dX), Math.Abs(pagePoint1.dY - pagePoint2.dY));
+            }
+            else
+            {
+                return null;
+            }
+
+
         }
 
         #endregion
