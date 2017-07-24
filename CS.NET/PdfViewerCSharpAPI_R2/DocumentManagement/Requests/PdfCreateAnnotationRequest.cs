@@ -32,7 +32,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
     public class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, IList<PdfAnnotation>>
     {
         public PdfCreateAnnotationRequest(CreateAnnotationArgs arguments)
-            : base(arguments, 55)
+            : base(arguments, 60)
         {
         }
         public PdfCreateAnnotationRequest(CreateAnnotationArgs arguments, int priority)

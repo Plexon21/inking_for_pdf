@@ -52,8 +52,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private String password = "";
         private byte[] fileMem = null;
 
-        private IList<PdfAnnotation> annotations;
-
         private IList<string> extensionFolders;
         private CompositionContainer extensionContainer;
 
@@ -988,17 +986,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
         #endregion
 
-        #region annotation methods
-        public void AddAnnoation(PdfAnnotation annot)
-        {
-
-            if (annotations == null)
-            {
-                annotations = new List<PdfAnnotation>();
-                LoadAllAnnotationsOnPage(annot.PageNr);
-            }
-            annotations?.Add(annot);
-        }
+        #region Annotation Methods
 
         public void CreateAnnotation(PdfAnnotation oldAnnot)
         {
@@ -1006,15 +994,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             var annots = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
                 ?.MapToForm(oldAnnot.Rect);
             if (annots == null) return;
-            if (annots.Count > 1)
+            if (annots.Count > 0)
             {
                 var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) {Rect = points}).ToList();
                 canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
-            }
-            else
-            {
-                oldAnnot.Rect = annots.First();
-                canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(oldAnnot));
+                canvas.DocumentManager.LoadAnnotationsOnPage(oldAnnot.PageNr);
             }
 
 
@@ -1026,20 +1010,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public void UpdateAnnotation(UpdateAnnotationArgs args)
         {
             canvas.DocumentManager.UpdateAnnotation(args);
-        }
-
-        public PdfAnnotation GetAnnotation(long annotHandle)
-        {
-            if (annotations == null)
-            {
-                LoadAllAnnotations();
-            }
-            return annotations?.FirstOrDefault(a => a.GetHandleAsLong().Equals(annotHandle));
-        }
-
-        private void LoadAllAnnotations()
-        {
-            // TODO: implement
+            canvas.DocumentManager.LoadAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
         }
 
         public void LoadAllAnnotationsOnPage(int pageNr)
@@ -1047,18 +1018,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
         }
 
-        public IList<PdfAnnotation> GetAllAnnotationsOnPage(int pageNr)
-        {
-            LoadAllAnnotationsOnPage(pageNr);
-            return annotations;
-        }
-
         public void DeleteAnnotation(PdfAnnotation annot)
         {
-            DeleteAnnotation(annot.GetHandleAsLong());
+            canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annot.GetHandleAsLong()));
+            canvas.DocumentManager.LoadAnnotationsOnPage(annot.PageNr);
         }
 
-        public void DeleteAnnotation(long annotHandle)
+        public void DeleteAnnotation(long annotHandle) // TODO: maybe delete
         {
             canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annotHandle));
         }
@@ -1692,7 +1658,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             FireInvokeCallback(delegate ()
             {
-                annotations = tupleOutput;
+                AnnotationsChanged(tupleOutput);
+                FitAndUpdate(false);
+                UpdateBitmapContent();
             });
         }
         public void OnAnnotationUpdate(PdfViewerException pdfViewerException, IList<int> i)
@@ -1707,7 +1675,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             FireInvokeCallback(delegate ()
             {
-                LoadAllAnnotationsOnPage(FirstPageOnViewport); // TODO: find out why this is important
                 FitAndUpdate(false);
                 UpdateBitmapContent();
             });
@@ -1793,26 +1760,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
         }
 
-        public PdfSourceRect TransformRectOnScreenToOnPage(Rect rectOnPage, out int page) // TODO : delete if not used
-        {
-            // TODO: handle points outside of page correctly UPDATE : does not seem to be possible
-
-            int pagePoint1 = 0;
-            int pagePoint2 = 0;
-
-            PdfSourcePoint p1 = TransformOnScreenToOnPage(new PdfTargetPoint(rectOnPage.TopLeft), ref pagePoint1);
-            PdfSourcePoint p2 = TransformOnScreenToOnPage(new PdfTargetPoint(rectOnPage.BottomRight), ref pagePoint2);
-
-            if (pagePoint1 != 0 && pagePoint2 != 0 && pagePoint1 == pagePoint2)
-            {
-                page = pagePoint1;
-                return new PdfSourceRect(Math.Min(p1.dX, p2.dX), Math.Min(p1.dY, p2.dY), Math.Abs(p1.dX - p2.dX), Math.Abs(p1.dY - p2.dY));
-            }
-
-            page = 0;
-            return null;
-        }
-
         public PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr)
         {
             PdfSourcePoint canvasMiddle = rectOnCanvas.dCenter;
@@ -1834,8 +1781,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 return null;
             }
-
-
         }
 
         #endregion
@@ -1986,6 +1931,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public event Action<int, IList<PdfOutlineItem>, PdfViewerException> OutlinesChanged;
         //public event Action<int, int, WriteableBitmap, PdfViewerException> ThumbnailsChanged;
         public event Action<IList<int>> PageOrderChanged;
+
+        //Annotation
+        public event Action<IList<PdfAnnotation>> AnnotationsChanged;
+
         #endregion event redeclaration
 
         #region native imports

@@ -89,6 +89,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             controller.SearchCompleted += SearchCompletedEventHandler;
             controller.CloseCompleted += OnCloseCompletedEventHandler;
             controller.PageOrderChanged += OnPageOrderChangedEventHandler;
+
+            controller.AnnotationsChanged += OnAnnotationsChangedEventHandler;
         }
 
         private void OnCloseCompletedEventHandler(PdfViewerException e)
@@ -290,8 +292,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         {
                             controller.UpdateAnnotation(annot.UpdateWidth(_annotationStrokeWidth));
                         }
-
-                        InvalidateVisual();
                     }
                 }
             }
@@ -451,45 +451,51 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
 
             annotationPoints = null;
-
-            controller.GetAllAnnotationsOnPage(controller.FirstPageOnViewport); //TODO: find out why this is important
-            InvalidateVisual();
-
         }
 
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
         {
-            PdfSourceRect rectOnPage = controller.TransformRectOnCanvasToOnPage(rectOnCanvas, out int pageNr);
+            selectedRectOnPage = controller.TransformRectOnCanvasToOnPage(rectOnCanvas, out int pageNr);
 
-            if (rectOnPage != null)
+            if (selectedRectOnPage != null && pageNr > 0)
             {
-                IList<PdfAnnotation> annotations = controller.GetAllAnnotationsOnPage(pageNr);
-                IList<PdfAnnotation> markedAnnotations = annotations?.Where(annot => annot.IsContainedInRect(rectOnPage)).ToList<PdfAnnotation>();
+                controller.LoadAllAnnotationsOnPage(pageNr);
+            }
+        }
 
-                switch (MouseMode)
+
+        private void OnAnnotationsChangedEventHandler(IList<PdfAnnotation> annots)
+        {
+            if (selectedRectOnPage != null)
+            {
+                IList<PdfAnnotation> markedAnnotations = annots?.Where(annot => annot.IsContainedInRect(selectedRectOnPage)).ToList<PdfAnnotation>();
+
+                if (markedAnnotations != null && markedAnnotations.Count > 0)
                 {
-                    case TMouseMode.eMouseMarkMode:
+                    switch (MouseMode)
+                    {
+                        case TMouseMode.eMouseMarkMode:
 
-                        if (markedAnnotations != null)
-                        {
                             selectedAnnotations = markedAnnotations;
-                        }
 
-                        break;
-                    case TMouseMode.eMouseDeleteAnnotationMode:
+                            break;
+                        case TMouseMode.eMouseDeleteAnnotationMode:
 
-                        if (rectOnPage != null && pageNr != 0)
-                        {
                             foreach (PdfAnnotation annot in markedAnnotations)
                             {
                                 controller.DeleteAnnotation(annot);
                             }
-                        }
 
-                        break;
+                            break;
+                        default:
+                            selectedRectOnPage = null;
+                            break;
+                    }
                 }
+
             }
 
+            InvalidateVisual();
         }
 
         private void OnMouseModeChanged(TMouseMode arg) { if (MouseModeChanged != null) MouseModeChanged(arg); }
@@ -586,7 +592,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private List<System.Windows.Point> annotationPoints;
         private StrokeCollection strokes = new StrokeCollection();
         private IList<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
-        
+        private PdfSourceRect selectedRectOnPage;
+
+
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
         {
