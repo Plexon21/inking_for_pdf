@@ -421,6 +421,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         string ConvertAnnotations(IEnumerable<PdfAnnotation> annots);
         string ConvertAnnotations(StrokeCollection annots);
+        List<System.Windows.Point> DrawForm(List<System.Windows.Point> annotationPoints);
     }
 
 }

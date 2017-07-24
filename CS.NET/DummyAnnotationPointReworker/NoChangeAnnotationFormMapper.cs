@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Windows;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
 namespace NoChangeAnnotationFormMapper
@@ -13,6 +14,11 @@ namespace NoChangeAnnotationFormMapper
         public IList<double[]> MapToForm(double[] annotationPoints)
         {
             return new List<double[]>{annotationPoints};
+        }
+
+        public IList<Point> MapToForm(IList<Point> annotationPoints)
+        {
+            return annotationPoints;
         }
     }
 }
