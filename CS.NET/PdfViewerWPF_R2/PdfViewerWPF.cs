@@ -809,40 +809,39 @@ namespace PdfTools.PdfViewerWPF
             }
         }
 
+        /// <summary>
+        /// Configure the current width of annotations
+        /// </summary>
         public double AnnotationStrokeWidth
         {
-            get
-            {
-                return pane.AnnotationStrokeWidth;
-            }
-            set
-            {
-                pane.AnnotationStrokeWidth = value;
-            }
+            get => pane.AnnotationStrokeWidth;
+            set => pane.AnnotationStrokeWidth = value;
         }
-
-        //TODO add comments
+        
+        /// <summary>
+        /// Configure the current color of annotations
+        /// </summary>
         public Color AnnotationColor
         {
-            get
-            {
-                return pane.AnnotationColor;
-            }
-            set
-            {
-                pane.AnnotationColor = value;
-            }
+            get => pane.AnnotationColor;
+            set => pane.AnnotationColor = value;
         }
 
+        /// <summary>
+        /// Configure which textConverter Extension will be used to convert to text
+        /// </summary>
         public string TextConverter
         {
-            get { return controller.TextConverter; }
-            set { controller.TextConverter = value; }
+            get => controller.TextConverter;
+            set => controller.TextConverter = value;
         }
+        /// <summary>
+        /// Configure which formMapper will be used to create an annotation
+        /// </summary>
         public string AnnotationFormMapper
         {
-            get { return controller.AnnotationFormMapper; }
-            set { controller.AnnotationFormMapper = value; }
+            get => controller.AnnotationFormMapper;
+            set => controller.AnnotationFormMapper = value;
         }
 
         public void SaveToDesktop()

@@ -53,14 +53,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private String password = "";
         private byte[] fileMem = null;
 
-        private IList<string> extensionFolders;
-        private CompositionContainer extensionContainer;
+        private IList<string> _extensionFolders;
+        private CompositionContainer _extensionContainer;
 
         [ImportMany]
-        public IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> textConverters;
+        private IEnumerable<Lazy<IPdfTextConverter, IPdfTextConverterMetadata>> _textConverters;
 
         [ImportMany]
-        public IEnumerable<Lazy<IPdfAnnotationFormMapper, IPdfAnnotationFormMapperMetadata>> annotationFormMappers;
+        private IEnumerable<Lazy<IPdfAnnotationFormMapper, IPdfAnnotationFormMapperMetadata>> _annotationFormMappers;
 
         public string TextConverter { get; set; } = "WindowsInkTextConverter";
 
@@ -150,33 +150,28 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         private void InitializeExtensions()
         {
-            //TODO: Check for version and only take newest one.
-            extensionFolders = new List<string>();
-            extensionFolders.Add("TextConverters");
-            extensionFolders.Add("AnnotationFormMappers");
-
-
-            //An aggregate catalog that combines multiple catalogs
+            _extensionFolders = new List<string> {"TextConverters", "AnnotationFormMappers"};
+            
             var catalog = new AggregateCatalog();
 
-            foreach (var s in extensionFolders)
+            foreach (var s in _extensionFolders)
             {
-                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s);
-                //Check the directory exists
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s);
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
                 }
                 catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
             }
-            extensionContainer = new CompositionContainer(catalog);
+            _extensionContainer = new CompositionContainer(catalog);
             try
             {
-                this.extensionContainer.ComposeParts(this);
+                this._extensionContainer.ComposeParts(this);
             }
-            catch (CompositionException compositionException)
+            catch (Exception e)
             {
-                Console.WriteLine(compositionException.ToString());
+                Logger.LogError($"Exception occured while composing extension libraries.");
+                Logger.LogException(e);
             }
         }
 
@@ -993,18 +988,20 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             //TODO: Check for non working newer version. Loop over versions from newest to oldest until one works. Log which one was used
             //TODO: Swap Annotationtype
-            var annots = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
-                ?.MapToForm(oldAnnot.Rect);
-            if (annots == null) return;
-            if (annots.Count > 0)
+            var formMapper = _annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper));
+            if (formMapper == null)
             {
-                var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) {AnnotationHandle = new IntPtr(),Rect = points}).ToList();
-                canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
-                canvas.DocumentManager.LoadAnnotationsOnPage(oldAnnot.PageNr);
+                Logger.LogError($"No matching formmapper with name {AnnotationFormMapper} found.");
+                return;
             }
+            var annots = formMapper.Value?.MapToForm(oldAnnot.Rect);
+            if (!(annots?.Count > 0)) return;
+            var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) { AnnotationHandle = new IntPtr(), Rect = points }).ToList();
+            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
+            canvas.DocumentManager.LoadAnnotationsOnPage(oldAnnot.PageNr);
 
 
-            /*oldAnnot.Rect = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
+            /*oldAnnot.Rect = _annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
                              ?.MapToForm(oldAnnot.Rect).FirstOrDefault() ?? oldAnnot.Rect;
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(oldAnnot));*/
         }
@@ -1012,7 +1009,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public void UpdateAnnotation(UpdateAnnotationArgs args)
         {
             canvas.DocumentManager.UpdateAnnotation(args);
-            canvas.DocumentManager.LoadAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
+            LoadAllAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
+        }
+
+        public void DeleteAnnotation(PdfAnnotation annot)
+        {
+            canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annot.GetHandleAsLong()));
+            LoadAllAnnotationsOnPage(annot.PageNr);
         }
 
         public void LoadAllAnnotationsOnPage(int pageNr)
@@ -1020,31 +1023,24 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
         }
 
-        public void DeleteAnnotation(PdfAnnotation annot)
-        {
-            canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annot.GetHandleAsLong()));
-            canvas.DocumentManager.LoadAnnotationsOnPage(annot.PageNr);
-        }
-
-        public void DeleteAnnotation(long annotHandle) // TODO: maybe delete
-        {
-            canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annotHandle));
-        }
-
         public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots)
         {
-            var res = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
-            return res ?? $"No TextConverter with the name {TextConverter} found.";
+            var res = _textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            if (res != null) return res;
+            Logger.LogError($"No TextConverter with the name {TextConverter} found.");
+            return $"No TextConverter with the name {TextConverter} found.";
         }
         public string ConvertAnnotations(StrokeCollection annots)
         {
-            var res = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
-            return res ?? $"No TextConverter with the name {TextConverter} found.";
+            var res = _textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            if (res != null) return res;
+            Logger.LogError($"No TextConverter with the name {TextConverter} found.");
+            return $"No TextConverter with the name {TextConverter} found.";
         }
 
         public List<Point> DrawForm(List<Point> annotationPoints)
         {
-            return (List<Point>)(annotationFormMappers.FirstOrDefault(p => p.Metadata.Name.Equals(AnnotationFormMapper))
+            return (List<Point>)(_annotationFormMappers.FirstOrDefault(p => p.Metadata.Name.Equals(AnnotationFormMapper))
                                ?.Value?.MapToForm(annotationPoints) ?? annotationPoints);
         }
 
