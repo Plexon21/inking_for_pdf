@@ -872,7 +872,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             int nColors, double dBorderWidth)
         {
             lastVisiblePages.Clear();
-            return PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
+            var res = PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
+            return res;
         }
 
         public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,

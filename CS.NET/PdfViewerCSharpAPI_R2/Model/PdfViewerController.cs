@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
+using Point = System.Windows.Point;
 
 namespace PdfTools.PdfViewerCSharpAPI.Model
 {
@@ -991,12 +992,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public void CreateAnnotation(PdfAnnotation oldAnnot)
         {
             //TODO: Check for non working newer version. Loop over versions from newest to oldest until one works. Log which one was used
+            //TODO: Swap Annotationtype
             var annots = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
                 ?.MapToForm(oldAnnot.Rect);
             if (annots == null) return;
             if (annots.Count > 0)
             {
-                var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) {Rect = points}).ToList();
+                var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) {AnnotationHandle = new IntPtr(),Rect = points}).ToList();
                 canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
                 canvas.DocumentManager.LoadAnnotationsOnPage(oldAnnot.PageNr);
             }
@@ -1038,6 +1040,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             var res = textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
             return res ?? $"No TextConverter with the name {TextConverter} found.";
+        }
+
+        public List<Point> DrawForm(List<Point> annotationPoints)
+        {
+            return (List<Point>)(annotationFormMappers.FirstOrDefault(p => p.Metadata.Name.Equals(AnnotationFormMapper))
+                               ?.Value?.MapToForm(annotationPoints) ?? annotationPoints);
         }
 
         #endregion
