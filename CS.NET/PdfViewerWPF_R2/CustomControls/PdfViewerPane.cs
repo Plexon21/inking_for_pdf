@@ -190,7 +190,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                     if (annotationPoints != null)
                     {
-                        //TODO: move to Extension to handle drawing form while dragging cursor
                         var drawingAnnotations = controller.DrawForm(annotationPoints);
                         for (int i = 0; i < drawingAnnotations.Count - 1; i++)
                         {
@@ -445,10 +444,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
 
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException e)
             {
-                //TODO: handle exception
-                //log
+                Logger.LogError("Not all points of the drawn annotation are on the same Page. Aborting creation.");
+                Logger.LogException(e);
             }
 
             annotationPoints = null;
