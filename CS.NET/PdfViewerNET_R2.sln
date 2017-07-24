@@ -20,9 +20,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkPlayground", "InkPlaygro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInkTextConverter", "WindowsInkTextConverter\WindowsInkTextConverter.csproj", "{3997B09B-3297-4610-BEE6-CC9C9BA77BBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoChangeAnnotationReworker", "DummyAnnotationPointReworker\NoChangeAnnotationReworker.csproj", "{0AC9D4AD-F938-4055-A17E-A2F9A3B64FB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoChangeAnnotationFormMapper", "DummyAnnotationPointReworker\NoChangeAnnotationFormMapper.csproj", "{0AC9D4AD-F938-4055-A17E-A2F9A3B64FB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyTextConverter", "DummyTextConverter\DummyTextConverter.csproj", "{A3A4227F-70A1-4E05-874C-7510C735C1BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangleFormMapper", "RectangleFormMapper\RectangleFormMapper.csproj", "{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -328,6 +330,38 @@ Global
 		{A3A4227F-70A1-4E05-874C-7510C735C1BF}.UnicodeRelease|x64.Build.0 = Release|Any CPU
 		{A3A4227F-70A1-4E05-874C-7510C735C1BF}.UnicodeRelease|x86.ActiveCfg = Release|Any CPU
 		{A3A4227F-70A1-4E05-874C-7510C735C1BF}.UnicodeRelease|x86.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|x64.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Debug|x86.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|x64.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|x64.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|x86.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.Release|x86.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|Any CPU.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|x64.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|x64.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|x86.ActiveCfg = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeDebug|x86.Build.0 = Debug|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|Any CPU.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|Mixed Platforms.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|x64.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|x64.Build.0 = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|x86.ActiveCfg = Release|Any CPU
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}.UnicodeRelease|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

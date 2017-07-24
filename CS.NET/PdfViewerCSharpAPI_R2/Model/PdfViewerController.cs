@@ -1000,12 +1000,27 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             annotations?.Add(annot);
         }
 
-        public void CreateAnnotation(PdfAnnotation annot)
+        public void CreateAnnotation(PdfAnnotation oldAnnot)
         {
             //TODO: Check for non working newer version. Loop over versions from newest to oldest until one works. Log which one was used
-            annot.Rect = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
-                             ?.MapToForm(annot.Rect).FirstOrDefault() ?? annot.Rect;
-            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
+            var annots = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
+                ?.MapToForm(oldAnnot.Rect);
+            if (annots == null) return;
+            if (annots.Count > 1)
+            {
+                var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) {Rect = points}).ToList();
+                canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
+            }
+            else
+            {
+                oldAnnot.Rect = annots.First();
+                canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(oldAnnot));
+            }
+
+
+            /*oldAnnot.Rect = annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
+                             ?.MapToForm(oldAnnot.Rect).FirstOrDefault() ?? oldAnnot.Rect;
+            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(oldAnnot));*/
         }
 
         public void UpdateAnnotation(UpdateAnnotationArgs args)

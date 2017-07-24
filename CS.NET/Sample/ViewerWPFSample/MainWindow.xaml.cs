@@ -640,8 +640,8 @@ namespace ViewerWPFSample
                 case "NoChange":
                     PdfViewer.AnnotationFormMapper = "NoChangeFormMapper";
                     break;
-                case "Move":
-                    PdfViewer.AnnotationFormMapper = "MoveFormMapper";
+                case "Rect":
+                    PdfViewer.AnnotationFormMapper = "RectangleFormMapper";
                     break;
             }
         }

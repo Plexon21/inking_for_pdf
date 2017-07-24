@@ -188,6 +188,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                     if (annotationPoints != null)
                     {
+                        //TODO: move to Extension to handle drawing form while dragging cursor
                         for (int i = 0; i < annotationPoints.Count - 1; i++)
                         {
                             dc.DrawLine(annotPen, annotationPoints[i], annotationPoints[i + 1]);
