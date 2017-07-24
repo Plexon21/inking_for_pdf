@@ -1211,5 +1211,16 @@ namespace PdfTools.PdfViewerWPF
         }
 
         #endregion Events
+
+
+        public void DeleteSelectedAnnotations()
+        {
+            pane.DeleteSelectedAnnotations();
+        }
+
+        public void EndEndTextRecognitionMode()
+        {
+            pane.EndEndTextRecognitionMode();
+        }
     }
 }

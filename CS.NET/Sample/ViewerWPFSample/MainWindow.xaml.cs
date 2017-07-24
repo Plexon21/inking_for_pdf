@@ -74,6 +74,16 @@ namespace ViewerWPFSample
                 ContextMenu.Items.Add(item);
                 mouseModeMenuItems.Add(item);
             }
+
+            MenuItem deleteAnnotations = new MenuItem();
+            deleteAnnotations.Header = "Delete Annotations";
+            deleteAnnotations.Click += delegate { PdfViewer.DeleteSelectedAnnotations(); };
+            ContextMenu.Items.Add(deleteAnnotations);
+
+            MenuItem endTextRecognition = new MenuItem();
+            endTextRecognition.Header = "End Text Recognition";
+            endTextRecognition.Click += delegate { PdfViewer.EndEndTextRecognitionMode(); };
+            ContextMenu.Items.Add(endTextRecognition);
         }
 
         private String translateMouseMode(TMouseMode mode)
@@ -84,10 +94,8 @@ namespace ViewerWPFSample
                 case TMouseMode.eMouseMoveMode: return "Hand tool";
                 case TMouseMode.eMouseSelectMode: return "Text selection tool";
                 case TMouseMode.eMouseZoomMode: return "Zoom tool";
-                case TMouseMode.eMouseFreehandAnnotationMode: return "Draw Annotation tool";
-                case TMouseMode.eMouseDeleteAnnotationMode: return "Delete Annotation tool";
+                case TMouseMode.eMouseCreateAnnotationMode: return "Draw Annotation tool";
                 case TMouseMode.eMouseTextRecognitionMode: return "Start text recognition tool";
-                case TMouseMode.eMouseEndTextRecognitionMode: return "End text recognition tool";
                 default: return "undefined mouse mode";
             }
         }
