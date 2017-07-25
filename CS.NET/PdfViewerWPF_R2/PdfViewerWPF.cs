@@ -810,6 +810,15 @@ namespace PdfTools.PdfViewerWPF
         }
 
         /// <summary>
+        /// Configure wether the stroke width is dependent on the zoom level or not
+        /// </summary>
+        public bool AnnotationStrokeWidthZoomDependent
+        {
+            get => pane.AnnotationStrokeWidthZoomDependent;
+            set => pane.AnnotationStrokeWidthZoomDependent = value;
+        }
+
+        /// <summary>
         /// Configure the current width of annotations
         /// </summary>
         public double AnnotationStrokeWidth
@@ -823,8 +832,17 @@ namespace PdfTools.PdfViewerWPF
         /// </summary>
         public Color AnnotationColor
         {
-            get => pane.AnnotationColor;
-            set => pane.AnnotationColor = value;
+            get => pane.AnnotatioStrokeColor;
+            set => pane.AnnotatioStrokeColor = value;
+        }
+
+        /// <summary>
+        /// Configure wether the marking rectangle has to surround the annotation bounding box or only intersect it to get marked
+        /// </summary>
+        public bool AnnotationMarkingOnIntersect
+        {
+            get => pane.AnnotationMarkingOnIntersect;
+            set => pane.AnnotationMarkingOnIntersect = value;
         }
 
         /// <summary>

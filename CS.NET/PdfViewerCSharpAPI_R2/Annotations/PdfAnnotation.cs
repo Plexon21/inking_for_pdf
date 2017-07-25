@@ -132,9 +132,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             BorderWidth = annot.BorderWidth;
         }
 
-        public bool IsContainedInRect(PdfSourceRect markedRect)
+        public bool IsContainedInRect(PdfSourceRect markedRect, bool OnIntersect)
         {
             PdfSourceRect annotRect = new PdfSourceRect(Rect[0], Rect[1], Rect[2] - Rect[0], Rect[3] - Rect[1]);
+
+            if (OnIntersect)
+            {
+                return markedRect.intersectsDouble(annotRect);
+            }
             return markedRect.contains(annotRect);
         }
 
