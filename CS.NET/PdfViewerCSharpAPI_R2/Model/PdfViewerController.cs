@@ -150,8 +150,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         private void InitializeExtensions()
         {
-            _extensionFolders = new List<string> {"TextConverters", "AnnotationFormMappers"};
-            
+            _extensionFolders = new List<string> { "TextConverters", "AnnotationFormMappers" };
+
             var catalog = new AggregateCatalog();
 
             foreach (var s in _extensionFolders)
@@ -986,16 +986,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation oldAnnot)
         {
-            //TODO: Check for non working newer version. Loop over versions from newest to oldest until one works. Log which one was used
             //TODO: Swap Annotationtype
-            var formMapper = _annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper));
-            if (formMapper == null)
+
+            var loadedFormMapper = LoadFormMapper();
+            var annots = loadedFormMapper.MapToForm(oldAnnot.Rect);
+
+            if (!(annots?.Count > 0))
             {
-                Logger.LogError($"No matching formmapper with name {AnnotationFormMapper} found.");
+                Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value.");
                 return;
             }
-            var annots = formMapper.Value?.MapToForm(oldAnnot.Rect);
-            if (!(annots?.Count > 0)) return;
             var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) { AnnotationHandle = new IntPtr(), Rect = points }).ToList();
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
             canvas.DocumentManager.LoadAnnotationsOnPage(oldAnnot.PageNr);
@@ -1023,25 +1023,70 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
         }
 
+        public IPdfTextConverter LoadTextConverter()
+        {
+            var converter = _textConverters.Where(p => p.Metadata.Name.Equals(TextConverter))
+                .OrderByDescending(p => p.Metadata.Version).FirstOrDefault();
+            if (converter == null)
+            {
+                Logger.LogError($"No TextConverter with the name {TextConverter} found.");
+                return null;
+            }
+            var loadedConverter = converter.Value;
+            if (loadedConverter == null)
+            {
+                Logger.LogError(
+                    $"Textconverter {converter.Metadata.Name} with Version {converter.Metadata.Version} could not be loaded.");
+            }
+            return loadedConverter;
+        }
+
+        public IPdfAnnotationFormMapper LoadFormMapper()
+        {
+            var formMapper = _annotationFormMappers.Where(p => p.Metadata.Name.Equals(AnnotationFormMapper))
+                .OrderByDescending(p => p.Metadata.Version).FirstOrDefault();
+            if (formMapper == null)
+            {
+                Logger.LogError($"No FormMapper with the name {AnnotationFormMapper} found.");
+                return null;
+            }
+            var loadedFormMapper = formMapper.Value;
+            if (loadedFormMapper == null)
+            {
+                Logger.LogError(
+                    $"FormMapper {AnnotationFormMapper} with Version {formMapper.Metadata.Version} could not be loaded.");
+            }
+            return loadedFormMapper;
+        }
+
         public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots)
         {
-            var res = _textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            var loadedConverter = LoadTextConverter();
+            var res = loadedConverter.ToText(annots);
             if (res != null) return res;
-            Logger.LogError($"No TextConverter with the name {TextConverter} found.");
-            return $"No TextConverter with the name {TextConverter} found.";
+            Logger.LogError(
+                $"Textconverter {TextConverter} did not return a value.");
+            return
+                $"Textconverter {TextConverter} did not return a value.";
         }
         public string ConvertAnnotations(StrokeCollection annots)
         {
-            var res = _textConverters.FirstOrDefault(p => p.Metadata.Name.Equals(TextConverter))?.Value?.ToText(annots);
+            var loadedConverter = LoadTextConverter();
+            var res = loadedConverter.ToText(annots);
             if (res != null) return res;
-            Logger.LogError($"No TextConverter with the name {TextConverter} found.");
-            return $"No TextConverter with the name {TextConverter} found.";
+            Logger.LogError(
+                $"Textconverter {TextConverter} did not return a value.");
+            return
+                $"Textconverter {TextConverter} did not return a value.";
         }
 
         public List<Point> DrawForm(List<Point> annotationPoints)
         {
-            return (List<Point>)(_annotationFormMappers.FirstOrDefault(p => p.Metadata.Name.Equals(AnnotationFormMapper))
-                               ?.Value?.MapToForm(annotationPoints) ?? annotationPoints);
+            var loadedFormMapper = LoadFormMapper();
+            var res = loadedFormMapper.MapToForm(annotationPoints);
+            if (res != null) return (List<Point>) res;
+            Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
+            return annotationPoints;
         }
 
         #endregion
