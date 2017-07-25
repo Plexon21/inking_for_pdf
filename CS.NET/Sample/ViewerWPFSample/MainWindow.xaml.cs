@@ -561,6 +561,9 @@ namespace ViewerWPFSample
                 case Key.Right:
                     PdfViewer.Scroll((int)(-0.05 * PdfViewer.ActualWidth), 0);
                     break;
+                case Key.Delete:
+                    if (PdfViewer.MouseMode == TMouseMode.eMouseMarkMode) PdfViewer.DeleteSelectedAnnotations();
+                    break;
                 default:
                     //do nothing
                     return;
