@@ -996,7 +996,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value.");
                 return;
             }
-            var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) { AnnotationHandle = new IntPtr(), SubType = ReadType(loadedFormMapper.AnnotationType), Rect = points }).ToList();
+
+            var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot)
+            {
+                AnnotationHandle = new IntPtr(),
+                SubType = PdfAnnotation.ConvertSubtype(loadedFormMapper.AnnotationType),
+                Rect = points
+            }).ToList();
+
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
 
 
@@ -1090,20 +1097,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
             return annotationPoints;
         }
-
-        public PdfDocument.TPdfAnnotationType ReadType(string annnotationType)
-        {
-            switch (annnotationType.ToLower(CultureInfo.InvariantCulture))
-            {
-                // Add further annotation-types here
-                case "eannotationink":
-                case "ink":
-                    return PdfDocument.TPdfAnnotationType.eAnnotationInk;
-                default:
-                    return PdfDocument.TPdfAnnotationType.eAnnotationInk;
-            }
-        }
-
         #endregion
 
         public void SaveAs(string fileName)
