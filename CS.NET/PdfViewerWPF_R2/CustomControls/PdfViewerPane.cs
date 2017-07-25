@@ -165,6 +165,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             //set pen for selectedAnnotations
             Pen selectedAnnotationsPen = new Pen(new SolidColorBrush(Colors.Blue), 0.5);
 
+            //set pen for movingAnnotations
+            Pen movingAnnotationsPen = new Pen(new SolidColorBrush(Colors.Red), 0.5);
+
 
             //Draw bitmap
             if (bitmap != null)
@@ -228,7 +231,28 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                         dc.DrawRectangle(null, selectedAnnotationsPen, rectWin);
                     }
+
+                    if (movingAnnotation)
+                    {
+                        dc.DrawLine(movingAnnotationsPen, annotationPoints[0], lastMousePosition);
+
+                        double deltaX = lastMousePosition.X - annotationPoints[0].X;
+                        double deltaY = lastMousePosition.Y - annotationPoints[0].Y;
+
+                        foreach (PdfAnnotation annot in selectedAnnotations)
+                        {
+                            PdfSourceRect rectOnPage = new PdfSourceRect(annot.Rect[0], annot.Rect[1], annot.Rect[2] - annot.Rect[0], annot.Rect[3] - annot.Rect[1]);
+
+                            Rect rectWin = controller.TransformRectPageToViewportWinRect(rectOnPage, annot.PageNr);
+
+                            rectWin.X += deltaX;
+                            rectWin.Y += deltaY;
+
+                            dc.DrawRectangle(null, movingAnnotationsPen, rectWin);
+                        }
+                    }
                 }
+
                 if (selectedRects.Count > 0)
                 {
                     lock (selectedRectsLock)
@@ -459,6 +483,32 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             annotationPoints = null;
         }
 
+        private void MoveAnnotations(Point pointOrigin, Point pointDestination)
+        {
+            try
+            {
+                int pageOrigin = 0;
+                int pageDestination = 0;
+
+                PdfSourcePoint pointOriginPage = controller.TransformOnScreenToOnPage(new PdfTargetPoint(pointOrigin), ref pageOrigin);
+                PdfSourcePoint pointDestinationPage = controller.TransformOnScreenToOnPage(new PdfTargetPoint(pointDestination), ref pageDestination);
+
+                if (pageOrigin == pageDestination)
+                {
+                    PdfSourcePoint delta = pointDestinationPage - pointOriginPage;
+
+                    controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.Move(delta.dX, delta.dY)).ToList()));
+                }
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                //TODO: Log
+            }
+
+            InvalidateVisual();
+
+        }
+
         public void DeleteSelectedAnnotations()
         {
             controller.DeleteAnnotations(selectedAnnotations);
@@ -495,7 +545,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
                 else
                 {
-                    markedAnnotations = annots?.Where(annot => annot.IsContainedInRect(selectedRectOnPage, AnnotationMarkingOnIntersect)).ToList<PdfAnnotation>();
+                    markedAnnotations = annots?.Where(annot => annot.ContainsOrIntersectsWithRect(selectedRectOnPage, AnnotationMarkingOnIntersect)).ToList<PdfAnnotation>();
                 }
 
                 if (markedAnnotations != null)
@@ -615,9 +665,13 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private bool middleMouseScrolling = false;
         private bool markingRectangle = false;
         private bool selectingText = false;
-        private bool drawingFreeHandAnnotation = false;
         private Rect selectedRect = new Rect();
         private bool textRecognitionActive = false;
+
+        private bool drawingFreeHandAnnotation = false;
+        private bool drawingPointLineAnnotation = false;
+        private bool movingAnnotationPossible = false;
+        private bool movingAnnotation = false;
 
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)
@@ -646,7 +700,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         {
             Keyboard.Focus(this);
             selectedRects.Clear();
-            selectedAnnotations.Clear();
+            if (!movingAnnotationPossible) selectedAnnotations.Clear();
+            movingAnnotation = false;
+
             _selectedText = String.Empty;
             if (!controller.IsOpen)
                 return;
@@ -655,7 +711,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             if (middleMouseScrolling)
                 return; //handled by middlemousedown
 
-            if (MouseMode == TMouseMode.eMouseZoomMode || MouseMode == TMouseMode.eMouseMarkMode)
+            if (movingAnnotationPossible)
+            {
+                annotationPoints = new List<Point> { e.GetPosition(this) };
+                movingAnnotation = true;
+            }
+            else if (MouseMode == TMouseMode.eMouseZoomMode || MouseMode == TMouseMode.eMouseMarkMode)
             {
                 //start marking rectangle
                 lastMousePosition = e.GetPosition(this);
@@ -851,7 +912,39 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
             }
+            else if (movingAnnotation)
+            {
+                lastMousePosition = e.GetPosition(this);
+                InvalidateVisual();
+            } 
             else if (MouseMode == TMouseMode.eMouseCreateAnnotationMode || MouseMode == TMouseMode.eMouseTextRecognitionMode) InvalidateVisual();
+            else if (MouseMode == TMouseMode.eMouseMarkMode && selectedAnnotations != null && selectedAnnotations.Count > 0)
+            {
+                int page = 0;
+                try
+                {
+                    PdfSourcePoint point = controller.TransformOnScreenToOnPage(new PdfTargetPoint(e.GetPosition(this)), ref page);
+
+                    if (page > 0 && selectedAnnotations.Any(annot => annot.ContainsPoint(point)))
+                    {
+                        this.Cursor = Cursors.SizeAll;
+                        this.movingAnnotationPossible = true;
+                    }
+                    else
+                    {
+                        this.Cursor = Cursors.Cross;
+                        this.movingAnnotationPossible = false;
+                    }
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    Logger.LogError("Point was not on a page");
+                    Logger.LogException(ex);
+                    this.Cursor = Cursors.Cross;
+                }
+
+
+            }
 
             e.Handled = true;
         }
@@ -908,6 +1001,16 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 annotationPoints = null;
                 textRecognitionActive = false;
+            }
+            else if (movingAnnotation)
+            {
+                movingAnnotation = false;
+
+                if (annotationPoints != null && annotationPoints.Count > 0)
+                {
+                    MoveAnnotations(annotationPoints[0], lastMousePosition);
+                }
+
             }
 
             e.Handled = true;

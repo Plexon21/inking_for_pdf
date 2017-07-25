@@ -132,7 +132,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             BorderWidth = annot.BorderWidth;
         }
 
-        public bool IsContainedInRect(PdfSourceRect markedRect, bool OnIntersect)
+        public bool ContainsOrIntersectsWithRect(PdfSourceRect markedRect, bool OnIntersect)
         {
             PdfSourceRect annotRect = new PdfSourceRect(Rect[0], Rect[1], Rect[2] - Rect[0], Rect[3] - Rect[1]);
 
@@ -141,6 +141,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 return markedRect.intersectsDouble(annotRect);
             }
             return markedRect.contains(annotRect);
+        }
+
+        public bool ContainsPoint(PdfSourcePoint point)
+        {
+            return Rect[0] < point.dX && Rect[1] < point.dY && Rect[2] > point.dX && Rect[3] > point.dY; 
         }
 
         public UpdateAnnotation Move(double x, double y)
