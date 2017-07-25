@@ -998,7 +998,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             }
             var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) { AnnotationHandle = new IntPtr(), Rect = points }).ToList();
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
-            canvas.DocumentManager.LoadAnnotationsOnPage(oldAnnot.PageNr);
 
 
             /*oldAnnot.Rect = _annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
@@ -1012,10 +1011,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             LoadAllAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
         }
 
-        public void DeleteAnnotation(PdfAnnotation annot)
+        public void DeleteAnnotations(IList<PdfAnnotation> annots)
         {
-            canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annot.GetHandleAsLong()));
-            LoadAllAnnotationsOnPage(annot.PageNr);
+            if (annots != null && annots.Count > 0)
+            {
+                canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annots.Select(annot => annot.GetHandleAsLong()).ToList()));
+                LoadAllAnnotationsOnPage(annots[0].PageNr);
+            }
         }
 
         public void LoadAllAnnotationsOnPage(int pageNr)

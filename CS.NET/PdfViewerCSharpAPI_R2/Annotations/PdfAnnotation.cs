@@ -135,14 +135,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             return markedRect.contains(annotRect);
         }
 
-        public UpdateAnnotationArgs Move(double x, double y)
+        public UpdateAnnotation Move(double x, double y)
         {
             double[] rect = new double[] { Rect[0] + x, Rect[1] + y, Rect[2] + x, Rect[3] + y };
 
-            return new UpdateAnnotationArgs(this, rect, null, null, null, -1);
+            return new UpdateAnnotation(this, rect, null, null, null, -1);
         }
 
-        public UpdateAnnotationArgs Scale(double factor) //this is just to test... TODO: delete
+        public UpdateAnnotation Scale(double factor) //this is just to test... TODO: delete
         {
             double width = Rect[2] - Rect[0];
             double height = Rect[3] - Rect[1];
@@ -156,28 +156,28 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 Rect[3] - (height/2) + (newHeight/2)
             };
 
-            return new UpdateAnnotationArgs(this, rect, null, null, null, -1);
+            return new UpdateAnnotation(this, rect, null, null, null, -1);
         }
 
-        public UpdateAnnotationArgs UpdateContent(string content)
+        public UpdateAnnotation UpdateContent(string content)
         {
-            return new UpdateAnnotationArgs(this, null, content, null, null, -1);
+            return new UpdateAnnotation(this, null, content, null, null, -1);
         }
 
-        public UpdateAnnotationArgs UpdateLabel(string label)
+        public UpdateAnnotation UpdateLabel(string label)
         {
-            return new UpdateAnnotationArgs(this, null, null, label, null, -1);
+            return new UpdateAnnotation(this, null, null, label, null, -1);
         }
 
-        public UpdateAnnotationArgs UpdateColor(Color color)
+        public UpdateAnnotation UpdateColor(Color color)
         {
             double[] colorArray = new double[] { color.R / 255.0, color.G / 255.0, color.B / 255.0 };
-            return new UpdateAnnotationArgs(this, null, null, null, colorArray, -1);
+            return new UpdateAnnotation(this, null, null, null, colorArray, -1);
         }
 
-        public UpdateAnnotationArgs UpdateWidth(double width)
+        public UpdateAnnotation UpdateWidth(double width)
         {
-            return new UpdateAnnotationArgs(this, null, null, null, null, width);
+            return new UpdateAnnotation(this, null, null, null, null, width);
         }
     }
 }

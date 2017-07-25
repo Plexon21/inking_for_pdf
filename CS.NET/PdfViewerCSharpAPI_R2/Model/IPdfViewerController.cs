@@ -418,7 +418,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         void LoadAllAnnotationsOnPage(int pageNr);
         void CreateAnnotation(PdfAnnotation pdfAnnotation);
         void UpdateAnnotation(UpdateAnnotationArgs args);
-        void DeleteAnnotation(PdfAnnotation annot);
+        void DeleteAnnotations(IList<PdfAnnotation> annots);
 
         string ConvertAnnotations(IEnumerable<PdfAnnotation> annots);
         string ConvertAnnotations(StrokeCollection annots);
