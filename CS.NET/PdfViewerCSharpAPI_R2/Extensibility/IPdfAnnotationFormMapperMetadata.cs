@@ -12,7 +12,5 @@ namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 
         [DefaultValue(1)]
         int Version { get; }
-        [DefaultValue("eAnnotationInk")]
-        string AnnotationType { get; }
     }
 }

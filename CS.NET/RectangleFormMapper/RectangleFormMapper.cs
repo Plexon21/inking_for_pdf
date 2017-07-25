@@ -15,6 +15,7 @@ namespace RectangleFormMapper
      ExportMetadata("Version", 1)]
     public class RectangleFormMapper : IPdfAnnotationFormMapper
     {
+        public string AnnotationType { get; } = "eAnnotationRectangle";
         public IList<double[]> MapToForm(double[] annotationPoints)
         {
             if (annotationPoints == null || annotationPoints.Length < 2) return null;

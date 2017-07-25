@@ -11,6 +11,8 @@ namespace NoChangeAnnotationFormMapper
      ExportMetadata("Version", 1)]
     public class NoChangeAnnotationFormMapper : IPdfAnnotationFormMapper
     {
+        public string AnnotationType { get; } = "eAnnotationInk";
+
         public IList<double[]> MapToForm(double[] annotationPoints)
         {
             return new List<double[]>{annotationPoints};
