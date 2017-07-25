@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Windows.Threading;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
 using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
@@ -17,6 +18,7 @@ using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using System.Windows.Ink;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
+using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 using Point = System.Windows.Point;
 
@@ -986,8 +988,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateAnnotation(PdfAnnotation oldAnnot)
         {
-            //TODO: Swap Annotationtype
-
             var loadedFormMapper = LoadFormMapper();
             var annots = loadedFormMapper.MapToForm(oldAnnot.Rect);
 
@@ -996,7 +996,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value.");
                 return;
             }
-            var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot) { AnnotationHandle = new IntPtr(), Rect = points }).ToList();
+
+            var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot)
+            {
+                AnnotationHandle = new IntPtr(),
+                SubType = PdfAnnotation.ConvertSubtype(loadedFormMapper.AnnotationType),
+                Rect = points
+            }).ToList();
+
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
 
 
@@ -1093,6 +1100,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 $"Textconverter {TextConverter} did not return a value.";
         }
 
+        public List<Point> DrawForm(List<Point> annotationPoints)
+        {
+            var loadedFormMapper = LoadFormMapper();
+            var res = loadedFormMapper.MapToForm(annotationPoints);
+            if (res != null) return (List<Point>)res;
+            Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
+            return annotationPoints;
+        }
         #endregion
 
         public void SaveAs(string fileName)

@@ -3,6 +3,7 @@ using PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests;
 using PdfTools.PdfViewerCSharpAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -94,14 +95,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.AnnotationHandle = new IntPtr(value);
         }
 
-        private PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)
+        public static PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)
         {
-            switch (annotSubType)
+            switch (annotSubType.ToLower(CultureInfo.InvariantCulture))
             {
-                case "Ink":
+                // Add further annotation-types here
+                case "eannotationink":
+                case "ink":
                     return PdfDocument.TPdfAnnotationType.eAnnotationInk;
                 default:
-                    return PdfDocument.TPdfAnnotationType.eAnntationUnknown;
+                    return PdfDocument.TPdfAnnotationType.eAnnotationInk;
             }
         }
 
