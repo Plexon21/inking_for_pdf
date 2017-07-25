@@ -55,6 +55,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         private String password = "";
         private byte[] fileMem = null;
 
+        #endregion
+
+        #region [InkingforPDF] Variables
         private IList<string> _extensionFolders;
         private CompositionContainer _extensionContainer;
 
@@ -149,34 +152,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             PageLayoutMode = (PageLayoutMode == TPageLayoutMode.None) ? TPageLayoutMode.OneColumn : PageLayoutMode;
             Logger.LogInfo("Created Object instance");
         }
-
-        private void InitializeExtensions()
-        {
-            _extensionFolders = new List<string> { "TextConverters", "AnnotationFormMappers" };
-
-            var catalog = new AggregateCatalog();
-
-            foreach (var s in _extensionFolders)
-            {
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s);
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
-            }
-            _extensionContainer = new CompositionContainer(catalog);
-            try
-            {
-                this._extensionContainer.ComposeParts(this);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError($"Exception occured while composing extension libraries.");
-                Logger.LogException(e);
-            }
-        }
-
+        
         public void Initialize()
         {
             Logger.LogInfo("Initialize");
@@ -775,9 +751,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 _scrollingToNextPageEnabled = value;
             }
         }
-
-
-
+        
         private TPageLayoutMode _pageLayoutMode;
         public TPageLayoutMode PageLayoutMode
         {
@@ -812,8 +786,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.PageLayoutMode = value;
             OnPageLayoutModeChanged(value);
         }
-
-
+        
         private FitMode _fitMode;
         public FitMode FitMode
         {
@@ -855,8 +828,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 viewport.ZoomCenteredOnViewportCenter(1.0);
             }
         }
-
-
+        
         public void ZoomToRectangle(PdfTargetRect rect)
         {
             if (_fitMode != FitMode.FitNone)
@@ -984,12 +956,47 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         }
         #endregion
 
-        #region Annotation Methods
+        #region [InkingforPDF] Annotation Methods
+        private void InitializeExtensions()
+        {
+            _extensionFolders = new List<string> { "TextConverters", "AnnotationFormMappers" };
+
+            var catalog = new AggregateCatalog();
+
+            foreach (var s in _extensionFolders)
+            {
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s);
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catalog.Catalogs.Add(new DirectoryCatalog(path, "*.dll"));
+            }
+            _extensionContainer = new CompositionContainer(catalog);
+            try
+            {
+                this._extensionContainer.ComposeParts(this);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception occured while composing extension libraries.");
+                Logger.LogException(e);
+            }
+        }
 
         public void CreateAnnotation(PdfAnnotation oldAnnot)
         {
             var loadedFormMapper = LoadFormMapper();
-            var annots = loadedFormMapper.MapToForm(oldAnnot.Rect);
+            IList<double[]> annots = null;
+            try
+            {
+                 annots = loadedFormMapper.MapToForm(oldAnnot.Rect);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception occured while executing MapToForm on {AnnotationFormMapper}.");
+                Logger.LogException(e);
+            }
 
             if (!(annots?.Count > 0))
             {
@@ -1005,11 +1012,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             }).ToList();
 
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
-
-
-            /*oldAnnot.Rect = _annotationFormMappers.FirstOrDefault(a => a.Metadata.Name.Equals(AnnotationFormMapper))?.Value
-                             ?.MapToForm(oldAnnot.Rect).FirstOrDefault() ?? oldAnnot.Rect;
-            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(oldAnnot));*/
         }
 
         public void UpdateAnnotation(UpdateAnnotationArgs args)
@@ -1031,8 +1033,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
         }
-
-        //Form Mapper
+        
         public IPdfAnnotationFormMapper LoadFormMapper()
         {
             var formMapper = _annotationFormMappers.Where(p => p.Metadata.Name.Equals(AnnotationFormMapper))
@@ -1042,7 +1043,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 Logger.LogError($"No FormMapper with the name {AnnotationFormMapper} found.");
                 return null;
             }
-            var loadedFormMapper = formMapper.Value;
+            IPdfAnnotationFormMapper loadedFormMapper = null;
+            try
+            {
+                 loadedFormMapper = formMapper.Value;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception occured while loading FormMapper with the name {AnnotationFormMapper}.");
+                Logger.LogException(e);
+            }
             if (loadedFormMapper == null)
             {
                 Logger.LogError(
@@ -1054,13 +1064,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public IList<Point> DrawForm(IList<Point> annotationPoints)
         {
             var loadedFormMapper = LoadFormMapper();
+            if (loadedFormMapper == null) return null;
             var res = loadedFormMapper.MapToForm(annotationPoints);
-            if (res != null) return (IList<Point>)res;
+            if (res != null) return (List<Point>)res;
             Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
             return annotationPoints;
         }
-
-        //Text Converter
+        
         public IPdfTextConverter LoadTextConverter()
         {
             var converter = _textConverters.Where(p => p.Metadata.Name.Equals(TextConverter))
@@ -1070,7 +1080,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 Logger.LogError($"No TextConverter with the name {TextConverter} found.");
                 return null;
             }
-            var loadedConverter = converter.Value;
+            IPdfTextConverter loadedConverter = null;
+            try
+            {
+                loadedConverter = converter.Value;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception occured while loading TextConverter with the name {TextConverter}.");
+                Logger.LogException(e);
+            }
             if (loadedConverter == null)
             {
                 Logger.LogError(
@@ -1082,7 +1101,17 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots)
         {
             var loadedConverter = LoadTextConverter();
-            var res = loadedConverter.ToText(annots);
+            if (loadedConverter == null) return $"No TextConverter with name {TextConverter} found.";
+            string res = null;
+            try
+            {
+                res = loadedConverter.ToText(annots);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception occured while executing ToText on {TextConverter}.");
+                Logger.LogException(e);
+            }
             if (res != null) return res;
             Logger.LogError(
                 $"Textconverter {TextConverter} did not return a value.");
@@ -1092,29 +1121,30 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         public string ConvertAnnotations(StrokeCollection annots)
         {
             var loadedConverter = LoadTextConverter();
-            var res = loadedConverter.ToText(annots);
+            if (loadedConverter == null) return $"No TextConverter with name {TextConverter} found.";
+            string res = null;
+            try
+            {
+                res = loadedConverter.ToText(annots);
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"Exception occured while executing ToText on {TextConverter}.");
+                Logger.LogException(e);
+            }
             if (res != null) return res;
             Logger.LogError(
                 $"Textconverter {TextConverter} did not return a value.");
             return
                 $"Textconverter {TextConverter} did not return a value.";
         }
-
-        public List<Point> DrawForm(List<Point> annotationPoints)
-        {
-            var loadedFormMapper = LoadFormMapper();
-            var res = loadedFormMapper.MapToForm(annotationPoints);
-            if (res != null) return (List<Point>)res;
-            Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
-            return annotationPoints;
-        }
-        #endregion
-
+        
         public void SaveAs(string fileName)
         {
             canvas.DocumentManager.SaveAs(fileName);
         }
-
+        #endregion
+        
         #region Update Helper Methods
         //private helper methods that are used for internal bitmap updating
 
@@ -1713,6 +1743,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             UpdateBitmapContent();
         }
 
+        #endregion
+
+        #region [InkingforPDF] IPdfControllerCallbackManager Methods
         public void OnAnnotationCreated(PdfViewerException ex, IList<PdfAnnotation> annots)
         {
             FireInvokeCallback(delegate ()
@@ -2024,10 +2057,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         static extern TViewerError PdfViewerGetLastError();
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
-
-
-
-
+        
         #endregion native imports
     }
 }
