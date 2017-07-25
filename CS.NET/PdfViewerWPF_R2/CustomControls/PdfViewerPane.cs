@@ -317,7 +317,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        #region Annotation Variables
+        #region [InkingForPDF] Annotation Variables
 
         private IList<System.Windows.Point> annotationPoints;
         private PdfSourceRect selectedRectOnPage;
@@ -330,9 +330,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private Color _annotationStrokeColor = Colors.Black;
         private bool _annotationMarkingOnIntersect = false;
 
-        #endregion Annotation Variables
+        #endregion [InkingForPDF] Annotation Variables
 
-        #region Annotation Properties
+        #region [InkingForPDF] Annotation Properties
 
         public bool AnnotationStrokeWidthZoomDependent
         {
@@ -395,9 +395,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        #endregion Annotation Properties
+        #endregion [InkingForPDF] Annotation Properties
 
-        #region Annotation Methods
+        #region [InkingForPDF] Annotation Methods
 
         private void UpdateAnnotationOnMouseModeChanged(TMouseMode value)
         {
@@ -527,7 +527,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             MessageBox.Show(controller.ConvertAnnotations(strokes));
         }
 
-        #endregion Annotation Methods
+        #endregion [InkingForPDF] Annotation Methods
 
         private void OnMouseModeChanged(TMouseMode arg) { if (MouseModeChanged != null) MouseModeChanged(arg); }
 
