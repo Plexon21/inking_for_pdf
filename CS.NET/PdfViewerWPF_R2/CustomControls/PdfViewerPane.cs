@@ -251,7 +251,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             base.OnRender(dc);
             //Utilities.DebugLogger.Log("End OnRender");
         }
-
         private void SetBitmap(WriteableBitmap bitmap)
         {
             this.bitmap = bitmap;
