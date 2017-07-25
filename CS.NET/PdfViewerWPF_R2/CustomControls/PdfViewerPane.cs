@@ -155,9 +155,9 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             dc.DrawRectangle(this.Background, null, panelRect);
 
             //set pen for annotations
-            Brush freehandBrush = new SolidColorBrush(AnnotationColor);
+            Brush freehandBrush = new SolidColorBrush(AnnotatioStrokeColor);
             freehandBrush.Opacity = 1.0;
-            double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth : AnnotationStrokeWidth * controller.ZoomFactor;
+            double width = AnnotationStrokeWidthZoomDependent ? AnnotationStrokeWidth : AnnotationStrokeWidth * controller.ZoomFactor;
             Pen annotPen = new Pen(freehandBrush, width);
             annotPen.EndLineCap = PenLineCap.Round;
             annotPen.StartLineCap = PenLineCap.Round;
@@ -274,58 +274,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        private bool _zoomRelativeAnnotationStrokeWidth = false;
-        public bool ZoomRelativeAnnotationStrokeWidth
-        {
-            set
-            {
-                _zoomRelativeAnnotationStrokeWidth = value;
-            }
-            get
-            {
-                return _zoomRelativeAnnotationStrokeWidth;
-            }
-        }
-
-        private double _annotationStrokeWidth = 1;
-        public double AnnotationStrokeWidth
-        {
-            set
-            {
-                if (value >= 0)
-                {
-                    _annotationStrokeWidth = value;
-
-                    if (selectedAnnotations.Count > 0)
-                    {
-                        controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateWidth(_annotationStrokeWidth)).ToList()));
-                    }
-                }
-            }
-            get
-            {
-                return _annotationStrokeWidth;
-            }
-        }
-
-        private Color _annotationColor = Colors.Black;
-        public Color AnnotationColor
-        {
-            set
-            {
-                _annotationColor = value;
-
-                if (selectedAnnotations.Count > 0)
-                {
-                    controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateColor(_annotationColor)).ToList()));
-                }
-            }
-            get
-            {
-                return _annotationColor;
-            }
-        }
-
         private TMouseMode _mouseMode = TMouseMode.eMouseUndefMode;
         public TMouseMode MouseMode
         {
@@ -368,6 +316,86 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
             }
         }
+
+        #region Annotation Variables
+
+        private IList<System.Windows.Point> annotationPoints;
+        private PdfSourceRect selectedRectOnPage;
+        private IList<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
+        private StrokeCollection strokes = new StrokeCollection();
+
+        //backing fields
+        private bool _annotationStrokeWidthZoomDependent = false;
+        private double _annotationStrokeWidth = 1;
+        private Color _annotationStrokeColor = Colors.Black;
+        private bool _annotationMarkingOnIntersect = false;
+
+        #endregion Annotation Variables
+
+        #region Annotation Properties
+
+        public bool AnnotationStrokeWidthZoomDependent
+        {
+            set
+            {
+                _annotationStrokeWidthZoomDependent = value;
+            }
+            get
+            {
+                return _annotationStrokeWidthZoomDependent;
+            }
+        }
+
+        public double AnnotationStrokeWidth
+        {
+            set
+            {
+                if (value >= 0)
+                {
+                    _annotationStrokeWidth = value;
+
+                    if (selectedAnnotations.Count > 0)
+                    {
+                        controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateWidth(_annotationStrokeWidth)).ToList()));
+                    }
+                }
+            }
+            get
+            {
+                return _annotationStrokeWidth;
+            }
+        }
+
+        public Color AnnotatioStrokeColor
+        {
+            set
+            {
+                _annotationStrokeColor = value;
+
+                if (selectedAnnotations.Count > 0)
+                {
+                    controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateColor(_annotationStrokeColor)).ToList()));
+                }
+            }
+            get
+            {
+                return _annotationStrokeColor;
+            }
+        }
+
+        public bool AnnotationMarkingOnIntersect
+        {
+            set
+            {
+                _annotationMarkingOnIntersect = value;
+            }
+            get
+            {
+                return _annotationMarkingOnIntersect;
+            }
+        }
+
+        #endregion Annotation Properties
 
         #region Annotation Methods
 
@@ -416,8 +444,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 }
 
-                double[] color = new double[] { AnnotationColor.R / 255.0, AnnotationColor.G / 255.0, AnnotationColor.B / 255.0 };
-                double width = ZoomRelativeAnnotationStrokeWidth ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
+                double[] color = new double[] { AnnotatioStrokeColor.R / 255.0, AnnotatioStrokeColor.G / 255.0, AnnotatioStrokeColor.B / 255.0 };
+                double width = AnnotationStrokeWidthZoomDependent ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
 
@@ -455,7 +483,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-
         private void OnAnnotationsChangedEventHandler(IList<PdfAnnotation> annots)
         {
             if (selectedRectOnPage != null)
@@ -464,12 +491,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 if (selectedAnnotations != null && selectedAnnotations.Count > 0)
                 {
-                    //TODO: select annotations in annots that are in selectedAnnotations
                     markedAnnotations = annots.Where(annot => selectedAnnotations.Any(selAnnot => selAnnot.GetHandleAsLong() == annot.GetHandleAsLong())).ToList();
                 }
                 else
                 {
-                    markedAnnotations = annots?.Where(annot => annot.IsContainedInRect(selectedRectOnPage)).ToList<PdfAnnotation>();
+                    markedAnnotations = annots?.Where(annot => annot.IsContainedInRect(selectedRectOnPage, AnnotationMarkingOnIntersect)).ToList<PdfAnnotation>();
                 }
 
                 if (markedAnnotations != null)
@@ -592,13 +618,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private bool drawingFreeHandAnnotation = false;
         private Rect selectedRect = new Rect();
         private bool textRecognitionActive = false;
-
-        //annotation
-        private List<System.Windows.Point> annotationPoints;
-        private StrokeCollection strokes = new StrokeCollection();
-        private IList<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
-        private PdfSourceRect selectedRectOnPage;
-
 
 
         private void MouseWheelEventHandler(Object sender, MouseWheelEventArgs e)

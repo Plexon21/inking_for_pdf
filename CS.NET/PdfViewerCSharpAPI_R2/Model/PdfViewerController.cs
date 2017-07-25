@@ -1025,24 +1025,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
         }
 
-        public IPdfTextConverter LoadTextConverter()
-        {
-            var converter = _textConverters.Where(p => p.Metadata.Name.Equals(TextConverter))
-                .OrderByDescending(p => p.Metadata.Version).FirstOrDefault();
-            if (converter == null)
-            {
-                Logger.LogError($"No TextConverter with the name {TextConverter} found.");
-                return null;
-            }
-            var loadedConverter = converter.Value;
-            if (loadedConverter == null)
-            {
-                Logger.LogError(
-                    $"Textconverter {converter.Metadata.Name} with Version {converter.Metadata.Version} could not be loaded.");
-            }
-            return loadedConverter;
-        }
-
+        //Form Mapper
         public IPdfAnnotationFormMapper LoadFormMapper()
         {
             var formMapper = _annotationFormMappers.Where(p => p.Metadata.Name.Equals(AnnotationFormMapper))
@@ -1059,6 +1042,34 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                     $"FormMapper {AnnotationFormMapper} with Version {formMapper.Metadata.Version} could not be loaded.");
             }
             return loadedFormMapper;
+        }
+
+        public IList<Point> DrawForm(IList<Point> annotationPoints)
+        {
+            var loadedFormMapper = LoadFormMapper();
+            var res = loadedFormMapper.MapToForm(annotationPoints);
+            if (res != null) return (IList<Point>)res;
+            Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
+            return annotationPoints;
+        }
+
+        //Text Converter
+        public IPdfTextConverter LoadTextConverter()
+        {
+            var converter = _textConverters.Where(p => p.Metadata.Name.Equals(TextConverter))
+                .OrderByDescending(p => p.Metadata.Version).FirstOrDefault();
+            if (converter == null)
+            {
+                Logger.LogError($"No TextConverter with the name {TextConverter} found.");
+                return null;
+            }
+            var loadedConverter = converter.Value;
+            if (loadedConverter == null)
+            {
+                Logger.LogError(
+                    $"Textconverter {converter.Metadata.Name} with Version {converter.Metadata.Version} could not be loaded.");
+            }
+            return loadedConverter;
         }
 
         public string ConvertAnnotations(IEnumerable<PdfAnnotation> annots)
@@ -1080,15 +1091,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 $"Textconverter {TextConverter} did not return a value.");
             return
                 $"Textconverter {TextConverter} did not return a value.";
-        }
-
-        public List<Point> DrawForm(List<Point> annotationPoints)
-        {
-            var loadedFormMapper = LoadFormMapper();
-            var res = loadedFormMapper.MapToForm(annotationPoints);
-            if (res != null) return (List<Point>) res;
-            Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
-            return annotationPoints;
         }
 
         #endregion
