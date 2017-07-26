@@ -501,7 +501,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                //TODO: Log
+                Logger.LogError("Origin or Destination Point was not on a page");
+                Logger.LogException(ex);
             }
 
             InvalidateVisual();
