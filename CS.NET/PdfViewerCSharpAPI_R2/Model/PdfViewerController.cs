@@ -1016,8 +1016,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void UpdateAnnotation(UpdateAnnotationArgs args)
         {
-            canvas.DocumentManager.UpdateAnnotation(args);
-            LoadAllAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
+            if (args.updateAnnots != null && args.updateAnnots.Count > 0)
+            {
+                canvas.DocumentManager.UpdateAnnotation(args);
+                LoadAllAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
+            }
         }
 
         public void DeleteAnnotations(IList<PdfAnnotation> annots)

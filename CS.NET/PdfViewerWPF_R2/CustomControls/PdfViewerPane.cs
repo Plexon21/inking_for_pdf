@@ -96,6 +96,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private void OnCloseCompletedEventHandler(PdfViewerException e)
         {
             clearRects();
+            selectedAnnotations.Clear();
         }
 
         private void OnPageOrderChangedEventHandler(IList<int> pageOrder)

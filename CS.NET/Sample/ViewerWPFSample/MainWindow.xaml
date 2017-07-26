@@ -4,7 +4,7 @@
         xmlns:custom="clr-namespace:PdfTools.PdfViewerWPF;assembly=PdfViewerWPF"
         WindowStartupLocation="CenterScreen"
         xmlns:props="clr-namespace:ViewerWPFSample.Properties"
-        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1200">
+        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1182">
 
 
     <DockPanel LastChildFill="True" x:Name="root" x:FieldModifier="public">
@@ -186,6 +186,8 @@
                     <Button x:Name="colorBlack_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Black" Click="colorBlack_Button_Click"/>
                     <Button x:Name="colorRed_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Red" Click="colorRed_Button_Click"/>
                     <Button x:Name="colorCustom_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="#FF2581AF" Click="colorCustom_Button_Click"/>
+                    <CheckBox x:Name="LineWithZoomDependent_CheckBox" Content="LineWithZoomDependent" VerticalAlignment="Top" Margin="0,3,0,0" Width="26" Click="LineWithZoomDependent_CheckBox_Click"/>
+                    <CheckBox x:Name="MarkOnIntersect_CheckBox" Content="MarkOnIntersect" VerticalAlignment="Top" Margin="0,3,0,0" Width="27" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" Click="MarkOnIntersect_CheckBox_Click"/>
                 </ToolBar>
 
             </ToolBarPanel>

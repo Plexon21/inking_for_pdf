@@ -676,5 +676,15 @@ namespace ViewerWPFSample
         {
             PdfViewer.SaveToDesktop();
         }
+
+        private void LineWithZoomDependent_CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.AnnotationStrokeWidthZoomDependent = ((CheckBox)sender).IsChecked == true;
+        }
+
+        private void MarkOnIntersect_CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            PdfViewer.AnnotationMarkingOnIntersect = ((CheckBox)sender).IsChecked == true;
+        }
     }
 }
