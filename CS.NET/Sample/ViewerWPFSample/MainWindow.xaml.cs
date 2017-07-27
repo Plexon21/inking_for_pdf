@@ -82,7 +82,7 @@ namespace ViewerWPFSample
 
             MenuItem endTextRecognition = new MenuItem();
             endTextRecognition.Header = "End Text Recognition";
-            endTextRecognition.Click += delegate { PdfViewer.EndEndTextRecognitionMode(); };
+            endTextRecognition.Click += delegate { PdfViewer.EndTextRecognitionMode(); };
             ContextMenu.Items.Add(endTextRecognition);
         }
 
@@ -94,7 +94,8 @@ namespace ViewerWPFSample
                 case TMouseMode.eMouseMoveMode: return "Hand tool";
                 case TMouseMode.eMouseSelectMode: return "Text selection tool";
                 case TMouseMode.eMouseZoomMode: return "Zoom tool";
-                case TMouseMode.eMouseCreateAnnotationMode: return "Draw Annotation tool";
+                case TMouseMode.eMouseDrawAnnotationMode: return "Draw Annotation tool";
+                case TMouseMode.eMouseClickAnnotationMode: return "Click Annotation tool";
                 case TMouseMode.eMouseTextRecognitionMode: return "Start text recognition tool";
                 default: return "undefined mouse mode";
             }
@@ -564,6 +565,9 @@ namespace ViewerWPFSample
                 case Key.Delete:
                     if (PdfViewer.MouseMode == TMouseMode.eMouseMarkMode) PdfViewer.DeleteSelectedAnnotations();
                     break;
+                case Key.Space:
+                    if(PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode)PdfViewer.EndCurrentClickAnotation();
+                    break;
                 default:
                     //do nothing
                     return;
@@ -653,6 +657,9 @@ namespace ViewerWPFSample
                     break;
                 case "Rect":
                     PdfViewer.AnnotationFormMapper = "RectangleFormMapper";
+                    break;
+                case "Poly":
+                    PdfViewer.AnnotationFormMapper = "PolylineFormMapper";
                     break;
             }
         }

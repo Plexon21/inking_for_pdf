@@ -54,7 +54,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         eDestinationInvalid = 0, eDestinationFit = 1, eDestinationFitH = 2, eDestinationFitV = 3, eDestinationFitR = 4, eDestinationFitB = 5, eDestinationFitBH = 6, eDestinationFitBV = 7, eDestinationXYZ = 8
     };
 
-    public enum TMouseMode { eMouseUndefMode, eMouseMoveMode, eMouseZoomMode, eMouseMarkMode, eMouseSelectMode, eMouseCreateAnnotationMode, eMouseTextRecognitionMode };
+    public enum TMouseMode { eMouseUndefMode, eMouseMoveMode, eMouseZoomMode, eMouseMarkMode, eMouseSelectMode, eMouseDrawAnnotationMode, eMouseTextRecognitionMode, eMouseClickAnnotationMode };
 
     public enum TViewerTab { eOutlineTab, eThumbnailTab, eNone };
 

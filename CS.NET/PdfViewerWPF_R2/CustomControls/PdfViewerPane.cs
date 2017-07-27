@@ -200,6 +200,18 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         }
                     }
                 }
+                if (creatingClickAnnotation)
+                {
+                    if (annotationPoints != null)
+                    {
+                        var drawingAnnotations = controller.DrawForm(annotationPoints);
+                        for (var i = 0; i < drawingAnnotations.Count - 1; i++)
+                        {
+                            dc.DrawLine(annotPen, drawingAnnotations[i], drawingAnnotations[i + 1]);
+                        }
+                        dc.DrawLine(annotPen, drawingAnnotations[drawingAnnotations.Count -1], lastMousePosition);
+                    }
+                }
 
                 if (MouseMode == TMouseMode.eMouseTextRecognitionMode)
                 {
@@ -334,7 +346,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     case TMouseMode.eMouseMoveMode: this.Cursor = System.Windows.Input.Cursors.Hand; break;
                     case TMouseMode.eMouseMarkMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
                     case TMouseMode.eMouseZoomMode: this.Cursor = System.Windows.Input.Cursors.Cross; break;
-                    case TMouseMode.eMouseCreateAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
+                    case TMouseMode.eMouseDrawAnnotationMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
                     case TMouseMode.eMouseTextRecognitionMode: this.Cursor = System.Windows.Input.Cursors.Pen; break;
                     default: this.Cursor = System.Windows.Input.Cursors.Arrow; break;
                 }
@@ -520,13 +532,18 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             controller.DeleteAnnotations(selectedAnnotations);
         }
 
-        public void EndEndTextRecognitionMode()
+        public void EndTextRecognitionMode()
         {
             textRecognitionActive = false;
             RecognizeText();
 
             strokes = new StrokeCollection();
             MouseMode = TMouseMode.eMouseSelectMode;
+        }
+        public void EndCurrentClickAnnotation()
+        {
+            creatingClickAnnotation = false;
+            if (annotationPoints != null) CreateAnnotation();
         }
 
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
@@ -555,7 +572,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 }
 
                 if (markedAnnotations != null)
-                { 
+                {
                     if (markedAnnotations.Count > 0)
                     {
                         if (MouseMode == TMouseMode.eMouseMarkMode)
@@ -573,7 +590,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     }
                 }
             }
-            
+
             InvalidateVisual();
         }
 
@@ -673,6 +690,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private bool selectingText = false;
         private Rect selectedRect = new Rect();
         private bool textRecognitionActive = false;
+        private bool creatingClickAnnotation = false;
 
         private bool drawingFreeHandAnnotation = false;
         private bool drawingPointLineAnnotation = false;
@@ -735,14 +753,20 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 this.Cursor = Cursors.IBeam;
                 selectingText = true;
             }
-            else if (MouseMode == TMouseMode.eMouseCreateAnnotationMode)
+            else if (MouseMode == TMouseMode.eMouseDrawAnnotationMode)
             {
                 annotationPoints = new List<Point>();
                 annotationPoints.Add(e.GetPosition(this));
                 drawingFreeHandAnnotation = true;
 
                 StylusPlugIns.First().Enabled = true;
-            } else if (MouseMode == TMouseMode.eMouseTextRecognitionMode)
+            }
+            else if (MouseMode == TMouseMode.eMouseClickAnnotationMode)
+            {
+                creatingClickAnnotation = true;
+                StylusPlugIns.First().Enabled = true;
+            }
+            else if (MouseMode == TMouseMode.eMouseTextRecognitionMode)
             {
                 textRecognitionActive = true;
                 annotationPoints = new List<Point>();
@@ -918,18 +942,26 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
             }
+            else if (creatingClickAnnotation)
+            {
+                lastMousePosition = e.GetPosition(this);
+                InvalidateVisual();
+            }
             else if (movingAnnotation)
             {
                 lastMousePosition = e.GetPosition(this);
                 InvalidateVisual();
-            } 
-            else if (MouseMode == TMouseMode.eMouseCreateAnnotationMode || MouseMode == TMouseMode.eMouseTextRecognitionMode) InvalidateVisual();
-            else if (MouseMode == TMouseMode.eMouseMarkMode && selectedAnnotations != null && selectedAnnotations.Count > 0)
+            }
+            /*else if (MouseMode == TMouseMode.eMouseDrawAnnotationMode ||
+                     MouseMode == TMouseMode.eMouseTextRecognitionMode) InvalidateVisual();*/
+            else if (MouseMode == TMouseMode.eMouseMarkMode && selectedAnnotations != null &&
+                     selectedAnnotations.Count > 0)
             {
                 int page = 0;
                 try
                 {
-                    PdfSourcePoint point = controller.TransformOnScreenToOnPage(new PdfTargetPoint(e.GetPosition(this)), ref page);
+                    PdfSourcePoint point =
+                        controller.TransformOnScreenToOnPage(new PdfTargetPoint(e.GetPosition(this)), ref page);
 
                     if (page > 0 && selectedAnnotations.Any(annot => annot.ContainsPoint(point)))
                     {
@@ -1007,6 +1039,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 annotationPoints = null;
                 textRecognitionActive = false;
+            }
+            else if (creatingClickAnnotation)
+            {
+                if (annotationPoints == null) annotationPoints = new List<Point>();
+                annotationPoints.Add(e.GetPosition(this));
             }
             else if (movingAnnotation)
             {
@@ -1094,7 +1131,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         protected override void OnStylusEnter(StylusEventArgs e)
         {
             base.OnStylusEnter(e);
-            MouseMode = TMouseMode.eMouseCreateAnnotationMode;
+            MouseMode = TMouseMode.eMouseDrawAnnotationMode;
         }
 
         protected override void OnStylusLeave(StylusEventArgs e)
@@ -1104,6 +1141,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         }
 
         #endregion StylusHandlers
+
 
     }
 }
