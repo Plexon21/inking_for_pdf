@@ -52,4 +52,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)Sample\ViewerWPFSample\bin\x64\UnicodeDebug\TextConverters"/Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>
