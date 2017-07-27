@@ -429,6 +429,11 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             {
                 strokes = new StrokeCollection();
             }
+            if (value != TMouseMode.eMouseMarkMode)
+            {
+                movingAnnotation = false;
+                movingAnnotationPossible = false;
+            }
 
             selectedAnnotations.Clear();
         }
