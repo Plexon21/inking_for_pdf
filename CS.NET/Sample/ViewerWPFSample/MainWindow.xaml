@@ -4,7 +4,7 @@
         xmlns:custom="clr-namespace:PdfTools.PdfViewerWPF;assembly=PdfViewerWPF"
         WindowStartupLocation="CenterScreen"
         xmlns:props="clr-namespace:ViewerWPFSample.Properties"
-        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1182">
+        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1241">
 
 
     <DockPanel LastChildFill="True" x:Name="root" x:FieldModifier="public">
@@ -183,6 +183,7 @@
                     <RadioButton x:Name="Dummy" GroupName="textRecognizer" Content="Dummy" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
                     <RadioButton x:Name="NoChange" GroupName="annotationFormMapper" Content="NoChange" IsChecked="True" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
                     <RadioButton x:Name="Rect" GroupName="annotationFormMapper" Content="Rect" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
+                    <RadioButton x:Name="Poly" GroupName="annotationFormMapper" Content="Poly" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
                     <Button x:Name="colorBlack_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Black" Click="colorBlack_Button_Click"/>
                     <Button x:Name="colorRed_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Red" Click="colorRed_Button_Click"/>
                     <Button x:Name="colorCustom_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="#FF2581AF" Click="colorCustom_Button_Click"/>

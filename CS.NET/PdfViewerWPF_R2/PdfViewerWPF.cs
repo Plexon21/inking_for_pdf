@@ -1235,9 +1235,15 @@ namespace PdfTools.PdfViewerWPF
             pane.DeleteSelectedAnnotations();
         }
 
-        public void EndEndTextRecognitionMode()
+        public void EndTextRecognitionMode()
         {
-            pane.EndEndTextRecognitionMode();
+            pane.EndTextRecognitionMode();
         }
+
+        public void EndCurrentClickAnotation()
+        {
+            pane.EndCurrentClickAnnotation();
+        }
+
     }
 }
