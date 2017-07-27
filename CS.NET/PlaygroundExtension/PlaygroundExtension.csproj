@@ -47,11 +47,5 @@
     <Compile Include="TextAnnotation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Playground\Playground.csproj">
-      <Project>{11aa2f5e-2c0e-443e-9153-92b5c6a021bf}</Project>
-      <Name>Playground</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

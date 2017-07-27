@@ -200,7 +200,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         }
                     }
                 }
-                if (creatingClickAnnotation)
+                if (MouseMode == TMouseMode.eMouseClickAnnotationMode)
                 {
                     if (annotationPoints != null)
                     {
@@ -446,6 +446,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 movingAnnotation = false;
                 movingAnnotationPossible = false;
             }
+            annotationPoints = null;
 
             selectedAnnotations.Clear();
         }
@@ -544,6 +545,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         {
             creatingClickAnnotation = false;
             if (annotationPoints != null) CreateAnnotation();
+        }
+        public void AbortCurrentClickAnnotation()
+        {
+            creatingClickAnnotation = false;
+            annotationPoints = null;
+            InvalidateVisual();
         }
 
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
@@ -1143,5 +1150,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         #endregion StylusHandlers
 
 
+        
     }
 }

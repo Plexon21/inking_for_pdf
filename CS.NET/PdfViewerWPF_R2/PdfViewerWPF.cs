@@ -1245,5 +1245,10 @@ namespace PdfTools.PdfViewerWPF
             pane.EndCurrentClickAnnotation();
         }
 
+        public void AbortCurrentClickAnnotation()
+        {
+            pane.AbortCurrentClickAnnotation();
+        }
+
     }
 }

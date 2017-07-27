@@ -568,6 +568,9 @@ namespace ViewerWPFSample
                 case Key.Space:
                     if(PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode)PdfViewer.EndCurrentClickAnotation();
                     break;
+                case Key.Escape:
+                    if(PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode)PdfViewer.AbortCurrentClickAnnotation();
+                    break;
                 default:
                     //do nothing
                     return;
