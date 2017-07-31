@@ -1014,6 +1014,29 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
         }
 
+        public void CreateAnnotationWithoutMapper(PdfAnnotation annot)
+        {
+            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
+        }
+
+        public void CreateTextAnnotation(string content, int page, double[] point, double[] color)
+        {
+            PdfAnnotation annot = new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, page, point, color);
+            annot.Contents = content;
+            CreateAnnotationWithoutMapper(annot);
+        }
+
+        private void UpdateTextAnnotations(IList<PdfAnnotation> annots)
+        {
+            foreach (PdfAnnotation annot in annots)
+            {
+                if (annot.SubType == PdfDocument.TPdfAnnotationType.eAnnotationText && annot.Contents.Length > 0)
+                {
+                    UpdateAnnotation(new UpdateAnnotationArgs(new UpdateAnnotation(annot,null,annot.Contents,"Sticky Note",null,-1)));
+                }
+            }
+        }
+
         public void UpdateAnnotation(UpdateAnnotationArgs args)
         {
             if (args.updateAnnots != null && args.updateAnnots.Count > 0)
@@ -1753,6 +1776,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             FireInvokeCallback(delegate ()
             {
+                UpdateTextAnnotations(annots);
                 FitAndUpdate(false);
                 UpdateBitmapContent();
             });

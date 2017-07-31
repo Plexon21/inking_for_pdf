@@ -416,7 +416,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr);
 
         void LoadAllAnnotationsOnPage(int pageNr);
-        void CreateAnnotation(PdfAnnotation pdfAnnotation);
+        void CreateAnnotation(PdfAnnotation annot);
+        void CreateAnnotationWithoutMapper(PdfAnnotation annot);
+        void CreateTextAnnotation(string content, int page, double[] point, double[] color);
         void UpdateAnnotation(UpdateAnnotationArgs args);
         void DeleteAnnotations(IList<PdfAnnotation> annots);
 

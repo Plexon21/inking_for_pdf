@@ -45,9 +45,13 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
             var res = new List<PdfAnnotation>();
             foreach (var annot in args.Annots)
             {
-                var newAnnot = document.CreateAnnotation(annot.SubType,
+                var newAnnotHandle = document.CreateAnnotation(annot.SubType,
                     annot.PageNr, annot.Rect, annot.Rect.Length, annot.Colors, annot.Colors.Length, annot.BorderWidth);
-                annot.AnnotationHandle = newAnnot;
+
+                var annotSize = Marshal.SizeOf(typeof(PdfDocument.TPdfAnnotation));
+                var newAnnot = (PdfDocument.TPdfAnnotation)Marshal.PtrToStructure(newAnnotHandle, typeof(PdfDocument.TPdfAnnotation));
+                var newAnnotObj = new PdfAnnotation(newAnnot);
+                annot.AnnotationHandle = newAnnotObj.AnnotationHandle;
                 res.Add(annot);
             }
 

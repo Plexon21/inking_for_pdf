@@ -100,11 +100,29 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             switch (annotSubType.ToLower(CultureInfo.InvariantCulture))
             {
                 // Add further annotation-types here
+                case "eannotationtext":
+                case "text":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationText;
+                case "eannotationlink":
+                case "link":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationLink;
+                case "eannotationfreetext":
+                case "freetext":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationFreeText;
+                case "eannotationhighlight":
+                case "highlight":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationHighlight;
                 case "eannotationink":
                 case "ink":
                     return PdfDocument.TPdfAnnotationType.eAnnotationInk;
+                case "eannotationpopup":
+                case "popup":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationPopup;
+                case "eannotationwidet":
+                case "widget":
+                    return PdfDocument.TPdfAnnotationType.eAnnotationWidet;
                 default:
-                    return PdfDocument.TPdfAnnotationType.eAnnotationInk;
+                    return PdfDocument.TPdfAnnotationType.eAnntationUnknown;
             }
         }
 

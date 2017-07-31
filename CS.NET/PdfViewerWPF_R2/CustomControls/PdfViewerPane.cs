@@ -360,6 +360,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private IList<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
         private StrokeCollection strokes = new StrokeCollection();
 
+        private double maxAnnotationStrokeWidth = 12;
+
         //backing fields
         private bool _annotationStrokeWidthZoomDependent = false;
         private double _annotationStrokeWidth = 1;
@@ -386,7 +388,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         {
             set
             {
-                if (value >= 0)
+                if (value >= 0 && value <= maxAnnotationStrokeWidth)
                 {
                     _annotationStrokeWidth = value;
 
@@ -604,7 +606,27 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         public void RecognizeText()
         {
-            MessageBox.Show(controller.ConvertAnnotations(strokes));
+            //MessageBox.Show(controller.ConvertAnnotations(strokes));
+
+            if (strokes != null && strokes.Count > 0)
+            {
+                Stroke firstStroke = strokes[0];
+
+                if (firstStroke != null && firstStroke.StylusPoints != null && firstStroke.StylusPoints.Count > 0)
+                {
+                    StylusPoint firstPoint = firstStroke.StylusPoints[0];
+                    int page = 0;
+                    
+                    PdfSourcePoint pointOnPage = controller.TransformOnScreenToOnPage(new PdfTargetPoint((int)firstPoint.X, (int)firstPoint.Y), ref page);
+
+                    string content = controller.ConvertAnnotations(strokes);
+                    double[] point = new double[] { pointOnPage.dX, pointOnPage.dY };
+                    double[] color = new double[] { AnnotatioStrokeColor.R / 255.0, AnnotatioStrokeColor.G / 255.0, AnnotatioStrokeColor.B / 255.0 };
+
+                    controller.CreateTextAnnotation(content, page, point, color);
+
+                }
+            }
         }
 
         #endregion [InkingForPDF] Annotation Methods
