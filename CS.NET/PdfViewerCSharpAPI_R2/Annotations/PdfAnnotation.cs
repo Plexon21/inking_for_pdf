@@ -122,7 +122,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 case "widget":
                     return PdfDocument.TPdfAnnotationType.eAnnotationWidet;
                 default:
-                    return PdfDocument.TPdfAnnotationType.eAnntationUnknown;
+                    return PdfDocument.TPdfAnnotationType.eAnnotationInk;
             }
         }
 

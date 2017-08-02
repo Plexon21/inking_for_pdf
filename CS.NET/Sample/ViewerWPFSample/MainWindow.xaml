@@ -1,10 +1,11 @@
 ﻿<Window x:Class="ViewerWPFSample.MainWindow"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:custom="clr-namespace:PdfTools.PdfViewerWPF;assembly=PdfViewerWPF"
         WindowStartupLocation="CenterScreen"
         xmlns:props="clr-namespace:ViewerWPFSample.Properties"
-        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1241">
+        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1378">
 
 
     <DockPanel LastChildFill="True" x:Name="root" x:FieldModifier="public">
@@ -178,15 +179,13 @@
                     <Button Click="TextSelectionClick" x:Name="TextSelection_Button" Height="30" ToolTip="{x:Static props:MainWindowRes.textSelection}"  x:FieldModifier="public">
                         <Image Source="{StaticResource textSelection}" />
                     </Button>
-                    <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="69" Margin="0,4,0,0" Minimum="1" Maximum="100" LargeChange="10" Value="1" Thumb.DragCompleted="AnnotationWidth_Slider_DragCompleted"/>
+                    <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="69" Margin="0,4,0,0" Minimum="1" Maximum="12" Value="1" Thumb.DragCompleted="AnnotationWidth_Slider_DragCompleted" SmallChange="1" LargeChange="6"/>
                     <RadioButton x:Name="WindowsInk" GroupName="textRecognizer" Content="Ink" IsChecked="True" Checked="MEF_Changed"/>
                     <RadioButton x:Name="Dummy" GroupName="textRecognizer" Content="Dummy" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
                     <RadioButton x:Name="NoChange" GroupName="annotationFormMapper" Content="NoChange" IsChecked="True" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
                     <RadioButton x:Name="Rect" GroupName="annotationFormMapper" Content="Rect" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
                     <RadioButton x:Name="Poly" GroupName="annotationFormMapper" Content="Poly" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
-                    <Button x:Name="colorBlack_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Black" Click="colorBlack_Button_Click"/>
-                    <Button x:Name="colorRed_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="Red" Click="colorRed_Button_Click"/>
-                    <Button x:Name="colorCustom_Button" Content="" Height="29" VerticalAlignment="Top" Width="27" Background="#FF2581AF" Click="colorCustom_Button_Click"/>
+                    <xctk:ColorPicker Name="annotationColor_ColorPicker" SelectedColorChanged="annotationColor_ColorPicker_SelectedColorChanged" Margin="0,0,0,0.333" Width="85" SelectedColor="Black"/>
                     <CheckBox x:Name="LineWithZoomDependent_CheckBox" Content="LineWithZoomDependent" VerticalAlignment="Top" Margin="0,3,0,0" Width="26" Click="LineWithZoomDependent_CheckBox_Click"/>
                     <CheckBox x:Name="MarkOnIntersect_CheckBox" Content="MarkOnIntersect" VerticalAlignment="Top" Margin="0,3,0,0" Width="27" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" Click="MarkOnIntersect_CheckBox_Click"/>
                 </ToolBar>

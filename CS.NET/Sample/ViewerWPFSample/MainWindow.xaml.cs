@@ -667,21 +667,6 @@ namespace ViewerWPFSample
             }
         }
 
-        private void colorBlack_Button_Click(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.AnnotationColor = Colors.Black;
-        }
-
-        private void colorRed_Button_Click(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.AnnotationColor = Colors.Red;
-        }
-
-        private void colorCustom_Button_Click(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.AnnotationColor = ((SolidColorBrush)(((Button)sender).Background)).Color;
-        }
-
         private void SaveToDesktop_Click(object sender, RoutedEventArgs e)
         {
             PdfViewer.SaveToDesktop();
@@ -695,6 +680,13 @@ namespace ViewerWPFSample
         private void MarkOnIntersect_CheckBox_Click(object sender, RoutedEventArgs e)
         {
             PdfViewer.AnnotationMarkingOnIntersect = ((CheckBox)sender).IsChecked == true;
+        }
+
+        private void annotationColor_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (PdfViewer == null || e.NewValue == null || e.NewValue == e.OldValue) return;
+
+            PdfViewer.AnnotationColor = (Color)e.NewValue;
         }
     }
 }
