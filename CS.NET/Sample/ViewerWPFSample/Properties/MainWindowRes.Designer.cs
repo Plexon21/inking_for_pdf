@@ -61,6 +61,96 @@ namespace ViewerWPFSample.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Annotations.
+        /// </summary>
+        public static string annotations {
+            get {
+                return ResourceManager.GetString("annotations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only count number of  Strokes.
+        /// </summary>
+        public static string annotations_dummy {
+            get {
+                return ResourceManager.GetString("annotations_dummy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FormMapper.
+        /// </summary>
+        public static string annotations_formmapper {
+            get {
+                return ResourceManager.GetString("annotations_formmapper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Line width dependent on zoom.
+        /// </summary>
+        public static string annotations_linewithzoomdependent {
+            get {
+                return ResourceManager.GetString("annotations_linewithzoomdependent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mark annotations intersecting.
+        /// </summary>
+        public static string annotations_markonintersect {
+            get {
+                return ResourceManager.GetString("annotations_markonintersect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not alter form of annotation.
+        /// </summary>
+        public static string annotations_nochange {
+            get {
+                return ResourceManager.GetString("annotations_nochange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alter form of annotation to polyline.
+        /// </summary>
+        public static string annotations_polyline {
+            get {
+                return ResourceManager.GetString("annotations_polyline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alter form of annotation to rectangles.
+        /// </summary>
+        public static string annotations_rectangle {
+            get {
+                return ResourceManager.GetString("annotations_rectangle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TextRecognizer.
+        /// </summary>
+        public static string annotations_textrecognizer {
+            get {
+                return ResourceManager.GetString("annotations_textrecognizer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Textrecognition using WindowsInk.
+        /// </summary>
+        public static string annotations_windowsink {
+            get {
+                return ResourceManager.GetString("annotations_windowsink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Border:.
         /// </summary>
         public static string border {

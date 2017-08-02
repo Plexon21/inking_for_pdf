@@ -306,4 +306,34 @@
   <data name="windows_ink" xml:space="preserve">
     <value>Windows Ink Text Recognizer</value>
   </data>
+  <data name="annotations" xml:space="preserve">
+    <value>Annotations</value>
+  </data>
+  <data name="annotations_dummy" xml:space="preserve">
+    <value>Only count number of  Strokes</value>
+  </data>
+  <data name="annotations_formmapper" xml:space="preserve">
+    <value>FormMapper</value>
+  </data>
+  <data name="annotations_linewithzoomdependent" xml:space="preserve">
+    <value>Line width dependent on zoom</value>
+  </data>
+  <data name="annotations_markonintersect" xml:space="preserve">
+    <value>Mark annotations intersecting</value>
+  </data>
+  <data name="annotations_nochange" xml:space="preserve">
+    <value>Do not alter form of annotation</value>
+  </data>
+  <data name="annotations_polyline" xml:space="preserve">
+    <value>Alter form of annotation to polyline</value>
+  </data>
+  <data name="annotations_rectangle" xml:space="preserve">
+    <value>Alter form of annotation to rectangles</value>
+  </data>
+  <data name="annotations_textrecognizer" xml:space="preserve">
+    <value>TextRecognizer</value>
+  </data>
+  <data name="annotations_windowsink" xml:space="preserve">
+    <value>Textrecognition using WindowsInk</value>
+  </data>
 </root>

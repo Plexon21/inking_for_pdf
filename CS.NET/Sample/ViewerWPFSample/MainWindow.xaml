@@ -28,6 +28,20 @@
             <MenuItem Header="{x:Static props:MainWindowRes.debug}"  >
                 <MenuItem Header="{x:Static props:MainWindowRes.debug_IgnoreEmbeddedPreferences}" IsCheckable="true" IsChecked="{Binding ElementName=PdfViewer, Path=IgnoreEmbeddedPreferences}"/>
             </MenuItem>
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations}" HorizontalContentAlignment="Stretch">
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_linewithzoomdependent}" IsCheckable="True" IsChecked="{Binding ElementName=PdfViewer,Path=AnnotationStrokeWidthZoomDependent}"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_markonintersect}" IsCheckable="True" IsChecked="{Binding ElementName=PdfViewer,Path=AnnotationMarkingOnIntersect}"/>
+                <Separator/>
+            </MenuItem>
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_textrecognizer}">
+                <RadioButton x:Name="WindowsInk" GroupName="textRecognizer" Content="{x:Static props:MainWindowRes.annotations_windowsink}" IsChecked="True" Checked="MEF_Changed" HorizontalAlignment="Stretch"/>
+                <RadioButton x:Name="Dummy" GroupName="textRecognizer" Content="{x:Static props:MainWindowRes.annotations_dummy}" Checked="MEF_Changed" HorizontalAlignment="Stretch"/>
+            </MenuItem>
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_formmapper}">
+                <RadioButton x:Name="NoChange" GroupName="annotationFormMapper" Content="{x:Static props:MainWindowRes.annotations_nochange}" IsChecked="True" Checked="MEF_Changed" />
+                <RadioButton x:Name="Rect" GroupName="annotationFormMapper" Content="{x:Static props:MainWindowRes.annotations_rectangle}" Checked="MEF_Changed" />
+                <RadioButton x:Name="Poly" GroupName="annotationFormMapper" Content="{x:Static props:MainWindowRes.annotations_polyline}" Checked="MEF_Changed" />
+            </MenuItem>
         </Menu>
 
 
@@ -180,14 +194,7 @@
                         <Image Source="{StaticResource textSelection}" />
                     </Button>
                     <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="69" Margin="0,4,0,0" Minimum="1" Maximum="12" Value="1" Thumb.DragCompleted="AnnotationWidth_Slider_DragCompleted" SmallChange="1" LargeChange="6"/>
-                    <RadioButton x:Name="WindowsInk" GroupName="textRecognizer" Content="Ink" IsChecked="True" Checked="MEF_Changed"/>
-                    <RadioButton x:Name="Dummy" GroupName="textRecognizer" Content="Dummy" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
-                    <RadioButton x:Name="NoChange" GroupName="annotationFormMapper" Content="NoChange" IsChecked="True" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25"/>
-                    <RadioButton x:Name="Rect" GroupName="annotationFormMapper" Content="Rect" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
-                    <RadioButton x:Name="Poly" GroupName="annotationFormMapper" Content="Poly" Checked="MEF_Changed" Margin="0,4,0,3.333" Width="25" />
                     <xctk:ColorPicker Name="annotationColor_ColorPicker" SelectedColorChanged="annotationColor_ColorPicker_SelectedColorChanged" Margin="0,0,0,0.333" Width="85" SelectedColor="Black"/>
-                    <CheckBox x:Name="LineWithZoomDependent_CheckBox" Content="LineWithZoomDependent" VerticalAlignment="Top" Margin="0,3,0,0" Width="26" Click="LineWithZoomDependent_CheckBox_Click"/>
-                    <CheckBox x:Name="MarkOnIntersect_CheckBox" Content="MarkOnIntersect" VerticalAlignment="Top" Margin="0,3,0,0" Width="27" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" Click="MarkOnIntersect_CheckBox_Click"/>
                 </ToolBar>
 
             </ToolBarPanel>

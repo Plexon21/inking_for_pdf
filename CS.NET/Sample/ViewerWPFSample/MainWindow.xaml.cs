@@ -566,10 +566,10 @@ namespace ViewerWPFSample
                     if (PdfViewer.MouseMode == TMouseMode.eMouseMarkMode) PdfViewer.DeleteSelectedAnnotations();
                     break;
                 case Key.Space:
-                    if(PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode)PdfViewer.EndCurrentClickAnotation();
+                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.EndCurrentClickAnotation();
                     break;
                 case Key.Escape:
-                    if(PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode)PdfViewer.AbortCurrentClickAnnotation();
+                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.AbortCurrentClickAnnotation();
                     break;
                 default:
                     //do nothing
@@ -672,21 +672,81 @@ namespace ViewerWPFSample
             PdfViewer.SaveToDesktop();
         }
 
-        private void LineWithZoomDependent_CheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.AnnotationStrokeWidthZoomDependent = ((CheckBox)sender).IsChecked == true;
-        }
-
-        private void MarkOnIntersect_CheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            PdfViewer.AnnotationMarkingOnIntersect = ((CheckBox)sender).IsChecked == true;
-        }
-
         private void annotationColor_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (PdfViewer == null || e.NewValue == null || e.NewValue == e.OldValue) return;
 
             PdfViewer.AnnotationColor = (Color)e.NewValue;
+        }
+    }
+    public class MenuItemExtensions : DependencyObject
+    {
+        public static Dictionary<MenuItem, String> ElementToGroupNames = new Dictionary<MenuItem, String>();
+
+        public static readonly DependencyProperty GroupNameProperty =
+            DependencyProperty.RegisterAttached("GroupName",
+                typeof(String),
+                typeof(MenuItemExtensions),
+                new PropertyMetadata(String.Empty, OnGroupNameChanged));
+
+        public static void SetGroupName(MenuItem element, String value)
+        {
+            element.SetValue(GroupNameProperty, value);
+        }
+
+        public static String GetGroupName(MenuItem element)
+        {
+            return element.GetValue(GroupNameProperty).ToString();
+        }
+
+        private static void OnGroupNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            //Add an entry to the group name collection
+            var menuItem = d as MenuItem;
+
+            if (menuItem != null)
+            {
+                String newGroupName = e.NewValue.ToString();
+                String oldGroupName = e.OldValue.ToString();
+                if (String.IsNullOrEmpty(newGroupName))
+                {
+                    //Removing the toggle button from grouping
+                    RemoveCheckboxFromGrouping(menuItem);
+                }
+                else
+                {
+                    //Switching to a new group
+                    if (newGroupName != oldGroupName)
+                    {
+                        if (!String.IsNullOrEmpty(oldGroupName))
+                        {
+                            //Remove the old group mapping
+                            RemoveCheckboxFromGrouping(menuItem);
+                        }
+                        ElementToGroupNames.Add(menuItem, e.NewValue.ToString());
+                        menuItem.Checked += MenuItemChecked;
+                    }
+                }
+            }
+        }
+
+        private static void RemoveCheckboxFromGrouping(MenuItem checkBox)
+        {
+            ElementToGroupNames.Remove(checkBox);
+            checkBox.Checked -= MenuItemChecked;
+        }
+
+
+        static void MenuItemChecked(object sender, RoutedEventArgs e)
+        {
+            var menuItem = e.OriginalSource as MenuItem;
+            foreach (var item in ElementToGroupNames)
+            {
+                if (item.Key != menuItem && item.Value == GetGroupName(menuItem))
+                {
+                    item.Key.IsChecked = false;
+                }
+            }
         }
     }
 }
