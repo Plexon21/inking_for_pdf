@@ -832,8 +832,8 @@ namespace PdfTools.PdfViewerWPF
         /// </summary>
         public Color AnnotationColor
         {
-            get => pane.AnnotatioStrokeColor;
-            set => pane.AnnotatioStrokeColor = value;
+            get => pane.AnnotationStrokeColor;
+            set => pane.AnnotationStrokeColor = value;
         }
 
         /// <summary>

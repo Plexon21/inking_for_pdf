@@ -156,7 +156,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             dc.DrawRectangle(this.Background, null, panelRect);
 
             //set pen for annotations
-            Brush freehandBrush = new SolidColorBrush(AnnotatioStrokeColor);
+            Brush freehandBrush = new SolidColorBrush(AnnotationStrokeColor);
             freehandBrush.Opacity = 1.0;
             double width = AnnotationStrokeWidthZoomDependent ? AnnotationStrokeWidth : AnnotationStrokeWidth * controller.ZoomFactor;
             Pen annotPen = new Pen(freehandBrush, width);
@@ -404,11 +404,12 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
         }
 
-        public Color AnnotatioStrokeColor
+        public Color AnnotationStrokeColor
         {
             set
             {
                 _annotationStrokeColor = value;
+                _annotationStrokeColor.A = 255;
 
                 if (selectedAnnotations.Count > 0)
                 {
@@ -488,7 +489,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 }
 
-                double[] color = new double[] { AnnotatioStrokeColor.R / 255.0, AnnotatioStrokeColor.G / 255.0, AnnotatioStrokeColor.B / 255.0 };
+                double[] color = new double[] { AnnotationStrokeColor.R / 255.0, AnnotationStrokeColor.G / 255.0, AnnotationStrokeColor.B / 255.0 };
                 double width = AnnotationStrokeWidthZoomDependent ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
 
                 controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
@@ -621,7 +622,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                     string content = controller.ConvertAnnotations(strokes);
                     double[] point = new double[] { pointOnPage.dX, pointOnPage.dY };
-                    double[] color = new double[] { AnnotatioStrokeColor.R / 255.0, AnnotatioStrokeColor.G / 255.0, AnnotatioStrokeColor.B / 255.0 };
+                    double[] color = new double[] { AnnotationStrokeColor.R / 255.0, AnnotationStrokeColor.G / 255.0, AnnotationStrokeColor.B / 255.0 };
 
                     controller.CreateTextAnnotation(content, page, point, color);
 
