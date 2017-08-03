@@ -173,23 +173,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             return new UpdateAnnotation(this, rect, null, null, null, -1);
         }
 
-        public UpdateAnnotation Scale(double factor) //this is just to test... TODO: delete
-        {
-            double width = Rect[2] - Rect[0];
-            double height = Rect[3] - Rect[1];
-            double newWidth = width * factor;
-            double newHeight = height * factor;
-
-            double[] rect = new double[] {
-                Rect[0] + (width/2) - (newWidth/2),
-                Rect[1] + (height/2) - (newHeight/2),
-                Rect[2] - (width/2) + (newWidth/2),
-                Rect[3] - (height/2) + (newHeight/2)
-            };
-
-            return new UpdateAnnotation(this, rect, null, null, null, -1);
-        }
-
         public UpdateAnnotation UpdateContent(string content)
         {
             return new UpdateAnnotation(this, null, content, null, null, -1);

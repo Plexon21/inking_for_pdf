@@ -544,7 +544,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         }
 
 
-        //Marshalling der Annotation aus der dll
+        //Marshalling of the dll Annotation
         [StructLayout(LayoutKind.Sequential)]
         public struct TPdfAnnotation
         {
@@ -555,7 +555,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public int nrOfColors;
             public IntPtr ptrColors;
             public int flags;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public double[] rect;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            public double[] rect;
             public IntPtr ptrQuadPoints;
             public int nrOfQuadPoints;
             public IntPtr ptrContents;
@@ -573,98 +574,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public IntPtr ptrTextLabel;
             public Int32 hasPopup;
             public IntPtr m_pPopupAnnot;
-
-            /* TODO : Delete this if not needed
-            public IntPtr annotationHandle;
-            public int pageNr;
-            public IntPtr ptrSubtype;
-
-            public string subType
-            {
-                get { return Marshal.PtrToStringAnsi(ptrSubtype); }
-            }
-
-            public int nrOfColors;
-            public IntPtr ptrColors;
-
-            public double[] colors
-            {
-                get
-                {
-                    double[] array = new double[nrOfColors];
-                    IntPtr pG = ptrColors;
-                    for (int i = 0; i < nrOfColors; i++)
-                    {
-                        array[i] = (double)Marshal.PtrToStructure(pG, typeof(double));
-                        pG += Marshal.SizeOf(typeof(double));
-                    }
-                    return array;
-                }
-            }
-
-            public int flags;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public double[] rect;
-            public IntPtr ptrQuadPoints;
-
-            public double[] quadPoints
-            {
-                get
-                {
-                    double[] array = new double[nrOfQuadPoints];
-                    IntPtr pG = ptrQuadPoints;
-                    for (int i = 0; i < nrOfQuadPoints; i++)
-                    {
-                        array[i] = (double)Marshal.PtrToStructure(pG, typeof(double));
-                        pG += Marshal.SizeOf(typeof(double));
-                    }
-                    return array;
-                }
-            }
-
-            public int nrOfQuadPoints;
-            public IntPtr ptrContents;
-
-            public string contents
-            {
-                get { return Marshal.PtrToStringAnsi(ptrContents); }
-            }
-
-            [MarshalAs(UnmanagedType.I1)] public bool isLink;
-            public IntPtr ptrActionType;
-
-            public string actionType
-            {
-                get { return Marshal.PtrToStringAnsi(ptrActionType); }
-            }
-
-            [MarshalAs(UnmanagedType.I1)] public bool hasURI;
-            public IntPtr ptrURI;
-
-            public string URI
-            {
-                get { return Marshal.PtrToStringAnsi(ptrURI); }
-            }
-
-            public int destType;
-
-            [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.I1, SizeConst = 5)]
-            public bool[] hasDestVal;
-
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)] public double[] destArray;
-            int destPage;
-            [MarshalAs(UnmanagedType.I1)] public bool isMarkup;
-            public IntPtr ptrTextLabel;
-
-            public string textLabel
-            {
-                get { return Marshal.PtrToStringAnsi(ptrTextLabel); }
-            }
-
-            [MarshalAs(UnmanagedType.I1)] public bool hasPopup;
-            public IntPtr m_pPopupAnnot;
-            public IntPtr offset;
-
-    */
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -680,6 +589,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
                 get { return Marshal.PtrToStringUni(ptrSubtype); }
             }
         }
+
         public enum TPdfViewerModelPixelOrder
         {
             ePdfViewerModelPixelOrderRGBA = 0,
