@@ -33,14 +33,14 @@
                 <MenuItem Header="{x:Static props:MainWindowRes.annotations_markonintersect}" IsCheckable="True" IsChecked="{Binding ElementName=PdfViewer,Path=AnnotationMarkingOnIntersect}"/>
                 <Separator/>
             </MenuItem>
-            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_textrecognizer}" x:Name="TextRecognizer">
-                <MenuItem Header="{x:Static props:MainWindowRes.annotations_windowsink}" x:Name="WindowsInk" IsChecked="True" Click="TextRec_Changed"/>
-                <MenuItem Header="{x:Static props:MainWindowRes.annotations_dummy}" x:Name="Dummy" Click="TextRec_Changed"/>
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_textrecognizer}" Name="TextRecognizer">
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_windowsink}" Name="WindowsInk" IsChecked="True" Click="TextRec_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_dummy}" Name="Dummy" Click="TextRec_Changed"/>
             </MenuItem>
-            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_formmapper}" x:Name="FormMapper">
-                <MenuItem Header="{x:Static props:MainWindowRes.annotations_nochange}" x:Name="NoChange" IsChecked="True" Click="FormMap_Changed"/>
-                <MenuItem Header="{x:Static props:MainWindowRes.annotations_rectangle}" x:Name="Rect" Click="FormMap_Changed"/>
-                <MenuItem Header="{x:Static props:MainWindowRes.annotations_polyline}" x:Name="Poly" Click="FormMap_Changed"/>
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_formmapper}" Name="FormMapper">
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_nochange}" Name="NoChange" IsChecked="True" Click="FormMap_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_rectangle}" Name="Rect" Click="FormMap_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_polyline}" Name="Poly" Click="FormMap_Changed"/>
             </MenuItem>
         </Menu>
 

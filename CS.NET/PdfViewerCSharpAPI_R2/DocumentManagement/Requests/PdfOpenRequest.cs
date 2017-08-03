@@ -1,6 +1,6 @@
 ﻿/****************************************************************************
  *
- * File:            PdfSaveAsRequest.cs
+ * File:            PdfOpenRequest.cs
  *
  * Description:     The 3-Heights™  Pdf Viewer Control for WPF
  *
