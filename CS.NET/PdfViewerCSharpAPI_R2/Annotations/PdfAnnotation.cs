@@ -66,8 +66,8 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             IntPtr pQuadPoints = annot.ptrQuadPoints;
             for (int i = 0; i < annot.nrOfQuadPoints; i++)
             {
-                quadPointArray[i] = (double)Marshal.PtrToStructure(pColorArray, typeof(double));
-                pColorArray += Marshal.SizeOf(typeof(double));
+                quadPointArray[i] = (double)Marshal.PtrToStructure(pQuadPoints, typeof(double));
+                pQuadPoints += Marshal.SizeOf(typeof(double));
             }
 
             this.QuadPoints = quadPointArray;
