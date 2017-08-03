@@ -66,37 +66,47 @@ namespace ViewerWPFSample
             ContextMenu.Items.Add(new Separator());
             foreach (TMouseMode mouseMode in Enum.GetValues(typeof(TMouseMode)))
             {
-                if (mouseMode == TMouseMode.eMouseUndefMode)
+                if (mouseMode == TMouseMode.eMouseUndefMode || mouseMode == TMouseMode.eMouseTextRecognitionMode)
                     continue;
+                if(mouseMode == TMouseMode.eMouseDrawAnnotationMode)
+                    ContextMenu.Items.Add(new Separator());
                 MenuItem item = new MenuItem();
                 item.Header = translateMouseMode(mouseMode);
                 item.Click += delegate { PdfViewer.MouseMode = mouseMode; };
                 ContextMenu.Items.Add(item);
                 mouseModeMenuItems.Add(item);
             }
-
             MenuItem deleteAnnotations = new MenuItem();
             deleteAnnotations.Header = "Delete Annotations";
             deleteAnnotations.Click += delegate { PdfViewer.DeleteSelectedAnnotations(); };
             ContextMenu.Items.Add(deleteAnnotations);
 
+            ContextMenu.Items.Add(new Separator());
+
+            MenuItem startTextReco = new MenuItem();
+            startTextReco.Header = translateMouseMode(TMouseMode.eMouseTextRecognitionMode);
+            startTextReco.Click += delegate { PdfViewer.MouseMode = TMouseMode.eMouseTextRecognitionMode; };
+            ContextMenu.Items.Add(startTextReco);
+            mouseModeMenuItems.Add(startTextReco);
+
             MenuItem endTextRecognition = new MenuItem();
             endTextRecognition.Header = "End Text Recognition";
             endTextRecognition.Click += delegate { PdfViewer.EndTextRecognitionMode(); };
             ContextMenu.Items.Add(endTextRecognition);
+
         }
 
         private String translateMouseMode(TMouseMode mode)
         {
             switch (mode)
             {
-                case TMouseMode.eMouseMarkMode: return "Mark area tool";
-                case TMouseMode.eMouseMoveMode: return "Hand tool";
-                case TMouseMode.eMouseSelectMode: return "Text selection tool";
-                case TMouseMode.eMouseZoomMode: return "Zoom tool";
-                case TMouseMode.eMouseDrawAnnotationMode: return "Draw Annotation tool";
-                case TMouseMode.eMouseClickAnnotationMode: return "Click Annotation tool";
-                case TMouseMode.eMouseTextRecognitionMode: return "Start text recognition tool";
+                case TMouseMode.eMouseMarkMode: return "Mark Area Tool";
+                case TMouseMode.eMouseMoveMode: return "Hand Tool";
+                case TMouseMode.eMouseSelectMode: return "Text Selection Tool";
+                case TMouseMode.eMouseZoomMode: return "Zoom Tool";
+                case TMouseMode.eMouseDrawAnnotationMode: return "Draw Annotation Tool";
+                case TMouseMode.eMouseClickAnnotationMode: return "Click Annotation Tool";
+                case TMouseMode.eMouseTextRecognitionMode: return "Start Text Recognition Tool";
                 default: return "undefined mouse mode";
             }
         }
