@@ -66,37 +66,47 @@ namespace ViewerWPFSample
             ContextMenu.Items.Add(new Separator());
             foreach (TMouseMode mouseMode in Enum.GetValues(typeof(TMouseMode)))
             {
-                if (mouseMode == TMouseMode.eMouseUndefMode)
+                if (mouseMode == TMouseMode.eMouseUndefMode || mouseMode == TMouseMode.eMouseTextRecognitionMode)
                     continue;
+                if(mouseMode == TMouseMode.eMouseDrawAnnotationMode)
+                    ContextMenu.Items.Add(new Separator());
                 MenuItem item = new MenuItem();
                 item.Header = translateMouseMode(mouseMode);
                 item.Click += delegate { PdfViewer.MouseMode = mouseMode; };
                 ContextMenu.Items.Add(item);
                 mouseModeMenuItems.Add(item);
             }
-
             MenuItem deleteAnnotations = new MenuItem();
             deleteAnnotations.Header = "Delete Annotations";
             deleteAnnotations.Click += delegate { PdfViewer.DeleteSelectedAnnotations(); };
             ContextMenu.Items.Add(deleteAnnotations);
 
+            ContextMenu.Items.Add(new Separator());
+
+            MenuItem startTextReco = new MenuItem();
+            startTextReco.Header = translateMouseMode(TMouseMode.eMouseTextRecognitionMode);
+            startTextReco.Click += delegate { PdfViewer.MouseMode = TMouseMode.eMouseTextRecognitionMode; };
+            ContextMenu.Items.Add(startTextReco);
+            mouseModeMenuItems.Add(startTextReco);
+
             MenuItem endTextRecognition = new MenuItem();
             endTextRecognition.Header = "End Text Recognition";
             endTextRecognition.Click += delegate { PdfViewer.EndTextRecognitionMode(); };
             ContextMenu.Items.Add(endTextRecognition);
+
         }
 
         private String translateMouseMode(TMouseMode mode)
         {
             switch (mode)
             {
-                case TMouseMode.eMouseMarkMode: return "Mark area tool";
-                case TMouseMode.eMouseMoveMode: return "Hand tool";
-                case TMouseMode.eMouseSelectMode: return "Text selection tool";
-                case TMouseMode.eMouseZoomMode: return "Zoom tool";
-                case TMouseMode.eMouseDrawAnnotationMode: return "Draw Annotation tool";
-                case TMouseMode.eMouseClickAnnotationMode: return "Click Annotation tool";
-                case TMouseMode.eMouseTextRecognitionMode: return "Start text recognition tool";
+                case TMouseMode.eMouseMarkMode: return "Mark Area Tool";
+                case TMouseMode.eMouseMoveMode: return "Hand Tool";
+                case TMouseMode.eMouseSelectMode: return "Text Selection Tool";
+                case TMouseMode.eMouseZoomMode: return "Zoom Tool";
+                case TMouseMode.eMouseDrawAnnotationMode: return "Draw Annotation Tool";
+                case TMouseMode.eMouseClickAnnotationMode: return "Click Annotation Tool";
+                case TMouseMode.eMouseTextRecognitionMode: return "Start Text Recognition Tool";
                 default: return "undefined mouse mode";
             }
         }
@@ -643,11 +653,22 @@ namespace ViewerWPFSample
             }
         }
 
-        private void MEF_Changed(object sender, RoutedEventArgs e)
+        private void TextRec_Changed(object sender, RoutedEventArgs e)
         {
-            var btn = sender as RadioButton;
-            if (btn == null || btn.IsChecked != true || PdfViewer == null) return;
-            switch (btn.Name)
+            var item = sender as MenuItem;
+            if (TextRecognizer == null || item == null || PdfViewer == null)
+                return;
+            item.IsChecked = true;
+            foreach (var child in TextRecognizer.Items)
+            {
+                var mChild = child as MenuItem;
+                if (mChild == null) return;
+                if (!item.Name.Equals(mChild.Name))
+                {
+                    mChild.IsChecked = false;
+                }
+            }
+            switch (item.Name)
             {
                 case "WindowsInk":
                     PdfViewer.TextConverter = "WindowsInkTextConverter";
@@ -655,6 +676,26 @@ namespace ViewerWPFSample
                 case "Dummy":
                     PdfViewer.TextConverter = "DummyTextConverter";
                     break;
+            }
+        }
+        private void FormMap_Changed(object sender, RoutedEventArgs e)
+        {
+            var item = sender as MenuItem;
+            FormMapper.IsChecked = false;
+            if (FormMapper == null || item == null || PdfViewer == null)
+                return;
+            item.IsChecked = true;
+            foreach (var child in FormMapper.Items)
+            {
+                var mChild = child as MenuItem;
+                if (mChild == null) return;
+                if (!item.Name.Equals(mChild.Name))
+                {
+                    mChild.IsChecked = false;
+                }
+            }
+            switch (item.Name)
+            {
                 case "NoChange":
                     PdfViewer.AnnotationFormMapper = "NoChangeFormMapper";
                     break;
@@ -677,76 +718,6 @@ namespace ViewerWPFSample
             if (PdfViewer == null || e.NewValue == null || e.NewValue == e.OldValue) return;
 
             PdfViewer.AnnotationColor = (Color)e.NewValue;
-        }
-    }
-    public class MenuItemExtensions : DependencyObject
-    {
-        public static Dictionary<MenuItem, String> ElementToGroupNames = new Dictionary<MenuItem, String>();
-
-        public static readonly DependencyProperty GroupNameProperty =
-            DependencyProperty.RegisterAttached("GroupName",
-                typeof(String),
-                typeof(MenuItemExtensions),
-                new PropertyMetadata(String.Empty, OnGroupNameChanged));
-
-        public static void SetGroupName(MenuItem element, String value)
-        {
-            element.SetValue(GroupNameProperty, value);
-        }
-
-        public static String GetGroupName(MenuItem element)
-        {
-            return element.GetValue(GroupNameProperty).ToString();
-        }
-
-        private static void OnGroupNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            //Add an entry to the group name collection
-            var menuItem = d as MenuItem;
-
-            if (menuItem != null)
-            {
-                String newGroupName = e.NewValue.ToString();
-                String oldGroupName = e.OldValue.ToString();
-                if (String.IsNullOrEmpty(newGroupName))
-                {
-                    //Removing the toggle button from grouping
-                    RemoveCheckboxFromGrouping(menuItem);
-                }
-                else
-                {
-                    //Switching to a new group
-                    if (newGroupName != oldGroupName)
-                    {
-                        if (!String.IsNullOrEmpty(oldGroupName))
-                        {
-                            //Remove the old group mapping
-                            RemoveCheckboxFromGrouping(menuItem);
-                        }
-                        ElementToGroupNames.Add(menuItem, e.NewValue.ToString());
-                        menuItem.Checked += MenuItemChecked;
-                    }
-                }
-            }
-        }
-
-        private static void RemoveCheckboxFromGrouping(MenuItem checkBox)
-        {
-            ElementToGroupNames.Remove(checkBox);
-            checkBox.Checked -= MenuItemChecked;
-        }
-
-
-        static void MenuItemChecked(object sender, RoutedEventArgs e)
-        {
-            var menuItem = e.OriginalSource as MenuItem;
-            foreach (var item in ElementToGroupNames)
-            {
-                if (item.Key != menuItem && item.Value == GetGroupName(menuItem))
-                {
-                    item.Key.IsChecked = false;
-                }
-            }
         }
     }
 }

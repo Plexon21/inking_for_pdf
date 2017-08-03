@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewerWPFSample", "Sample\V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsInkTextConverter", "WindowsInkTextConverter\WindowsInkTextConverter.csproj", "{3997B09B-3297-4610-BEE6-CC9C9BA77BBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoChangeAnnotationFormMapper", "DummyAnnotationPointReworker\NoChangeAnnotationFormMapper.csproj", "{0AC9D4AD-F938-4055-A17E-A2F9A3B64FB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoChangeAnnotationFormMapper", "NoChangeAnnotationFormMapper\NoChangeAnnotationFormMapper.csproj", "{0AC9D4AD-F938-4055-A17E-A2F9A3B64FB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyTextConverter", "DummyTextConverter\DummyTextConverter.csproj", "{A3A4227F-70A1-4E05-874C-7510C735C1BF}"
 EndProject

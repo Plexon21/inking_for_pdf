@@ -84,6 +84,54 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.HasPopup = annot.hasPopup == 1;
             this.PopupAnnotation = annot.m_pPopupAnnot;
         }
+        public PdfAnnotation(PdfAnnotation annot)
+        {
+            AnnotationHandle = annot.AnnotationHandle;
+            PageNr = annot.PageNr;
+            SubType = annot.SubType;
+            var tmpCol = new double[annot.Colors.Length];
+            for (int i = 0; i < annot.Colors.Length; i++)
+            {
+                tmpCol[i] = annot.Colors[i];
+            }
+            Colors = tmpCol;
+            Flags = annot.Flags;
+            var tmpRect = new double[annot.Rect.Length];
+            for (int i = 0; i < annot.Rect.Length; i++)
+            {
+                tmpRect[i] = annot.Rect[i];
+            }
+            Rect = tmpRect;
+            var tmpQuad = new double[annot.QuadPoints.Length];
+            for (int i = 0; i < annot.QuadPoints.Length; i++)
+            {
+                tmpQuad[i] = annot.QuadPoints[i];
+            }
+            QuadPoints = tmpQuad;
+            Contents = annot.Contents;
+            IsLink = annot.IsLink;
+            ActionType = annot.ActionType;
+            HasUri = annot.HasUri;
+            Uri = annot.Uri;
+            DestType = annot.DestType;
+            var tmpHDest = new bool[annot.HasDestVal.Length];
+            for (int i = 0; i < annot.HasDestVal.Length; i++)
+            {
+                tmpHDest[i] = annot.HasDestVal[i];
+            }
+            HasDestVal = tmpHDest;
+            var tmpDest = new double[annot.DestArray.Length];
+            for (int i = 0; i < annot.DestArray.Length; i++)
+            {
+                tmpDest[i] = annot.DestArray[i];
+            }
+            DestArray = tmpDest;
+            IsMarkup = annot.IsMarkup;
+            TextLabel = annot.TextLabel;
+            HasPopup = annot.HasPopup;
+            PopupAnnotation = annot.PopupAnnotation;
+            BorderWidth = annot.BorderWidth;
+        }
 
         public long GetHandleAsLong()
         {
@@ -126,29 +174,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             }
         }
 
-        public PdfAnnotation(PdfAnnotation annot)
-        {
-            AnnotationHandle = annot.AnnotationHandle;
-            PageNr = annot.PageNr;
-            SubType = annot.SubType;
-            Colors = annot.Colors;
-            Flags = annot.Flags;
-            Rect = annot.Rect;
-            QuadPoints = annot.QuadPoints;
-            Contents = annot.Contents;
-            IsLink = annot.IsLink;
-            ActionType = annot.ActionType;
-            HasUri = annot.HasUri;
-            Uri = annot.Uri;
-            DestType = annot.DestType;
-            HasDestVal = annot.HasDestVal;
-            DestArray = annot.DestArray;
-            IsMarkup = annot.IsMarkup;
-            TextLabel = annot.TextLabel;
-            HasPopup = annot.HasPopup;
-            PopupAnnotation = annot.PopupAnnotation;
-            BorderWidth = annot.BorderWidth;
-        }
+        
 
         public bool ContainsOrIntersectsWithRect(PdfSourceRect markedRect, bool OnIntersect)
         {
