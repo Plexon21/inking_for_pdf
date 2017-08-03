@@ -33,14 +33,14 @@
                 <MenuItem Header="{x:Static props:MainWindowRes.annotations_markonintersect}" IsCheckable="True" IsChecked="{Binding ElementName=PdfViewer,Path=AnnotationMarkingOnIntersect}"/>
                 <Separator/>
             </MenuItem>
-            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_textrecognizer}">
-                <RadioButton x:Name="WindowsInk" GroupName="textRecognizer" Content="{x:Static props:MainWindowRes.annotations_windowsink}" IsChecked="True" Checked="MEF_Changed" HorizontalAlignment="Stretch"/>
-                <RadioButton x:Name="Dummy" GroupName="textRecognizer" Content="{x:Static props:MainWindowRes.annotations_dummy}" Checked="MEF_Changed" HorizontalAlignment="Stretch"/>
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_textrecognizer}" x:Name="TextRecognizer">
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_windowsink}" x:Name="WindowsInk" IsChecked="True" Click="TextRec_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_dummy}" x:Name="Dummy" Click="TextRec_Changed"/>
             </MenuItem>
-            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_formmapper}">
-                <RadioButton x:Name="NoChange" GroupName="annotationFormMapper" Content="{x:Static props:MainWindowRes.annotations_nochange}" IsChecked="True" Checked="MEF_Changed" />
-                <RadioButton x:Name="Rect" GroupName="annotationFormMapper" Content="{x:Static props:MainWindowRes.annotations_rectangle}" Checked="MEF_Changed" />
-                <RadioButton x:Name="Poly" GroupName="annotationFormMapper" Content="{x:Static props:MainWindowRes.annotations_polyline}" Checked="MEF_Changed" />
+            <MenuItem Header ="{x:Static props:MainWindowRes.annotations_formmapper}" x:Name="FormMapper">
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_nochange}" x:Name="NoChange" IsChecked="True" Click="FormMap_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_rectangle}" x:Name="Rect" Click="FormMap_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_polyline}" x:Name="Poly" Click="FormMap_Changed"/>
             </MenuItem>
         </Menu>
 
