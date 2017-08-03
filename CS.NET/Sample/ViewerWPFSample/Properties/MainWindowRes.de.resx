@@ -310,7 +310,7 @@
     <value>Strichzähler</value>
   </data>
   <data name="annotations_formmapper" xml:space="preserve">
-    <value>FormMapper</value>
+    <value>Formen</value>
   </data>
   <data name="annotations_markonintersect" xml:space="preserve">
     <value>Geschnittene Annotationen markieren</value>
@@ -325,9 +325,9 @@
     <value>Rechteck</value>
   </data>
   <data name="annotations_textrecognizer" xml:space="preserve">
-    <value>TextRecognizer</value>
+    <value>Texterkennung</value>
   </data>
   <data name="annotations_windowsink" xml:space="preserve">
-    <value>WindowsInk</value>
+    <value>Windows Ink</value>
   </data>
 </root>

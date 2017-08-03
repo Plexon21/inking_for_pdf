@@ -96,36 +96,52 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             }
             Colors = tmpCol;
             Flags = annot.Flags;
-            var tmpRect = new double[annot.Rect.Length];
-            for (int i = 0; i < annot.Rect.Length; i++)
+            if (annot.Rect == null) Rect = null;
+            else
             {
-                tmpRect[i] = annot.Rect[i];
+                var tmpRect = new double[annot.Rect.Length];
+                for (int i = 0; i < annot.Rect.Length; i++)
+                {
+                    tmpRect[i] = annot.Rect[i];
+                }
+                Rect = tmpRect;
             }
-            Rect = tmpRect;
-            var tmpQuad = new double[annot.QuadPoints.Length];
-            for (int i = 0; i < annot.QuadPoints.Length; i++)
+            if (annot.QuadPoints == null) QuadPoints = null;
+            else
             {
-                tmpQuad[i] = annot.QuadPoints[i];
+                var tmpQuad = new double[annot.QuadPoints.Length];
+                for (int i = 0; i < annot.QuadPoints.Length; i++)
+                {
+                    tmpQuad[i] = annot.QuadPoints[i];
+                }
+                QuadPoints = tmpQuad;
             }
-            QuadPoints = tmpQuad;
             Contents = annot.Contents;
             IsLink = annot.IsLink;
             ActionType = annot.ActionType;
             HasUri = annot.HasUri;
             Uri = annot.Uri;
             DestType = annot.DestType;
-            var tmpHDest = new bool[annot.HasDestVal.Length];
-            for (int i = 0; i < annot.HasDestVal.Length; i++)
+            if (annot.HasDestVal == null) HasDestVal = null;
+            else
             {
-                tmpHDest[i] = annot.HasDestVal[i];
+                var tmpHDest = new bool[annot.HasDestVal.Length];
+                for (int i = 0; i < annot.HasDestVal.Length; i++)
+                {
+                    tmpHDest[i] = annot.HasDestVal[i];
+                }
+                HasDestVal = tmpHDest;
             }
-            HasDestVal = tmpHDest;
-            var tmpDest = new double[annot.DestArray.Length];
-            for (int i = 0; i < annot.DestArray.Length; i++)
+            if (annot.DestArray == null) DestArray = null;
+            else
             {
-                tmpDest[i] = annot.DestArray[i];
+                var tmpDest = new double[annot.DestArray.Length];
+                for (int i = 0; i < annot.DestArray.Length; i++)
+                {
+                    tmpDest[i] = annot.DestArray[i];
+                }
+                DestArray = tmpDest;
             }
-            DestArray = tmpDest;
             IsMarkup = annot.IsMarkup;
             TextLabel = annot.TextLabel;
             HasPopup = annot.HasPopup;
@@ -174,7 +190,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             }
         }
 
-        
+
 
         public bool ContainsOrIntersectsWithRect(PdfSourceRect markedRect, bool OnIntersect)
         {
@@ -189,7 +205,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 
         public bool ContainsPoint(PdfSourcePoint point)
         {
-            return Rect[0] < point.dX && Rect[1] < point.dY && Rect[2] > point.dX && Rect[3] > point.dY; 
+            return Rect[0] < point.dX && Rect[1] < point.dY && Rect[2] > point.dX && Rect[3] > point.dY;
         }
 
         public UpdateAnnotation Move(double x, double y)
