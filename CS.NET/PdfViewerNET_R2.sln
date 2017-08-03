@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfViewerCSharpAPI", "PdfViewerCSharpAPI_R2\PdfViewerCSharpAPI.csproj", "{12BB3EF2-6EA8-4428-9854-893F44524614}"
 EndProject
@@ -21,6 +21,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RectangleFormMapper", "RectangleFormMapper\RectangleFormMapper.csproj", "{EFC2C500-EA8A-4D11-9286-6C0D2E85E891}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolylineFormMapper", "PolylineFormMapper\PolylineFormMapper.csproj", "{811B06E3-E3F1-43FC-8AE0-C85BBCF9C383}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FormMapper", "FormMapper", "{1869D6CA-794A-4D59-9464-B97EE25D5405}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextConverter", "TextConverter", "{0BA4549C-7958-4F70-A25C-2AD8FFAB02D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -297,5 +301,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3997B09B-3297-4610-BEE6-CC9C9BA77BBE} = {0BA4549C-7958-4F70-A25C-2AD8FFAB02D9}
+		{0AC9D4AD-F938-4055-A17E-A2F9A3B64FB9} = {1869D6CA-794A-4D59-9464-B97EE25D5405}
+		{A3A4227F-70A1-4E05-874C-7510C735C1BF} = {0BA4549C-7958-4F70-A25C-2AD8FFAB02D9}
+		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891} = {1869D6CA-794A-4D59-9464-B97EE25D5405}
+		{811B06E3-E3F1-43FC-8AE0-C85BBCF9C383} = {1869D6CA-794A-4D59-9464-B97EE25D5405}
 	EndGlobalSection
 EndGlobal
