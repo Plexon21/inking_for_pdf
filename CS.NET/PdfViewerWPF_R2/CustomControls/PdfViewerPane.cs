@@ -494,14 +494,17 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 controller.CreateAnnotation(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, firstPage, points, color, width));
 
+                annotationPoints = null;
             }
             catch (ArgumentOutOfRangeException e)
             {
                 Logger.LogError("Not all points of the drawn annotation are on the same Page. Aborting creation.");
                 Logger.LogException(e);
-            }
 
-            annotationPoints = null;
+
+                annotationPoints = null;
+                InvalidateVisual();
+            }
         }
 
         private void MoveAnnotations(Point pointOrigin, Point pointDestination)
@@ -533,6 +536,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         public void DeleteSelectedAnnotations()
         {
+            movingAnnotationPossible = false;
+            movingAnnotation = false;
+            SetCursorAccordingToMouseMode();
+
             controller.DeleteAnnotations(selectedAnnotations);
         }
 
@@ -993,7 +1000,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     PdfSourcePoint point =
                         controller.TransformOnScreenToOnPage(new PdfTargetPoint(e.GetPosition(this)), ref page);
 
-                    if (page > 0 && selectedAnnotations.Any(annot => annot.ContainsPoint(point)))
+                    if (page > 0 && selectedAnnotations.Any(annot => annot.ContainsPoint(point) && annot.PageNr == page))
                     {
                         this.Cursor = Cursors.SizeAll;
                         this.movingAnnotationPossible = true;

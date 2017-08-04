@@ -715,7 +715,7 @@ namespace ViewerWPFSample
 
         private void annotationColor_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if (PdfViewer == null || e.NewValue == null || e.NewValue == e.OldValue) return;
+            if (PdfViewer == null || e.NewValue == null) return;
 
             PdfViewer.AnnotationColor = (Color)e.NewValue;
         }
