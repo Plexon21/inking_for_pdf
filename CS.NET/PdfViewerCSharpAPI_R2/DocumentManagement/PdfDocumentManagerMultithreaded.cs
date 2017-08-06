@@ -345,7 +345,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        #region Annotations
+        #region [InkingForPDF] Annotation Methods
 
         public PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args)
         {
@@ -354,9 +354,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        public PdfDeleteAnnotationRequest DeleteAnnotation(DeleteAnnotationArgs args)
+        public PdfGetAnnotationsOnPageRequest GetAnnotationsOnPage(int pageNr)
         {
-            var request = new PdfDeleteAnnotationRequest(args);
+            var request = new PdfGetAnnotationsOnPageRequest(new PdfGetAnnotationsOnPageArgs(pageNr));
             requestQueue.Add(request);
             return request;
         }
@@ -368,10 +368,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        public PdfGetAnnotationsOnPageRequest GetAnnotationsOnPage(int pageNr)
+        public PdfDeleteAnnotationRequest DeleteAnnotation(DeleteAnnotationArgs args)
         {
-            PdfGetAnnotationsOnPageArgs args = new PdfGetAnnotationsOnPageArgs(pageNr);
-            var request = new PdfGetAnnotationsOnPageRequest(args); requestQueue.Add(request);
+            var request = new PdfDeleteAnnotationRequest(args);
+            requestQueue.Add(request);
             return request;
         }
 
@@ -382,7 +382,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        #endregion
+        #endregion [InkingForPDF] Annotation Methods
 
         private IList<int> _pageOrder;
         public IList<int> PageOrder
