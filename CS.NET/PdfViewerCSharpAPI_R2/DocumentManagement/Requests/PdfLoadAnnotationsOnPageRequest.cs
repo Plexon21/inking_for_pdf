@@ -10,27 +10,27 @@ using PdfTools.PdfViewerCSharpAPI.Utilities;
 namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 {
 
-    public struct PdfLoadAnnotationsOnPageArgs
+    public struct PdfGetAnnotationsOnPageArgs
     {
         public int PageNr;
 
-        public PdfLoadAnnotationsOnPageArgs(int pageNr)
+        public PdfGetAnnotationsOnPageArgs(int pageNr)
         {
             this.PageNr = pageNr;
         }
     }
-    public class PdfLoadAnnotationsOnPageRequest : APdfRequest<PdfLoadAnnotationsOnPageArgs, IList<PdfAnnotation>>
+    public class PdfGetAnnotationsOnPageRequest : APdfRequest<PdfGetAnnotationsOnPageArgs, IList<PdfAnnotation>>
     {
-        public PdfLoadAnnotationsOnPageRequest(PdfLoadAnnotationsOnPageArgs arguments)
+        public PdfGetAnnotationsOnPageRequest(PdfGetAnnotationsOnPageArgs arguments)
             : base(arguments, 45)
         {
         }
-        public PdfLoadAnnotationsOnPageRequest(PdfLoadAnnotationsOnPageArgs arguments, int priority)
+        public PdfGetAnnotationsOnPageRequest(PdfGetAnnotationsOnPageArgs arguments, int priority)
             : base(arguments, priority)
         {
         }
 
-        protected override IList<PdfAnnotation> ExecuteNative(IPdfDocument document, PdfLoadAnnotationsOnPageArgs args)
+        protected override IList<PdfAnnotation> ExecuteNative(IPdfDocument document, PdfGetAnnotationsOnPageArgs args)
         {
            var annotations = document.GetAnnotations(args.PageNr);
             return annotations;

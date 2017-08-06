@@ -368,10 +368,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        public PdfLoadAnnotationsOnPageRequest LoadAnnotationsOnPage(int pageNr)
+        public PdfGetAnnotationsOnPageRequest GetAnnotationsOnPage(int pageNr)
         {
-            PdfLoadAnnotationsOnPageArgs args = new PdfLoadAnnotationsOnPageArgs(pageNr);
-            var request = new PdfLoadAnnotationsOnPageRequest(args); requestQueue.Add(request);
+            PdfGetAnnotationsOnPageArgs args = new PdfGetAnnotationsOnPageArgs(pageNr);
+            var request = new PdfGetAnnotationsOnPageRequest(args); requestQueue.Add(request);
             return request;
         }
 

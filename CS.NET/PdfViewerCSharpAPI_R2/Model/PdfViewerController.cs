@@ -1057,7 +1057,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void LoadAllAnnotationsOnPage(int pageNr)
         {
-            canvas.DocumentManager.LoadAnnotationsOnPage(pageNr);
+            canvas.DocumentManager.GetAnnotationsOnPage(pageNr);
         }
         
         public IPdfAnnotationFormMapper LoadFormMapper()

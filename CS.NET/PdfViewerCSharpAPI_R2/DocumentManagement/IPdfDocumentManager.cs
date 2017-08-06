@@ -96,10 +96,43 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             get;
         }
 
-        PdfLoadAnnotationsOnPageRequest LoadAnnotationsOnPage(int pageNr);
-        PdfSaveAsRequest SaveAs(string fileName);
+        #region [InkingForPDF] Annotation Methods
+
+        /// <summary>
+        /// Creates a new annotation
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args);
+
+        /// <summary>
+        /// Gets all annotations on a page
+        /// </summary>
+        /// <param name="pageNr"></param>
+        /// <returns></returns>
+        PdfGetAnnotationsOnPageRequest GetAnnotationsOnPage(int pageNr);
+
+        /// <summary>
+        /// Updates an existing annotation
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         PdfUpdateAnnotaionRequest UpdateAnnotation(UpdateAnnotationArgs args);
+
+        /// <summary>
+        /// Deletes an existing annotation
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         PdfDeleteAnnotationRequest DeleteAnnotation(DeleteAnnotationArgs args);
+
+        /// <summary>
+        /// Saves the document
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        PdfSaveAsRequest SaveAs(string filePath);
+
+        #endregion [InkingForPDF] Annotation Methods
     }
 }
