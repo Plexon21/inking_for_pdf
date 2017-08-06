@@ -1050,7 +1050,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             if (annots != null && annots.Count > 0)
             {
-                canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annots.Select(annot => annot.GetHandleAsLong()).ToList()));
+                canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annots.Select(annot => annot.AnnotId).ToList()));
                 LoadAllAnnotationsOnPage(annots[0].PageNr);
             }
         }

@@ -60,9 +60,36 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         event Action<IList<int>> PageOrderChanged;
         #endregion
 
-        void OnAnnotationCreated(PdfViewerException ex, IList<PdfAnnotation> annots);
-        void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput);
-        void OnAnnotationUpdate(PdfViewerException pdfViewerException, IList<int> i);
-        void OnAnnotationDeleted(PdfViewerException pdfViewerException, object o);
+        #region [InkingForPDF] Annotation Methods
+
+        /// <summary>
+        /// Notifies controller, that annotations have been created
+        /// </summary>
+        /// <param name="pdfViewerException"></param>
+        /// <param name="annots"></param>
+        void OnAnnotationCreated(PdfViewerException pdfViewerException, IList<PdfAnnotation> annots);
+
+        /// <summary>
+        /// Notifies controller, that annotations have been loaded
+        /// </summary>
+        /// <param name="pdfViewerException"></param>
+        /// <param name="annots"></param>
+        void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> annots);
+
+        /// <summary>
+        /// Notifies controller, that annotations have been updated
+        /// </summary>
+        /// <param name="pdfViewerException"></param>
+        /// <param name="updateResults"></param>
+        void OnAnnotationUpdate(PdfViewerException pdfViewerException, IList<int> updateResults);
+
+        /// <summary>
+        /// Notifies controller, that annotations have been deleted
+        /// </summary>
+        /// <param name="pdfViewerException"></param>
+        /// <param name="annotIds"></param>
+        void OnAnnotationDeleted(PdfViewerException pdfViewerException, IList<IntPtr> annotIds);
+
+        #endregion [InkingForPDF] Annotation Methods
     }
 }
