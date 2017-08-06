@@ -544,11 +544,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         }
 
 
-        //Marshalling of the dll Annotation
+        //[InkingForPDF] representation of the Dll annotation
         [StructLayout(LayoutKind.Sequential)]
         public struct TPdfAnnotation
         {
-
             public IntPtr annotationHandle;
             public int pageNr;
             public IntPtr ptrSubtype;
@@ -576,6 +575,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             public IntPtr m_pPopupAnnot;
         }
 
+        //[InkingForPDF] representation of the Dll popup annotation
         [StructLayout(LayoutKind.Sequential)]
         public struct TPopupAnnotation
         {
@@ -754,6 +754,8 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer,
             UIntPtr errorMessageBufferSize);
 
+        #region [InkingForPDF] DllImports
+
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
         static extern IntPtr PdfViewerCreateAnnotation(IntPtr pHandle, TPdfAnnotationType eType, int iPage, double[] r,
@@ -776,58 +778,58 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerSaveAs(IntPtr documentHandle, string szPath);
 
+        #endregion [InkingForPDF] DllImports
+
         #endregion
 
-        public IntPtr CreateAnnotation(TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color,
-            int nColors, double dBorderWidth)
-        {
-            lastVisiblePages.Clear();
-            var res = PdfViewerCreateAnnotation(documentHandle, eType, iPage, r, iLen, color, nColors, dBorderWidth);
-            return res;
-        }
+        #region [InkingForPDF] Annotation Methods
 
-        public int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,
-             double dBorderWidth)
+        public IList<PdfAnnotation> GetAnnotations(int pageNr)
         {
-            lastVisiblePages.Clear();
+            var annotsCount = 0;
+            if (!LoadAnnotations(pageNr, out IntPtr pointer, ref annotsCount)) return null;
 
-            return PdfViewerUpdateAnnotation(documentHandle, annot, iPage, r, content, label, color, color != null ? color.Length : 0,
-                dBorderWidth);
-        }
-      
-
-        public void DeleteAnnotation(IntPtr anno)
-        {
-            lastVisiblePages.Clear();
-            PdfViewerDeleteAnnotation(anno);
-        }
-
-        public bool LoadAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
-        {
-            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNo, out pdfAnnotations, ref count);
-        }
-
-        public bool SaveAs(string fileName)
-        {
-            return PdfViewerSaveAs(documentHandle, fileName);
-        }
-
-        public IList<PdfAnnotation> GetAnnotations(int pageNo)
-        {
-            var count = 0;
-            if (!LoadAnnotations(pageNo, out IntPtr pointer, ref count))
-                return null;
             var annotations = new List<PdfAnnotation>();
             var p = pointer;
             var annotSize = Marshal.SizeOf(typeof(TPdfAnnotation));
-            for (int i = 0; i < count; i++)
+
+            for (int i = 0; i < annotsCount; i++)
             {
                 var annot = (TPdfAnnotation)Marshal.PtrToStructure(p, typeof(TPdfAnnotation));
-                var lastAnnot = new PdfAnnotation(annot);
-                annotations.Add(lastAnnot);
+                annotations.Add(new PdfAnnotation(annot));
                 p = new IntPtr(p.ToInt32() + annotSize);
             }
             return annotations;
         }
+
+        public IntPtr CreateAnnotation(PdfDocument.TPdfAnnotationType annotType, int pageNr, double[] annotPoints, int annotPointsLength, double[] color, int colorLength, double strokeWidth)
+        {
+            lastVisiblePages.Clear();
+            return PdfViewerCreateAnnotation(documentHandle, annotType, pageNr, annotPoints, annotPointsLength, color, colorLength, strokeWidth);
+        }
+
+        public bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, ref int annotsLength)
+        {
+            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNr, out annotsPointer, ref annotsLength);
+        }
+
+        public int UpdateAnnotation(IntPtr annotId, int pageNr, double[] boundingBox, string content, string label, double[] color, double strokeWidth)
+        {
+            lastVisiblePages.Clear();
+            return PdfViewerUpdateAnnotation(documentHandle, annotId, pageNr, boundingBox, content, label, color, (color != null ? color.Length : 0), strokeWidth);
+        }
+
+        public void DeleteAnnotation(IntPtr annotId)
+        {
+            lastVisiblePages.Clear();
+            PdfViewerDeleteAnnotation(annotId);
+        }
+
+        public bool SaveAs(string filePath)
+        {
+            return PdfViewerSaveAs(documentHandle, filePath);
+        }
+
+        #endregion [InkingForPDF] Annotation Methods
     }
 }
