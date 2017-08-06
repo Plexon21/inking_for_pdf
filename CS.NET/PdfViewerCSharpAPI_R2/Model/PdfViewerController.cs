@@ -1032,12 +1032,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 if (annot.SubType == PdfDocument.TPdfAnnotationType.eAnnotationText && annot.Contents.Length > 0)
                 {
-                    UpdateAnnotation(new UpdateAnnotationArgs(new UpdateAnnotation(annot,null,annot.Contents,"Sticky Note",null,-1)));
+                    UpdateAnnotations(new UpdateAnnotationArgs(new UpdateAnnotation(annot,null,annot.Contents,"Sticky Note",null,-1)));
                 }
             }
         }
 
-        public void UpdateAnnotation(UpdateAnnotationArgs args)
+        public void UpdateAnnotations(UpdateAnnotationArgs args)
         {
             if (args.updateAnnots != null && args.updateAnnots.Count > 0)
             {
@@ -1799,7 +1799,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 UpdateBitmapContent();
             });
         }
-        public void OnAnnotationDeleted(PdfViewerException pdfViewerException, object o)
+        public void OnAnnotationDeleted(PdfViewerException pdfViewerException, IList<IntPtr> annotIds)
         {
             FireInvokeCallback(delegate ()
             {

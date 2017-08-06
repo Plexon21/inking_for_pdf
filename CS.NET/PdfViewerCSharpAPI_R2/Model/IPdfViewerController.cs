@@ -54,7 +54,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         eDestinationInvalid = 0, eDestinationFit = 1, eDestinationFitH = 2, eDestinationFitV = 3, eDestinationFitR = 4, eDestinationFitB = 5, eDestinationFitBH = 6, eDestinationFitBV = 7, eDestinationXYZ = 8
     };
 
-    public enum TMouseMode { eMouseUndefMode, eMouseMoveMode, eMouseZoomMode, eMouseMarkMode, eMouseSelectMode, eMouseDrawAnnotationMode, eMouseClickAnnotationMode, eMouseTextRecognitionMode };
+    public enum TMouseMode { eMouseUndefMode, eMouseMoveMode, eMouseZoomMode, eMouseMarkMode, eMouseSelectMode, eMouseDrawAnnotationMode, eMouseClickAnnotationMode, eMouseTextRecognitionMode }; //[InkingForPDF] added DrawAnnotation, ClickAnnotation and TextRecognitionMode
 
     public enum TViewerTab { eOutlineTab, eThumbnailTab, eNone };
 
@@ -331,6 +331,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         /// <returns>The rectangle in viewport coordinates for WinForms components</returns>
         /// <exception cref="PdfTools.PdfViewerCSharpAPI.Utilities.PdfNoFileOpenedException">Thrown when there is no file opened</exception>
         Rectangle TransformRectPageToViewportDrawRect(PdfSourceRect rectOnUnrotatedPage, int pageNo);
+
         /// <summary>
         /// transforms a rectangle that is given on the screen to a rectangle on canvas
         /// </summary>
@@ -338,6 +339,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         /// <returns>rectangle on canvas</returns>
         /// <exception cref="PdfTools.PdfViewerCSharpAPI.Utilities.PdfNoFileOpenedException">Thrown when there is no file opened</exception>
         PdfSourceRect TransformOnScreenToOnCanvas(PdfTargetRect rect);
+
         /// <summary>
         /// Transforms a Point on screen to unrotated(!) pagecoordinates.
         /// </summary>
@@ -346,6 +348,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         /// <returns>Point on unrotated page</returns>
         /// <exception cref="PdfTools.PdfViewerCSharpAPI.Utilities.PdfNoFileOpenedException">Thrown when there is no file opened</exception>
         PdfSourcePoint TransformOnScreenToOnPage(PdfTargetPoint point, ref int page);
+
+        /// <summary>
+        /// Transforms a rectangle on canvas to a rectangle on page
+        /// </summary>
+        /// <param name="rectOnCanvas">PdfSourceRect on canvas</param>
+        /// <param name="pageNr">Reference to the page that the middle of the rectangle was on. This is passed by reference and is to be used as output of the method</param>
+        /// <returns>rectangle on page</returns>
+        PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr); //[InkingForPDF]
 
 
         void OpenOutlineItem(int outlineId);
@@ -411,20 +421,69 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         #endregion Events
 
-        void SaveAs(string fileName);
+        #region [InkingForPDF] Annotation Methods
 
-        PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr);
+        /// <summary>
+        /// Saves document
+        /// </summary>
+        /// <param name="filePath"></param>
+        void SaveAs(string filePath);
 
-        void LoadAllAnnotationsOnPage(int pageNr);
+        /// <summary>
+        /// Creates a new annotation with remapping the points
+        /// </summary>
+        /// <param name="annot"></param>
         void CreateAnnotation(PdfAnnotation annot);
+
+        /// <summary>
+        /// Creates a new annotation without remapping the points
+        /// </summary>
+        /// <param name="annot"></param>
         void CreateAnnotationWithoutMapper(PdfAnnotation annot);
-        void CreateTextAnnotation(string content, int page, double[] point, double[] color);
-        void UpdateAnnotation(UpdateAnnotationArgs args);
+
+        /// <summary>
+        /// Creates a new text annotation
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="pageNr"></param>
+        /// <param name="point"></param>
+        /// <param name="color"></param>
+        void CreateTextAnnotation(string content, int pageNr, double[] point, double[] color);
+
+        /// <summary>
+        /// Loads all annotations on a page
+        /// </summary>
+        /// <param name="pageNr"></param>
+        void LoadAllAnnotationsOnPage(int pageNr);
+
+        /// <summary>
+        /// Updates annotations
+        /// </summary>
+        /// <param name="args"></param>
+        void UpdateAnnotations(UpdateAnnotationArgs args);
+
+        /// <summary>
+        /// Deletes a list of annotations
+        /// </summary>
+        /// <param name="annots"></param>
         void DeleteAnnotations(IList<PdfAnnotation> annots);
 
+        /// <summary>
+        /// Convert annotations to text with a text converter
+        /// </summary>
+        /// <param name="annots"></param>
+        /// <returns></returns>
         string ConvertAnnotations(IEnumerable<PdfAnnotation> annots);
+
+        /// <summary>
+        /// Convert a StrokeCollection to text with a text converter
+        /// </summary>
+        /// <param name="annots"></param>
+        /// <returns></returns>
         string ConvertAnnotations(StrokeCollection annots);
         IList<System.Windows.Point> DrawForm(IList<System.Windows.Point> annotationPoints);
+
+        #endregion [InkingForPDF] Annotation Methods
     }
 
 }

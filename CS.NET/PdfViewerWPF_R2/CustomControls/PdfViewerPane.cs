@@ -397,7 +397,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                     if (selectedAnnotations.Count > 0)
                     {
-                        controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateWidth(_annotationStrokeWidth)).ToList()));
+                        controller.UpdateAnnotations(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateWidth(_annotationStrokeWidth)).ToList()));
                     }
                 }
             }
@@ -416,7 +416,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
                 if (selectedAnnotations.Count > 0)
                 {
-                    controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateColor(_annotationStrokeColor)).ToList()));
+                    controller.UpdateAnnotations(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.UpdateColor(_annotationStrokeColor)).ToList()));
                 }
             }
             get
@@ -524,7 +524,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     PdfSourcePoint delta = pointDestinationPage - pointOriginPage;
 
-                    controller.UpdateAnnotation(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.Move(delta.dX, delta.dY)).ToList()));
+                    controller.UpdateAnnotations(new UpdateAnnotationArgs(selectedAnnotations.Select(annot => annot.Move(delta.dX, delta.dY)).ToList()));
                 }
             }
             catch (ArgumentOutOfRangeException ex)
