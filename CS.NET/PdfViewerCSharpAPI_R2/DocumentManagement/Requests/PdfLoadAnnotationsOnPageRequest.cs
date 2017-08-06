@@ -32,7 +32,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
 
         protected override IList<PdfAnnotation> ExecuteNative(IPdfDocument document, PdfLoadAnnotationsOnPageArgs args)
         {
-           var annotations = document.LoadAnnotations(args.PageNr);
+           var annotations = document.GetAnnotations(args.PageNr);
             return annotations;
         }
 

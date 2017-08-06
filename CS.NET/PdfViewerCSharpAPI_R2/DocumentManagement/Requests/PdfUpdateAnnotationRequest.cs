@@ -64,7 +64,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
             var results = new List<int>();
             foreach (var annot in args.updateAnnots)
             {
-                var result = document.UpdateAnnotation(annot.Annot.AnnotationHandle,
+                var result = document.UpdateAnnotation(annot.Annot.AnnotId,
                     annot.Annot.PageNr, annot.r, annot.content, annot.label, annot.color,
                     annot.dBorderWidth);
                 results.Add(result);

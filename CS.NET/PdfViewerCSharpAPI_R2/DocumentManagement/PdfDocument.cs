@@ -802,7 +802,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             PdfViewerDeleteAnnotation(anno);
         }
 
-        public bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
+        public bool LoadAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count)
         {
             return PdfViewerGetAnnotationsOnPage(documentHandle, pageNo, out pdfAnnotations, ref count);
         }
@@ -812,10 +812,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return PdfViewerSaveAs(documentHandle, fileName);
         }
 
-        public IList<PdfAnnotation> LoadAnnotations(int pageNo)
+        public IList<PdfAnnotation> GetAnnotations(int pageNo)
         {
             var count = 0;
-            if (!GetAnnotations(pageNo, out IntPtr pointer, ref count))
+            if (!LoadAnnotations(pageNo, out IntPtr pointer, ref count))
                 return null;
             var annotations = new List<PdfAnnotation>();
             var p = pointer;

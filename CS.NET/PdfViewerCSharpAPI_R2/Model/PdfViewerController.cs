@@ -1006,7 +1006,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
             var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot)
             {
-                AnnotationHandle = new IntPtr(),
+                AnnotId = new IntPtr(),
                 SubType = PdfAnnotation.ConvertSubtype(loadedFormMapper.AnnotationType),
                 Rect = points
             }).ToList();

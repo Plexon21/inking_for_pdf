@@ -13,7 +13,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 {
     public class PdfAnnotation
     {
-        public IntPtr AnnotationHandle;
+        public IntPtr AnnotId;
         public int PageNr;
         public PdfDocument.TPdfAnnotationType SubType;
         public double[] Colors;
@@ -46,7 +46,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 
         public PdfAnnotation(PdfDocument.TPdfAnnotation annot)
         {
-            this.AnnotationHandle = annot.annotationHandle;
+            this.AnnotId = annot.annotationHandle;
             this.PageNr = annot.pageNr;
             this.SubType = ConvertSubtype(Marshal.PtrToStringAnsi(annot.ptrSubtype));
 
@@ -86,7 +86,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         }
         public PdfAnnotation(PdfAnnotation annot)
         {
-            AnnotationHandle = annot.AnnotationHandle;
+            AnnotId = annot.AnnotId;
             PageNr = annot.PageNr;
             SubType = annot.SubType;
             var tmpCol = new double[annot.Colors.Length];
@@ -151,12 +151,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 
         public long GetHandleAsLong()
         {
-            return AnnotationHandle.ToInt64();
+            return AnnotId.ToInt64();
         }
 
         public void SetHandleFromLong(long value)
         {
-            this.AnnotationHandle = new IntPtr(value);
+            this.AnnotId = new IntPtr(value);
         }
 
         public static PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)

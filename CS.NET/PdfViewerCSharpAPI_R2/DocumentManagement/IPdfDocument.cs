@@ -62,16 +62,64 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         TPageLayoutMode GetPageLayout();
         PdfDestination GetOpenActionDestination();
         IList<PdfOutlineItem> GetOutlines(int parentId);
-        IList<PdfAnnotation> LoadAnnotations(int argsPageNr);
 
+        #region [InkingForPDF] Annotation Methods
 
-        IntPtr CreateAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, int iLen, double[] color, int nColors, double dBorderWidth);
-        bool GetAnnotations(int pageNo, out IntPtr pdfAnnotations, ref int count);
-        void DeleteAnnotation(IntPtr anno);
+        /// <summary>
+        /// Returns a List of all Annotations on a page
+        /// </summary>
+        /// <param name="pageNr"></param>
+        /// <returns></returns>
+        IList<PdfAnnotation> GetAnnotations(int pageNr);
 
-        int UpdateAnnotation(IntPtr annot, int iPage, double[] r, string content, string label, double[] color,
-            double dBorderWidth);
+        /// <summary>
+        /// Creates a new Annotation
+        /// </summary>
+        /// <param name="annotType"></param>
+        /// <param name="pageNr"></param>
+        /// <param name="annotPoints"></param>
+        /// <param name="annotPointsLength"></param>
+        /// <param name="color"></param>
+        /// <param name="colorLength"></param>
+        /// <param name="strokeWidth"></param>
+        /// <returns></returns>
+        IntPtr CreateAnnotation(PdfDocument.TPdfAnnotationType annotType, int pageNr, double[] annotPoints, int annotPointsLength, double[] color, int colorLength, double strokeWidth);
 
-        bool SaveAs( string fileName);
+        /// <summary>
+        /// Retrieves pointer and size of the annotation array
+        /// </summary>
+        /// <param name="pageNr"></param>
+        /// <param name="annotsPointer"></param>
+        /// <param name="annotsLength"></param>
+        /// <returns></returns>
+        bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, ref int annotsLength);
+
+        /// <summary>
+        /// Updates an annotation with new values
+        /// </summary>
+        /// <param name="annotId"></param>
+        /// <param name="pageNr"></param>
+        /// <param name="boundingBox"></param>
+        /// <param name="content"></param>
+        /// <param name="label"></param>
+        /// <param name="color"></param>
+        /// <param name="strokeWidth"></param>
+        /// <returns></returns>
+        int UpdateAnnotation(IntPtr annotId, int pageNr, double[] boundingBox, string content, string label, double[] color, double strokeWidth);
+
+        /// <summary>
+        /// Deletes an annotation with the given id
+        /// </summary>
+        /// <param name="annotId"></param>
+        void DeleteAnnotation(IntPtr annotId);
+
+        /// <summary>
+        /// Saves the document at the given path
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        bool SaveAs(string filePath);
+
+        #endregion [InkingForPDF] Annotation Methods
     }
 }

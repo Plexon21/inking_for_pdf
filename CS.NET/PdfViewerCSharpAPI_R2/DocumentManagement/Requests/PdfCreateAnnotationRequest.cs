@@ -51,7 +51,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
                 var annotSize = Marshal.SizeOf(typeof(PdfDocument.TPdfAnnotation));
                 var newAnnot = (PdfDocument.TPdfAnnotation)Marshal.PtrToStructure(newAnnotHandle, typeof(PdfDocument.TPdfAnnotation));
                 var newAnnotObj = new PdfAnnotation(newAnnot);
-                annot.AnnotationHandle = newAnnotObj.AnnotationHandle;
+                annot.AnnotId = newAnnotObj.AnnotId;
                 res.Add(annot);
             }
 
