@@ -212,7 +212,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                         {
                             dc.DrawLine(annotPen, drawingAnnotations[i], drawingAnnotations[i + 1]);
                         }
-                        dc.DrawLine(annotPen, drawingAnnotations[drawingAnnotations.Count -1], lastMousePosition);
+                        dc.DrawLine(annotPen, drawingAnnotations[drawingAnnotations.Count - 1], lastMousePosition);
                     }
                 }
 
@@ -627,7 +627,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     StylusPoint firstPoint = firstStroke.StylusPoints[0];
                     int page = 0;
-                    
+
                     PdfSourcePoint pointOnPage = controller.TransformOnScreenToOnPage(new PdfTargetPoint((int)firstPoint.X, (int)firstPoint.Y), ref page);
 
                     string content = controller.ConvertAnnotations(strokes);
@@ -979,6 +979,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
             }
             else if (drawingFreeHandAnnotation || textRecognitionActive)
             {
+                if (annotationPoints == null) annotationPoints = new List<Point>();
                 annotationPoints.Add(e.GetPosition(this));
                 InvalidateVisual();
             }
@@ -1183,6 +1184,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         #endregion StylusHandlers
 
 
-        
+
     }
 }
