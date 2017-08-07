@@ -1780,7 +1780,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 FitAndUpdate(false);
                 UpdateBitmapContent();
             });
-
         }
         public void OnAnnotationsLoaded(PdfViewerException pdfViewerException, IList<PdfAnnotation> tupleOutput)
         {

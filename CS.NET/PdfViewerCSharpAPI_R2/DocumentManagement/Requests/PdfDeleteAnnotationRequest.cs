@@ -27,7 +27,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
     public class PdfDeleteAnnotationRequest : APdfRequest<DeleteAnnotationArgs, IList<IntPtr>>
     {
         public PdfDeleteAnnotationRequest(DeleteAnnotationArgs arguments)
-            : base(arguments, 50)
+            : base(arguments, 55)
         {
         }
         public PdfDeleteAnnotationRequest(DeleteAnnotationArgs arguments, int priority)

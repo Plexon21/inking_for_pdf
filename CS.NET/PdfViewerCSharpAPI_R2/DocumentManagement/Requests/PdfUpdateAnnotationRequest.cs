@@ -51,7 +51,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
     public class PdfUpdateAnnotaionRequest : APdfRequest<UpdateAnnotationArgs, IList<int>>
     {
         public PdfUpdateAnnotaionRequest(UpdateAnnotationArgs arguments)
-            : base(arguments, 55)
+            : base(arguments, 50)
         {
         }
         public PdfUpdateAnnotaionRequest(UpdateAnnotationArgs arguments, int priority)
