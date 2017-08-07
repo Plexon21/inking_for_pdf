@@ -687,7 +687,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             eAnnotationHighlight = 9,
             eAnnotationInk = 15,
             eAnnotationPopup = 16,
-            eAnnotationWidet = 20
+            eAnnotationWidget = 20
         }
 
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
