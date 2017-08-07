@@ -347,7 +347,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         #region [InkingForPDF] Annotation Methods
 
-        public PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args)
+        public PdfCreateAnnotationRequest CreateAnnotations(CreateAnnotationArgs args)
         {
             var request = new PdfCreateAnnotationRequest(args);
             requestQueue.Add(request);
@@ -361,14 +361,14 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        public PdfUpdateAnnotaionRequest UpdateAnnotation(UpdateAnnotationArgs args)
+        public PdfUpdateAnnotaionRequest UpdateAnnotations(UpdateAnnotationArgs args)
         {
             var request = new PdfUpdateAnnotaionRequest(args);
             requestQueue.Add(request);
             return request;
         }
 
-        public PdfDeleteAnnotationRequest DeleteAnnotation(DeleteAnnotationArgs args)
+        public PdfDeleteAnnotationRequest DeleteAnnotations(DeleteAnnotationArgs args)
         {
             var request = new PdfDeleteAnnotationRequest(args);
             requestQueue.Add(request);

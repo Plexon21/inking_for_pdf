@@ -103,7 +103,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        PdfCreateAnnotationRequest CreateAnnotation(CreateAnnotationArgs args);
+        PdfCreateAnnotationRequest CreateAnnotations(CreateAnnotationArgs args);
 
         /// <summary>
         /// Gets all annotations on a page
@@ -117,14 +117,14 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        PdfUpdateAnnotaionRequest UpdateAnnotation(UpdateAnnotationArgs args);
+        PdfUpdateAnnotaionRequest UpdateAnnotations(UpdateAnnotationArgs args);
 
         /// <summary>
         /// Deletes an existing annotation
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        PdfDeleteAnnotationRequest DeleteAnnotation(DeleteAnnotationArgs args);
+        PdfDeleteAnnotationRequest DeleteAnnotations(DeleteAnnotationArgs args);
 
         /// <summary>
         /// Saves the document

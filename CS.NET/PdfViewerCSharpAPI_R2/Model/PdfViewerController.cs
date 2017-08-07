@@ -1011,12 +1011,12 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 Rect = points
             }).ToList();
 
-            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(newAnnotations));
+            canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(newAnnotations));
         }
 
         public void CreateAnnotationWithoutMapper(PdfAnnotation annot)
         {
-            canvas.DocumentManager.CreateAnnotation(new CreateAnnotationArgs(annot));
+            canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(annot));
         }
 
         public void CreateTextAnnotation(string content, int page, double[] point, double[] color)
@@ -1041,7 +1041,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             if (args.updateAnnots != null && args.updateAnnots.Count > 0)
             {
-                canvas.DocumentManager.UpdateAnnotation(args);
+                canvas.DocumentManager.UpdateAnnotations(args);
                 LoadAllAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
             }
         }
@@ -1050,7 +1050,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             if (annots != null && annots.Count > 0)
             {
-                canvas.DocumentManager.DeleteAnnotation(new DeleteAnnotationArgs(annots.Select(annot => annot.AnnotId).ToList()));
+                canvas.DocumentManager.DeleteAnnotations(new DeleteAnnotationArgs(annots.Select(annot => annot.AnnotId).ToList()));
                 LoadAllAnnotationsOnPage(annots[0].PageNr);
             }
         }
