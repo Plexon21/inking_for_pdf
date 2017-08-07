@@ -5,7 +5,7 @@
         xmlns:custom="clr-namespace:PdfTools.PdfViewerWPF;assembly=PdfViewerWPF"
         WindowStartupLocation="CenterScreen"
         xmlns:props="clr-namespace:ViewerWPFSample.Properties"
-        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="996">
+        Title="{x:Static props:MainWindowRes.window_title}" Height="600" Width="1090">
 
 
     <DockPanel LastChildFill="True" x:Name="root" x:FieldModifier="public">
