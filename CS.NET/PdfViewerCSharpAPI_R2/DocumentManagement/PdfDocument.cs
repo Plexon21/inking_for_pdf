@@ -772,7 +772,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
-        static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations,
+        static extern int PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations,
             out int count);
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
@@ -809,7 +809,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         public bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, out int annotsLength)
         {
-            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNr, out annotsPointer, out annotsLength);
+            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNr, out annotsPointer, out annotsLength) == 1;
         }
 
         public int UpdateAnnotation(IntPtr annotId, int pageNr, double[] boundingBox, string content, string label, double[] color, double strokeWidth)
