@@ -92,7 +92,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         /// <param name="annotsPointer"></param>
         /// <param name="annotsLength"></param>
         /// <returns></returns>
-        bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, ref int annotsLength);
+        bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, out int annotsLength);
 
         /// <summary>
         /// Updates an annotation with new values

@@ -773,7 +773,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations,
-            ref int count);
+            out int count);
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
             CallingConvention = CallingConvention.StdCall)]
         static extern bool PdfViewerSaveAs(IntPtr documentHandle, string szPath);
@@ -786,8 +786,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         public IList<PdfAnnotation> GetAnnotations(int pageNr)
         {
-            var annotsCount = 0;
-            if (!LoadAnnotations(pageNr, out IntPtr pointer, ref annotsCount)) return null;
+            if (!LoadAnnotations(pageNr, out IntPtr pointer, out int annotsCount)) return null;
 
             var annotations = new List<PdfAnnotation>();
             var p = pointer;
@@ -808,9 +807,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return PdfViewerCreateAnnotation(documentHandle, annotType, pageNr, annotPoints, annotPointsLength, color, colorLength, strokeWidth);
         }
 
-        public bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, ref int annotsLength)
+        public bool LoadAnnotations(int pageNr, out IntPtr annotsPointer, out int annotsLength)
         {
-            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNr, out annotsPointer, ref annotsLength);
+            return PdfViewerGetAnnotationsOnPage(documentHandle, pageNr, out annotsPointer, out annotsLength);
         }
 
         public int UpdateAnnotation(IntPtr annotId, int pageNr, double[] boundingBox, string content, string label, double[] color, double strokeWidth)

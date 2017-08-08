@@ -223,7 +223,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 
         public bool ContainsPoint(PdfSourcePoint point)
         {
-            return Rect[0] < point.dX && Rect[1] < point.dY && Rect[2] > point.dX && Rect[3] > point.dY;
+            return Rect[0] <= point.dX && Rect[1] <= point.dY && Rect[2] >= point.dX && Rect[3] >= point.dY;
         }
 
         public UpdateAnnotation Move(double x, double y)
