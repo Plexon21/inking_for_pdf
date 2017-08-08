@@ -1004,12 +1004,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 return;
             }
 
-            var newAnnotations = annots.Select(points => new PdfAnnotation(oldAnnot)
-            {
-                AnnotId = new IntPtr(),
-                SubType = PdfAnnotation.ConvertSubtype(loadedFormMapper.AnnotationType),
-                Rect = points
-            }).ToList();
+            var newAnnotations = annots.Select(points => new PdfAnnotation(PdfAnnotation.ConvertSubtype(loadedFormMapper.AnnotationType), oldAnnot.PageNr, points, oldAnnot.Colors, oldAnnot.BorderWidth)).ToList();
 
             canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(newAnnotations));
         }
@@ -1021,8 +1016,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public void CreateTextAnnotation(string content, int page, double[] point, double[] color)
         {
-            PdfAnnotation annot = new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, page, point, color);
-            annot.Contents = content;
+            PdfAnnotation annot = new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, page, point, content, color);
             CreateAnnotationWithoutMapper(annot);
         }
 

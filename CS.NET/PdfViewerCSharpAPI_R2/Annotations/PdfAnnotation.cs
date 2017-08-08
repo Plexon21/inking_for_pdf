@@ -13,35 +13,58 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 {
     public class PdfAnnotation
     {
-        public IntPtr AnnotId;
-        public int PageNr;
-        public PdfDocument.TPdfAnnotationType SubType;
-        public double[] Colors;
-        public int Flags;
-        public double[] Rect;
-        public double[] QuadPoints;
-        public string Contents;
-        public bool IsLink;
-        public string ActionType;
-        public bool HasUri;
-        public string Uri;
-        public int DestType;
-        public bool[] HasDestVal;
-        public double[] DestArray;
-        public bool IsMarkup;
-        public string TextLabel;
-        public bool HasPopup;
-        public IntPtr PopupAnnotation;
-        public double BorderWidth;
+        public readonly IntPtr AnnotId;
+        public readonly int PageNr;
+        public readonly PdfDocument.TPdfAnnotationType SubType;
+        public readonly double[] Colors;
+        public readonly int Flags;
+        public readonly double[] Rect;
+        public readonly double[] QuadPoints;
+        public readonly string Contents;
+        public readonly bool IsLink;
+        public readonly string ActionType;
+        public readonly bool HasUri;
+        public readonly string Uri;
+        public readonly int DestType;
+        public readonly bool[] HasDestVal;
+        public readonly double[] DestArray;
+        public readonly bool IsMarkup;
+        public readonly string TextLabel;
+        public readonly bool HasPopup;
+        public readonly IntPtr PopupAnnotation;
+        public readonly double BorderWidth;
 
         public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r,
-            double[] color, double dBorderWidth = 0.0d)
+            double[] color, double dBorderWidth = 1.0d)
         {
             this.SubType = eType;
             this.PageNr = iPage;
-            this.Rect = r;
-            this.Colors = color;
+            if (r == null) Rect = null;
+            else
+            {
+                var tmpRect = new double[r.Length];
+                for (int i = 0; i < r.Length; i++)
+                {
+                    tmpRect[i] = r[i];
+                }
+                this.Rect = tmpRect;
+            }
+            if (color == null) Colors = null;
+            else
+            {
+                var tmpColor = new double[color.Length];
+                for (int i = 0; i < color.Length; i++)
+                {
+                    tmpColor[i] = color[i];
+                }
+                this.Colors = tmpColor;
+            }
             this.BorderWidth = dBorderWidth;
+        }
+
+        public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, string content, double[] color, double dBorderWidth = 1.0d) :this(eType,iPage,r,color,dBorderWidth)
+        {
+            this.Contents = content;
         }
 
         public PdfAnnotation(PdfDocument.TPdfAnnotation annot)
@@ -86,16 +109,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         }
         public PdfAnnotation(PdfAnnotation annot)
         {
-            AnnotId = annot.AnnotId;
-            PageNr = annot.PageNr;
-            SubType = annot.SubType;
+            this.AnnotId = annot.AnnotId;
+            this.PageNr = annot.PageNr;
+            this.SubType = annot.SubType;
             var tmpCol = new double[annot.Colors.Length];
             for (int i = 0; i < annot.Colors.Length; i++)
             {
                 tmpCol[i] = annot.Colors[i];
             }
-            Colors = tmpCol;
-            Flags = annot.Flags;
+            this.Colors = tmpCol;
+            this.Flags = annot.Flags;
             if (annot.Rect == null) Rect = null;
             else
             {
@@ -104,7 +127,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 {
                     tmpRect[i] = annot.Rect[i];
                 }
-                Rect = tmpRect;
+                this.Rect = tmpRect;
             }
             if (annot.QuadPoints == null) QuadPoints = null;
             else
@@ -114,14 +137,14 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 {
                     tmpQuad[i] = annot.QuadPoints[i];
                 }
-                QuadPoints = tmpQuad;
+                this.QuadPoints = tmpQuad;
             }
-            Contents = annot.Contents;
-            IsLink = annot.IsLink;
-            ActionType = annot.ActionType;
-            HasUri = annot.HasUri;
-            Uri = annot.Uri;
-            DestType = annot.DestType;
+            this.Contents = annot.Contents;
+            this.IsLink = annot.IsLink;
+            this.ActionType = annot.ActionType;
+            this.HasUri = annot.HasUri;
+            this.Uri = annot.Uri;
+            this.DestType = annot.DestType;
             if (annot.HasDestVal == null) HasDestVal = null;
             else
             {
@@ -130,7 +153,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 {
                     tmpHDest[i] = annot.HasDestVal[i];
                 }
-                HasDestVal = tmpHDest;
+                this.HasDestVal = tmpHDest;
             }
             if (annot.DestArray == null) DestArray = null;
             else
@@ -140,23 +163,18 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
                 {
                     tmpDest[i] = annot.DestArray[i];
                 }
-                DestArray = tmpDest;
+                this.DestArray = tmpDest;
             }
-            IsMarkup = annot.IsMarkup;
-            TextLabel = annot.TextLabel;
-            HasPopup = annot.HasPopup;
-            PopupAnnotation = annot.PopupAnnotation;
-            BorderWidth = annot.BorderWidth;
+            this.IsMarkup = annot.IsMarkup;
+            this.TextLabel = annot.TextLabel;
+            this.HasPopup = annot.HasPopup;
+            this.PopupAnnotation = annot.PopupAnnotation;
+            this.BorderWidth = annot.BorderWidth;
         }
 
         public long GetHandleAsLong()
         {
             return AnnotId.ToInt64();
-        }
-
-        public void SetHandleFromLong(long value)
-        {
-            this.AnnotId = new IntPtr(value);
         }
 
         public static PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)
