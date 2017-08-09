@@ -13,7 +13,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
 {
     public class PdfAnnotation
     {
-        public readonly IntPtr AnnotId;
+        public IntPtr AnnotId;
         public readonly int PageNr;
         public readonly PdfDocument.TPdfAnnotationType SubType;
         public readonly double[] Colors;
