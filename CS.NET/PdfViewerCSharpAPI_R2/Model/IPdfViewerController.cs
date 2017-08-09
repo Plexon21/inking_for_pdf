@@ -350,6 +350,22 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         PdfSourcePoint TransformOnScreenToOnPage(PdfTargetPoint point, ref int page);
 
         /// <summary>
+        /// Transforms a Point on screen to unrotated(!) pagecoordinates of the nearest page.
+        /// </summary>
+        /// <param name="point">Point on screen</param>
+        /// <param name="page">Reference to the page that the point was closest to. This is passed by reference and is to be used as output of the method</param>
+        /// <returns>Point in unrotated pagecoordinates</returns>
+        PdfSourcePoint TransformOnScreenToOnNearestPage(PdfTargetPoint point, ref int page); //[InkingForPDF]
+
+        /// <summary>
+        /// Transforms a Point on screen to unrotated(!) pagecoordinates of a specific page.
+        /// </summary>
+        /// <param name="point">Point on screen</param>
+        /// <param name="page">page</param>
+        /// <returns>Point in unrotated pagecoordinates of the specific page</returns>
+        PdfSourcePoint TransformOnScreenToOnSpecificPage(PdfTargetPoint point, int page); //[InkingForPDF]
+
+        /// <summary>
         /// Transforms a rectangle on canvas to a rectangle on page
         /// </summary>
         /// <param name="rectOnCanvas">PdfSourceRect on canvas</param>

@@ -552,6 +552,40 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             }
         }
 
+        /// <summary>
+        /// Returns the page closest to a given point
+        /// </summary>
+        /// <param name="point">Point in canvas coordinates</param>
+        /// <returns></returns>
+        private int GetClosestPageToPoint(PdfSourcePoint point) //[InkingForPDF]
+        {
+            int startPage = 1;
+            int endPage = PageCount;
+            if (!PdfUtils.PageLayoutScrollingEnabled(PageLayoutMode))
+            {
+                startPage = FirstPageOnViewport;
+                endPage = LastPageOnViewport;
+            }
+
+            int nearestPage = startPage;
+            double distance = double.MaxValue;
+
+            for (int pageNeedle = startPage; pageNeedle <= endPage; pageNeedle++)
+            {
+                PdfSourcePoint pageMiddle = canvas.GetPageRect(pageNeedle).dCenter;
+
+                double currDistance = Math.Abs(pageMiddle.dX - point.dX) + Math.Abs(pageMiddle.dY - point.dY);
+
+                if (currDistance < distance)
+                {
+                    distance = currDistance;
+                    nearestPage = pageNeedle;
+                }
+            }
+
+            return nearestPage;
+        }
+
         #endregion
 
         #region Public Update Methods
@@ -1163,8 +1197,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             canvas.DocumentManager.SaveAs(fileName);
         }
-        #endregion
-        
+
+        #endregion Annotation Methods
+
         #region Update Helper Methods
         //private helper methods that are used for internal bitmap updating
 
@@ -1881,10 +1916,25 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
         }
 
-        public PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr)
+        public PdfSourcePoint TransformOnScreenToOnNearestPage(PdfTargetPoint point, ref int page) //[InkingForPDF]
+        {
+            point = point + viewport.Rectangle.iLocation;
+            PdfSourcePoint s = point.GetSourcePoint(viewport.ZoomFactor);
+            page = GetClosestPageToPoint(s);
+            return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
+        }
+
+        public PdfSourcePoint TransformOnScreenToOnSpecificPage(PdfTargetPoint point, int page) //[InkingForPDF]
+        {
+            point = point + viewport.Rectangle.iLocation;
+            PdfSourcePoint s = point.GetSourcePoint(viewport.ZoomFactor);
+            return canvas.GetPageRect(page).GetOnPageCoordinates(s, canvas.Rotation);
+        }
+
+        public PdfSourceRect TransformRectOnCanvasToOnPage(PdfSourceRect rectOnCanvas, out int pageNr) //[InkingForPDF] 
         {
             PdfSourcePoint canvasMiddle = rectOnCanvas.dCenter;
-            pageNr = GetPageContainingPoint(canvasMiddle);
+            pageNr = GetClosestPageToPoint(canvasMiddle);
 
             if (pageNr > 0)
             {

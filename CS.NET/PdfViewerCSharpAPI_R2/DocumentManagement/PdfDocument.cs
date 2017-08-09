@@ -756,27 +756,20 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         #region [InkingForPDF] DllImports
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
-            CallingConvention = CallingConvention.StdCall)]
-        static extern IntPtr PdfViewerCreateAnnotation(IntPtr pHandle, TPdfAnnotationType eType, int iPage, double[] r,
-            int iLen, double[] color, int nColors, double dBorderWidth);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern IntPtr PdfViewerCreateAnnotation(IntPtr documentHandle, TPdfAnnotationType annotType, int pageNr, double[] annotPoints, int annotPointsLength, double[] color, int colorLength, double borderWidth);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
-            CallingConvention = CallingConvention.StdCall)]
-        static extern int PdfViewerUpdateAnnotation(IntPtr pDocument, IntPtr annot, int iPage, double[] r,
-            string content, string label, double[] color, int nColors, double dBorderWidth);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern int PdfViewerGetAnnotationsOnPage(IntPtr documentHandle, int pageNr, out IntPtr annotsPointer, out int annotsLength);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
-            CallingConvention = CallingConvention.StdCall)]
-        static extern void PdfViewerDeleteAnnotation(IntPtr annot);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern int PdfViewerUpdateAnnotation(IntPtr documentHandle, IntPtr annotId, int pageNr, double[] boundingBox, string content, string label, double[] color, int colorLength, double borderWidth);
 
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
-            CallingConvention = CallingConvention.StdCall)]
-        static extern int PdfViewerGetAnnotationsOnPage(IntPtr handle, int pageNo, out IntPtr pdfAnnotations,
-            out int count);
-        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode,
-            CallingConvention = CallingConvention.StdCall)]
-        static extern bool PdfViewerSaveAs(IntPtr documentHandle, string szPath);
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern void PdfViewerDeleteAnnotation(IntPtr annotId);
+
+        [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
+        static extern bool PdfViewerSaveAs(IntPtr documentHandle, string filePath);
 
         #endregion [InkingForPDF] DllImports
 

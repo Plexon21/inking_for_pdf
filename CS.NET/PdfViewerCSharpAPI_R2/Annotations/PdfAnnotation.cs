@@ -94,16 +94,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             }
 
             this.QuadPoints = quadPointArray;
-            this.Contents = Marshal.PtrToStringAnsi(annot.ptrContents);
+            this.Contents = Marshal.PtrToStringUni(annot.ptrContents);
             this.IsLink = annot.isLink == 1;
             this.ActionType = Marshal.PtrToStringAnsi(annot.ptrActionType);
             this.HasUri = annot.hasURI == 1;
-            this.Uri = Marshal.PtrToStringAnsi(annot.ptrURI);
+            this.Uri = Marshal.PtrToStringUni(annot.ptrURI);
             this.DestType = annot.destType;
             this.HasDestVal = annot.hasDestVal.Select(num => num == 1).ToArray();
             this.DestArray = annot.destArray;
             this.IsMarkup = annot.isMarkup == 1;
-            this.TextLabel = Marshal.PtrToStringAnsi(annot.ptrTextLabel);
+            this.TextLabel = Marshal.PtrToStringUni(annot.ptrTextLabel);
             this.HasPopup = annot.hasPopup == 1;
             this.PopupAnnotation = annot.m_pPopupAnnot;
         }
