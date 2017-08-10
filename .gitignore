@@ -504,3 +504,5 @@ hs_err_pid*
 # BizTalk build output
 
 # End of https://www.gitignore.io/api/java,eclipse,visualstudio,csharp
+
+license-key.txt
