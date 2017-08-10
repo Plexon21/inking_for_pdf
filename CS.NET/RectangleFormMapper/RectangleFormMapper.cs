@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Threading.Tasks;
-using PdfTools.PdfViewerCSharpAPI.DocumentManagement;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
 namespace RectangleFormMapper
@@ -18,7 +17,7 @@ namespace RectangleFormMapper
         public string AnnotationType { get; } = "eAnnotationRectangle";
         public IList<double[]> MapToForm(double[] annotationPoints)
         {
-            if (annotationPoints == null || annotationPoints.Length < 2) return null;
+            if (annotationPoints == null || annotationPoints.Length < 2 || annotationPoints.Length%2!=0) return null;
             var startPointX = annotationPoints[0];
             var startPointY = annotationPoints[1];
             var endPointX = annotationPoints[annotationPoints.Length - 2];
@@ -34,6 +33,7 @@ namespace RectangleFormMapper
         }
         public IList<Point> MapToForm(IList<Point> annotationPoints)
         {
+            if(annotationPoints==null || annotationPoints.Count < 2)return null;
             var firstPoint = annotationPoints[0];
             var lastPoint = annotationPoints[annotationPoints.Count - 1];
             return new List<Point>
