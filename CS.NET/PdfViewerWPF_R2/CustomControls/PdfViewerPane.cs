@@ -208,11 +208,14 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                     if (annotationPoints != null)
                     {
                         var drawingAnnotations = controller.DrawForm(annotationPoints);
-                        for (var i = 0; i < drawingAnnotations.Count - 1; i++)
+                        if (drawingAnnotations != null)
                         {
-                            dc.DrawLine(annotPen, drawingAnnotations[i], drawingAnnotations[i + 1]);
+                            for (var i = 0; i < drawingAnnotations.Count - 1; i++)
+                            {
+                                dc.DrawLine(annotPen, drawingAnnotations[i], drawingAnnotations[i + 1]);
+                            }
+                            dc.DrawLine(annotPen, drawingAnnotations[drawingAnnotations.Count - 1], lastMousePosition);
                         }
-                        dc.DrawLine(annotPen, drawingAnnotations[drawingAnnotations.Count - 1], lastMousePosition);
                     }
                 }
 
