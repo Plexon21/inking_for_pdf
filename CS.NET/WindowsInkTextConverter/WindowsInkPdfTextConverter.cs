@@ -40,23 +40,18 @@ namespace WindowsInkTextConverter
         {
             using (MemoryStream ms = new MemoryStream())
             {
+                if (strokes == null) return null;
                 strokes.Save(ms);
-                var myInkCollector = new InkCollector();
                 var ink = new Ink();
                 ink.Load(ms.ToArray());
+                if (ink.Strokes.Count <= 0) return null;
 
                 using (RecognizerContext context = new RecognizerContext())
                 {
-                    if (ink.Strokes.Count > 0)
-                    {
-                        context.Strokes = ink.Strokes;
+                    context.Strokes = ink.Strokes;
 
-                        var result = context.Recognize(out RecognitionStatus status);
-
-                        if (status == RecognitionStatus.NoError)
-                            return result.TopString;
-                    }
-                    return null;
+                    var result = context.Recognize(out RecognitionStatus status);
+                    return status == RecognitionStatus.NoError ? result.TopString : null;
                 }
             }
         }

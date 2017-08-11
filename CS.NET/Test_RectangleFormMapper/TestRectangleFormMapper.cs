@@ -68,15 +68,15 @@ namespace Test_RectangleFormMapper
             double[] input = null;
             var rect = new RectangleFormMapper.RectangleFormMapper();
             var output = rect.MapToForm(input);
-            Assert.AreEqual(null, output);
+            Assert.IsNull(output);
 
             input = new double[0];
             output = rect.MapToForm(input);
-            Assert.AreEqual(null, output);
+            Assert.IsNull(output);
 
             input = new [] {1.1, 1.2, 1.3};
             output = rect.MapToForm(input);
-            Assert.AreEqual(null, output);
+            Assert.IsNull(output);
         }
 
         [TestMethod]
@@ -85,18 +85,18 @@ namespace Test_RectangleFormMapper
             List<Point> input = null;
             var rect = new RectangleFormMapper.RectangleFormMapper();
             var output = rect.MapToForm(input);
-            Assert.AreEqual(null, output);
+            Assert.IsNull(output);
 
             input = new List<Point>();
             output = rect.MapToForm(input);
-            Assert.AreEqual(null, output);
+            Assert.IsNull(output);
 
             input = new List<Point>
             {
                 new Point(1.1, 1.2)
             };
             output = rect.MapToForm(input);
-            Assert.AreEqual(null, output);
+            Assert.IsNull(output);
         }
 
     }

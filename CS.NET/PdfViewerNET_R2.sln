@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TextConverter", "TextConver
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_RectangleFormMapper", "Test_RectangleFormMapper\Test_RectangleFormMapper.csproj", "{ACD20391-A0D7-4DD1-ABC7-0E10E11F85AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_WindowsInkPdfTextConverter", "Test_WindowsInkPdfTextConverter\Test_WindowsInkPdfTextConverter.csproj", "{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -332,6 +334,38 @@ Global
 		{ACD20391-A0D7-4DD1-ABC7-0E10E11F85AC}.UnicodeRelease|x64.Build.0 = Release|Any CPU
 		{ACD20391-A0D7-4DD1-ABC7-0E10E11F85AC}.UnicodeRelease|x86.ActiveCfg = Release|Any CPU
 		{ACD20391-A0D7-4DD1-ABC7-0E10E11F85AC}.UnicodeRelease|x86.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|x64.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|x64.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|x64.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.Release|x86.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|x64.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|x64.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|x86.ActiveCfg = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeDebug|x86.Build.0 = Debug|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|Any CPU.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|Mixed Platforms.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|x64.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|x64.Build.0 = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|x86.ActiveCfg = Release|Any CPU
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222}.UnicodeRelease|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -343,5 +377,6 @@ Global
 		{EFC2C500-EA8A-4D11-9286-6C0D2E85E891} = {1869D6CA-794A-4D59-9464-B97EE25D5405}
 		{811B06E3-E3F1-43FC-8AE0-C85BBCF9C383} = {1869D6CA-794A-4D59-9464-B97EE25D5405}
 		{ACD20391-A0D7-4DD1-ABC7-0E10E11F85AC} = {1869D6CA-794A-4D59-9464-B97EE25D5405}
+		{7F1CEE79-C396-42A9-9FCA-5DDAE681D222} = {0BA4549C-7958-4F70-A25C-2AD8FFAB02D9}
 	EndGlobalSection
 EndGlobal
