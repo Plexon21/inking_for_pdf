@@ -563,6 +563,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         private void HandleSelectedRectangleOnCanvas(PdfSourceRect rectOnCanvas)
         {
+            if (MouseMode != TMouseMode.eMouseMarkMode) return;
+
             selectedRectOnPage = controller.TransformRectOnCanvasToOnPage(rectOnCanvas, out int pageNr);
 
             if (selectedRectOnPage != null && pageNr > 0)

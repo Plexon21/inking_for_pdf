@@ -559,6 +559,9 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         /// <returns></returns>
         private int GetClosestPageToPoint(PdfSourcePoint point) //[InkingForPDF]
         {
+            int page = GetPageContainingPoint(point);
+            if (page != -1) return page;
+
             int startPage = 1;
             int endPage = PageCount;
             if (!PdfUtils.PageLayoutScrollingEnabled(PageLayoutMode))
