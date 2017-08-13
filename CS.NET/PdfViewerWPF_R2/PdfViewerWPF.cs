@@ -809,6 +809,8 @@ namespace PdfTools.PdfViewerWPF
             }
         }
 
+        #region [InkingForPDF] Annotation properties
+
         /// <summary>
         /// Configure wether the stroke width is dependent on the zoom level or not
         /// </summary>
@@ -862,11 +864,16 @@ namespace PdfTools.PdfViewerWPF
             set => controller.AnnotationFormMapper = value;
         }
 
+        /// <summary>
+        /// Save the current document to the desktop with name "Test.pdf"
+        /// </summary>
         public void SaveToDesktop()
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             controller.SaveAs(path + "\\Test.pdf");
         }
+
+        #endregion [InkingForPDF] Annotation properties
 
 
         bool _showOutlines = true;
@@ -1229,26 +1236,41 @@ namespace PdfTools.PdfViewerWPF
 
         #endregion Events
 
+        #region [InkingForPDF] Annotation Methods
 
+        /// <summary>
+        /// Delete the selected Annotations
+        /// </summary>
         public void DeleteSelectedAnnotations()
         {
             pane.DeleteSelectedAnnotations();
         }
 
+        /// <summary>
+        /// End the TextRecognitionMode, convert the Text and create an annotation with it
+        /// </summary>
         public void EndTextRecognitionMode()
         {
             pane.EndTextRecognitionMode();
         }
 
+        /// <summary>
+        /// End the creation of an annotation using the click mode and create said annotation
+        /// </summary>
         public void EndCurrentClickAnotation()
         {
             pane.EndCurrentClickAnnotation();
         }
 
+        /// <summary>
+        /// End the creation of an annotation using the click mode but DON'T create the annotation
+        /// </summary>
         public void AbortCurrentClickAnnotation()
         {
             pane.AbortCurrentClickAnnotation();
         }
+
+        #endregion [InkingForPDF] Annotation Methods
 
     }
 }
