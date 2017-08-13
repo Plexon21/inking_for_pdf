@@ -194,7 +194,7 @@
                         <Image Source="{StaticResource textSelection}" />
                     </Button>
                     <Slider x:Name="AnnotationWidth_Slider" Height="21" VerticalAlignment="Top" Width="69" Margin="0,4,0,0" Minimum="1" Maximum="12" Value="1" Thumb.DragCompleted="AnnotationWidth_Slider_DragCompleted" SmallChange="1" LargeChange="6"/>
-                    <xctk:ColorPicker Name="annotationColor_ColorPicker" SelectedColorChanged="annotationColor_ColorPicker_SelectedColorChanged" Margin="0,0,0,0.333" Width="85" SelectedColor="Black"/>
+                    <xctk:ColorPicker x:Name="AnnotationColor_ColorPicker" SelectedColorChanged="AnnotationColor_ColorPicker_SelectedColorChanged" Margin="0,0,0,0.333" Width="85" SelectedColor="Black"/>
                 </ToolBar>
 
             </ToolBarPanel>

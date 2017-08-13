@@ -66,7 +66,7 @@ namespace ViewerWPFSample
             ContextMenu.Items.Add(new Separator());
             foreach (TMouseMode mouseMode in Enum.GetValues(typeof(TMouseMode)))
             {
-                if (mouseMode == TMouseMode.eMouseUndefMode || mouseMode == TMouseMode.eMouseTextRecognitionMode)
+                if (mouseMode == TMouseMode.eMouseUndefMode || mouseMode == TMouseMode.eMouseTextRecognitionMode) //[InkingForPDF]
                     continue;
                 if(mouseMode == TMouseMode.eMouseDrawAnnotationMode)
                     ContextMenu.Items.Add(new Separator());
@@ -76,6 +76,9 @@ namespace ViewerWPFSample
                 ContextMenu.Items.Add(item);
                 mouseModeMenuItems.Add(item);
             }
+
+            #region [InkingForPDF] additional annotation context menu entries
+
             MenuItem deleteAnnotations = new MenuItem();
             deleteAnnotations.Header = "Delete Annotations";
             deleteAnnotations.Click += delegate { PdfViewer.DeleteSelectedAnnotations(); };
@@ -93,6 +96,8 @@ namespace ViewerWPFSample
             endTextRecognition.Header = "End Text Recognition";
             endTextRecognition.Click += delegate { PdfViewer.EndTextRecognitionMode(); };
             ContextMenu.Items.Add(endTextRecognition);
+
+            #endregion [InkingForPDF] additional annotation context menu entries
 
         }
 
@@ -573,13 +578,13 @@ namespace ViewerWPFSample
                     PdfViewer.Scroll((int)(-0.05 * PdfViewer.ActualWidth), 0);
                     break;
                 case Key.Delete:
-                    if (PdfViewer.MouseMode == TMouseMode.eMouseMarkMode) PdfViewer.DeleteSelectedAnnotations();
+                    if (PdfViewer.MouseMode == TMouseMode.eMouseMarkMode) PdfViewer.DeleteSelectedAnnotations(); //[InkingForPDF]
                     break;
                 case Key.Space:
-                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.EndCurrentClickAnotation();
+                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.EndCurrentClickAnotation(); //[InkingForPDF]
                     break;
                 case Key.Escape:
-                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.AbortCurrentClickAnnotation();
+                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.AbortCurrentClickAnnotation(); //[InkingForPDF]
                     break;
                 default:
                     //do nothing
@@ -645,6 +650,8 @@ namespace ViewerWPFSample
             copySelectedMenuItem.IsEnabled = (PdfViewer.SelectedText.Length > 0);
         }
 
+        #region [InkingForPDF] Annotation Events
+
         private void AnnotationWidth_Slider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             if (PdfViewer != null)
@@ -678,6 +685,7 @@ namespace ViewerWPFSample
                     break;
             }
         }
+
         private void FormMap_Changed(object sender, RoutedEventArgs e)
         {
             var item = sender as MenuItem;
@@ -713,11 +721,13 @@ namespace ViewerWPFSample
             PdfViewer.SaveToDesktop();
         }
 
-        private void annotationColor_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void AnnotationColor_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (PdfViewer == null || e.NewValue == null) return;
 
             PdfViewer.AnnotationColor = (Color)e.NewValue;
         }
+
+        #endregion [InkingForPDF] Annotation Events
     }
 }
