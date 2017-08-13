@@ -15,13 +15,17 @@ namespace DummyTextConverter
     {
         public string ToText(IEnumerable<PdfAnnotation> strokes)
         {
-            return "There are " + strokes.Count() + " strokes in the Stroke-List";
+            var count = 0;
+            if (strokes != null) count = strokes.Count();
+            return "There are " + count + " strokes in the Stroke-List";
 
         }
 
         public string ToText(StrokeCollection strokes)
         {
-            return "There are " + strokes.Count + " strokes in the Stroke-List";
+            var count = 0;
+            if (strokes != null) count = strokes.Count;
+            return "There are " + count + " strokes in the Stroke-List";
         }
     }
 }

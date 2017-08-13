@@ -20,10 +20,11 @@ namespace WindowsInkTextConverter
      ExportMetadata("Version", 1)]
     public class WindowsInkPdfTextConverter : IPdfTextConverter
     {
-        public string ToText(IEnumerable<PdfAnnotation> strokes)
+        public string ToText(IEnumerable<PdfAnnotation> annots)
         {
+            if (annots == null) return null;
             var actualStrokes = new StrokeCollection();
-            foreach (var annot in strokes)
+            foreach (var annot in annots)
             {
                 var stylusPoints = new StylusPointCollection();
                 for (int i = 0; i < annot.Rect.Length - 1; i += 2)
