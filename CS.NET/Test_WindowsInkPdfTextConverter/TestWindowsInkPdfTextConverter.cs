@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Windows.Ink;
 using System.Windows.Input;
-using WindowsInkTextConverter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PdfTools.PdfViewerCSharpAPI.Annotations;
 
-namespace Test_WindowsInkPdfTextConverter
+namespace AnnotationTextConverter
 {
     [TestClass]
     public class TestWindowsInkPdfTextConverter

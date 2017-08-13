@@ -13,7 +13,7 @@ using System.Windows.Input.StylusPlugIns;
 using Microsoft.Ink;
 using Stroke = System.Windows.Ink.Stroke;
 
-namespace WindowsInkTextConverter
+namespace AnnotationTextConverter
 {
     [Export(typeof(IPdfTextConverter)),
      ExportMetadata("Name", "WindowsInkTextConverter"),
@@ -39,7 +39,7 @@ namespace WindowsInkTextConverter
 
         public string ToText(StrokeCollection strokes)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 if (strokes == null) return null;
                 strokes.Save(ms);
@@ -47,7 +47,7 @@ namespace WindowsInkTextConverter
                 ink.Load(ms.ToArray());
                 if (ink.Strokes.Count <= 0) return null;
 
-                using (RecognizerContext context = new RecognizerContext())
+                using (var context = new RecognizerContext())
                 {
                     context.Strokes = ink.Strokes;
 

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
-namespace NoChangeAnnotationFormMapper
+[assembly: CLSCompliant(true)]
+namespace AnnotationFormMapper
 {
     [Export(typeof(IPdfAnnotationFormMapper)),
      ExportMetadata("Name", "NoChangeFormMapper"),

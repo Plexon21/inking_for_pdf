@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using RectangleFormMapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test_RectangleFormMapper
+namespace AnnotationFormMapper
 {
     [TestClass]
     public class TestRectangleFormMapper
@@ -20,7 +19,7 @@ namespace Test_RectangleFormMapper
                 new double[]{1.1, 4.2, 4.1, 4.2},
                 new double[]{4.1, 1.2, 4.1, 4.2}
             };
-            var rect = new RectangleFormMapper.RectangleFormMapper();
+            var rect = new RectangleFormMapper();
             var output = rect.MapToForm(input);
 
             Assert.AreEqual(expected.Count, output.Count);
@@ -51,7 +50,7 @@ namespace Test_RectangleFormMapper
                 new Point(4.1, 1.2),
                 new Point(1.1, 1.2)
             };
-            var rect = new RectangleFormMapper.RectangleFormMapper();
+            var rect = new RectangleFormMapper();
             var output = rect.MapToForm(input);
             
             Assert.AreEqual(expected.Count, output.Count);
@@ -66,7 +65,7 @@ namespace Test_RectangleFormMapper
         public void TestMapToFormDoubleFails()
         {
             double[] input = null;
-            var rect = new RectangleFormMapper.RectangleFormMapper();
+            var rect = new RectangleFormMapper();
             var output = rect.MapToForm(input);
             Assert.IsNull(output);
 
@@ -83,7 +82,7 @@ namespace Test_RectangleFormMapper
         public void TestMapToFormPointFails()
         {
             List<Point> input = null;
-            var rect = new RectangleFormMapper.RectangleFormMapper();
+            var rect = new RectangleFormMapper();
             var output = rect.MapToForm(input);
             Assert.IsNull(output);
 

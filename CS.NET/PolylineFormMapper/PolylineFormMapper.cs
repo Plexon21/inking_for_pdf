@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
-namespace PolylineFormMapper
+[assembly: CLSCompliant(true)]
+namespace AnnotationFormMapper
 {
     [Export(typeof(IPdfAnnotationFormMapper)),
      ExportMetadata("Name", "PolylineFormMapper"),

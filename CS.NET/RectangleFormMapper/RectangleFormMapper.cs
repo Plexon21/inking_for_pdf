@@ -7,7 +7,8 @@ using System.Windows;
 using System.Threading.Tasks;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
-namespace RectangleFormMapper
+[assembly: CLSCompliant(true)]
+namespace AnnotationFormMapper
 {
     [Export(typeof(IPdfAnnotationFormMapper)),
      ExportMetadata("Name", "RectangleFormMapper"),
