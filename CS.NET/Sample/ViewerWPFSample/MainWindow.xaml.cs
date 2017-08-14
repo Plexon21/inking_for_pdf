@@ -729,5 +729,24 @@ namespace ViewerWPFSample
         }
 
         #endregion [InkingForPDF] Annotation Events
+
+        private void CreateAnnotations(object sender, RoutedEventArgs e)
+        {
+            MassCreate dialog = new MassCreate();
+            dialog.ValuesChanged += (a, b) =>
+            {
+                if (a.HasValue && b.HasValue)
+                {
+                    MassCreateAnnotations(a.Value, b.Value);
+                }
+            };
+            dialog.Show();
+            
+        }
+
+        private void MassCreateAnnotations(int annotCount, int pointCount)
+        {
+
+        }
     }
 }

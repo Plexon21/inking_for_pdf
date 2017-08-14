@@ -1,0 +1,28 @@
+﻿<Window x:Class="ViewerWPFSample.MassCreate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ViewerWPFSample"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="MassCreate" Height="183.721" Width="254.069">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Content="Nr of Annotations:"></Label>
+        <xctk:IntegerUpDown Grid.Row="0" Grid.Column="1" Value="5000" Name="AnnotCount"/>
+        <Label Grid.Row="1" Grid.Column="0" Content="Points per Annotation:"></Label>
+        <xctk:IntegerUpDown Grid.Row="1" Grid.Column="1" Value="2" Name="PointCount" />
+        <Button Grid.Column="1" Grid.Row="2" 
+                MinWidth="80" Margin="4,3,1,3" Content="Send" RenderTransformOrigin="1.344,0.58" Click="Send_Click"  />
+
+    </Grid>
+</Window>
