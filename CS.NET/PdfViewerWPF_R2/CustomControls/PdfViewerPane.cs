@@ -445,6 +445,38 @@ namespace PdfTools.PdfViewerWPF.CustomControls
 
         #region [InkingForPDF] Annotation Methods
 
+
+        public void MassCreateAnnotations(int annotCount, int pointCount)
+        {
+            Random rnd = new Random();
+
+            double minX = 100;
+            double minY = 100;
+            double maxX = 400;
+            double maxY = 700;
+
+            IList<PdfAnnotation> annots = new List<PdfAnnotation>();
+            double[] color = new double[] { AnnotationStrokeColor.R / 255.0, AnnotationStrokeColor.G / 255.0, AnnotationStrokeColor.B / 255.0 };
+            double width = AnnotationStrokeWidthZoomDependent ? AnnotationStrokeWidth / controller.ZoomFactor : AnnotationStrokeWidth;
+
+
+            for (int annotIndex = 0; annotIndex < annotCount; annotIndex++)
+            {
+                double[] annotPoints = new double[pointCount * 2];
+
+                for (int point = 0; point < pointCount; point++)
+                {
+                    annotPoints[point * 2] = (rnd.NextDouble() * (maxX - minX)) + minX;
+                    annotPoints[point * 2 + 1] = (rnd.NextDouble() * (maxY - minY)) + minY;
+                }
+
+                annots.Add(new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationInk, controller.FirstPageOnViewport, annotPoints, color, width));
+            }
+
+            controller.CreateAnnotationsWithoutMapper(annots);
+        }
+
+
         private void UpdateAnnotationOnMouseModeChanged(TMouseMode value)
         {
             if (value != TMouseMode.eMouseTextRecognitionMode)

@@ -1270,6 +1270,17 @@ namespace PdfTools.PdfViewerWPF
             pane.AbortCurrentClickAnnotation();
         }
 
+        /// <summary>
+        /// Create a number of random annotations each containing a certain amount of points
+        /// This method ist used to test the limits of the application
+        /// </summary>
+        /// <param name="annotCount"></param>
+        /// <param name="pointCount"></param>
+        public void MassCreateAnnotations(int annotCount, int pointCount)
+        {
+            pane.MassCreateAnnotations(annotCount, pointCount);
+        }
+
         #endregion [InkingForPDF] Annotation Methods
 
     }

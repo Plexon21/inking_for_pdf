@@ -746,7 +746,7 @@ namespace ViewerWPFSample
 
         private void MassCreateAnnotations(int annotCount, int pointCount)
         {
-
+            PdfViewer.MassCreateAnnotations(annotCount, pointCount);
         }
     }
 }

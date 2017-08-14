@@ -1046,15 +1046,15 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(newAnnotations));
         }
 
-        public void CreateAnnotationWithoutMapper(PdfAnnotation annot)
+        public void CreateAnnotationsWithoutMapper(IList<PdfAnnotation> annots)
         {
-            canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(annot));
+            canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(annots));
         }
 
         public void CreateTextAnnotation(string content, int page, double[] point, double[] color)
         {
             PdfAnnotation annot = new PdfAnnotation(PdfDocument.TPdfAnnotationType.eAnnotationText, page, point, content, color);
-            CreateAnnotationWithoutMapper(annot);
+            CreateAnnotationsWithoutMapper(new List<PdfAnnotation>() { annot });
         }
 
         private void UpdateTextAnnotations(IList<PdfAnnotation> annots)

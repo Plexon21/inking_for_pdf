@@ -452,10 +452,10 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         void CreateAnnotation(PdfAnnotation annot);
 
         /// <summary>
-        /// Creates a new annotation without remapping the points
+        /// Creates new annotations without remapping the points
         /// </summary>
         /// <param name="annot"></param>
-        void CreateAnnotationWithoutMapper(PdfAnnotation annot);
+        void CreateAnnotationsWithoutMapper(IList<PdfAnnotation> annots);
 
         /// <summary>
         /// Creates a new text annotation
