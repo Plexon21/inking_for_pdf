@@ -361,9 +361,9 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return request;
         }
 
-        public PdfUpdateAnnotaionRequest UpdateAnnotations(UpdateAnnotationArgs args)
+        public PdfUpdateAnnotationRequest UpdateAnnotations(UpdateAnnotationArgs args)
         {
-            var request = new PdfUpdateAnnotaionRequest(args);
+            var request = new PdfUpdateAnnotationRequest(args);
             requestQueue.Add(request);
             return request;
         }

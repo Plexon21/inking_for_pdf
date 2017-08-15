@@ -33,7 +33,6 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
     {
         public IList<UpdateAnnotation> updateAnnots;
 
-
         public UpdateAnnotationArgs(PdfAnnotation annot, double[] r, string content, string label, double[] color, double dBorderWidth)
         {
             updateAnnots = new List<UpdateAnnotation>() { new UpdateAnnotation(annot, r, content, label, color, dBorderWidth) };
@@ -48,13 +47,23 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
             updateAnnots = new List<UpdateAnnotation>() { annot };
         }
     }
-    public class PdfUpdateAnnotaionRequest : APdfRequest<UpdateAnnotationArgs, IList<int>>
+
+    /// <summary>
+    /// Requests the update of multiple annotations
+    /// </summary>
+    public class PdfUpdateAnnotationRequest : APdfRequest<UpdateAnnotationArgs, IList<int>>
     {
-        public PdfUpdateAnnotaionRequest(UpdateAnnotationArgs arguments)
+
+        /// <summary>
+        /// Creates the PdfUpdateAnnotationRequest
+        /// </summary>
+        /// <param name="arguments"></param>
+        public PdfUpdateAnnotationRequest(UpdateAnnotationArgs arguments)
             : base(arguments, 50)
         {
         }
-        public PdfUpdateAnnotaionRequest(UpdateAnnotationArgs arguments, int priority)
+
+        public PdfUpdateAnnotationRequest(UpdateAnnotationArgs arguments, int priority)
             : base(arguments, priority)
         {
         }

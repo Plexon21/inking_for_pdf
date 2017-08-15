@@ -117,7 +117,7 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        PdfUpdateAnnotaionRequest UpdateAnnotations(UpdateAnnotationArgs args);
+        PdfUpdateAnnotationRequest UpdateAnnotations(UpdateAnnotationArgs args);
 
         /// <summary>
         /// Deletes an existing annotation

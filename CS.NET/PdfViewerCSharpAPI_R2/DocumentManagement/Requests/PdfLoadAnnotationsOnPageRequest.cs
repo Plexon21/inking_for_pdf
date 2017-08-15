@@ -19,12 +19,22 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
             this.PageNr = pageNr;
         }
     }
+
+    /// <summary>
+    /// Requests to load all annotations on a page
+    /// </summary>
     public class PdfGetAnnotationsOnPageRequest : APdfRequest<PdfGetAnnotationsOnPageArgs, IList<PdfAnnotation>>
     {
+
+        /// <summary>
+        /// Creates the PdfGetAnnotationsOnPageRequest
+        /// </summary>
+        /// <param name="arguments"></param>
         public PdfGetAnnotationsOnPageRequest(PdfGetAnnotationsOnPageArgs arguments)
             : base(arguments, 45)
         {
         }
+
         public PdfGetAnnotationsOnPageRequest(PdfGetAnnotationsOnPageArgs arguments, int priority)
             : base(arguments, priority)
         {

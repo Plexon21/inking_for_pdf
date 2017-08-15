@@ -18,18 +18,27 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
         {
             this.annotationHandles = new List<IntPtr> { handle };
         }
+
         public DeleteAnnotationArgs(IList<IntPtr> handles)
         {
             this.annotationHandles = handles;
         }
-
     }
+
+    /// <summary>
+    /// Request the deletion of multiple annotations
+    /// </summary>
     public class PdfDeleteAnnotationRequest : APdfRequest<DeleteAnnotationArgs, IList<IntPtr>>
     {
+        /// <summary>
+        /// Creates the PdfDeleteAnnotationRequest
+        /// </summary>
+        /// <param name="arguments"></param>
         public PdfDeleteAnnotationRequest(DeleteAnnotationArgs arguments)
             : base(arguments, 55)
         {
         }
+
         public PdfDeleteAnnotationRequest(DeleteAnnotationArgs arguments, int priority)
             : base(arguments, priority)
         {
