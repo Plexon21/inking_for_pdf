@@ -379,7 +379,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         private PdfSourceRect selectedRectOnPage;
         private IList<PdfAnnotation> selectedAnnotations = new List<PdfAnnotation>();
         private StrokeCollection strokes = new StrokeCollection();
-        private TMouseMode stylusRememberedMouseMode = TMouseMode.eMouseUndefMode;
 
         private double maxAnnotationStrokeWidth = 12;
 
@@ -1195,45 +1194,6 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         }
 
         #endregion EventHandlers
-
-        #region StylusHandlers
-        protected override void OnStylusDown(StylusDownEventArgs e)
-        {
-
-        }
-        protected override void OnStylusMove(StylusEventArgs e)
-        {
-
-        }
-        protected override void OnStylusUp(StylusEventArgs e)
-        {
-
-        }
-
-        protected override void OnStylusEnter(StylusEventArgs e)
-        {
-            base.OnStylusEnter(e);
-            stylusRememberedMouseMode = MouseMode;
-            MouseMode = TMouseMode.eMouseDrawAnnotationMode;
-        }
-
-        protected override void OnStylusLeave(StylusEventArgs e)
-        {
-            base.OnStylusLeave(e);
-            if (stylusRememberedMouseMode != TMouseMode.eMouseUndefMode)
-            {
-                MouseMode = stylusRememberedMouseMode;
-            }
-            else
-            {
-                MouseMode = TMouseMode.eMouseMoveMode;
-            }
-            SetCursorAccordingToMouseMode();
-        }
-
-        #endregion StylusHandlers
-
-
 
     }
 }
