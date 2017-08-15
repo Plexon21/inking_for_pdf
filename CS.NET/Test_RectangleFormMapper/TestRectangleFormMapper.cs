@@ -51,7 +51,7 @@ namespace AnnotationFormMapper
                 new Point(1.1, 1.2)
             };
             var rect = new RectangleFormMapper();
-            var output = rect.MapToForm(input);
+            var output = rect.MapToForm(input)[0];
             
             Assert.AreEqual(expected.Count, output.Count);
             for (int k = 0; k < expected.Count; k++)

@@ -330,4 +330,7 @@
   <data name="annotations_windowsink" xml:space="preserve">
     <value>Windows Ink</value>
   </data>
+  <data name="annotations_equals" xml:space="preserve">
+    <value>Gleichzeichen</value>
+  </data>
 </root>

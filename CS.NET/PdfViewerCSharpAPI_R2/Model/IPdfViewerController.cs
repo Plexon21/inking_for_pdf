@@ -497,7 +497,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         /// <param name="annots"></param>
         /// <returns></returns>
         string ConvertAnnotations(StrokeCollection annots);
-        IList<System.Windows.Point> DrawForm(IList<System.Windows.Point> annotationPoints);
+        IList<IList<System.Windows.Point>> DrawForm(IList<System.Windows.Point> annotationPoints);
 
         #endregion [InkingForPDF] Annotation Methods
     }

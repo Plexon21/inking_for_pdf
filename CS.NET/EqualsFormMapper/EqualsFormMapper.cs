@@ -7,14 +7,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using PdfTools.PdfViewerCSharpAPI.Extensibility;
 
-namespace TestFormMapper07
+[assembly: CLSCompliant(true)]
+namespace AnnotationFormMapper
 {
-    [Export(typeof(IPdfTextConverter)),
-     ExportMetadata("Name", "RectangleFormMapper"),
-     ExportMetadata("Version", 1)]
-    public class TestFormMapper07 : IPdfAnnotationFormMapper
+    [Export(typeof(IPdfAnnotationFormMapper)),
+     ExportMetadata("Name", "EqualsFormMapper"),
+     ExportMetadata("Version",1)]
+    public class EqualsFormMapper:IPdfAnnotationFormMapper
     {
-        public string AnnotationType { get; } = "eAnnotationRectangle";
+        public string AnnotationType { get; } = "Equals";
         public IList<double[]> MapToForm(double[] annotationPoints)
         {
             if (annotationPoints == null || annotationPoints.Length < 2 || annotationPoints.Length % 2 != 0) return null;
@@ -25,10 +26,8 @@ namespace TestFormMapper07
 
             return new List<double[]>
             {
-                new double[] {startPointX, startPointY, startPointX, endPointY},
                 new double[] {startPointX, startPointY, endPointX, startPointY},
-                new double[] {startPointX, endPointY, endPointX, endPointY},
-                new double[] {endPointX, startPointY, endPointX, endPointY}
+                new double[] { startPointX, endPointY, endPointX, endPointY}
             };
         }
         public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
@@ -41,12 +40,15 @@ namespace TestFormMapper07
                 new List<Point>
                 {
                     firstPoint,
+                    new Point(lastPoint.X,firstPoint.Y)
+                }, 
+                new List<Point>
+                {
                     new Point(firstPoint.X,lastPoint.Y),
-                    lastPoint,
-                    new Point(lastPoint.X,firstPoint.Y),
-                    firstPoint
+                    lastPoint
                 }
             };
         }
+
     }
 }

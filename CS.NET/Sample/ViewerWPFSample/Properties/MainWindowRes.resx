@@ -336,4 +336,7 @@
   <data name="annotations_windowsink" xml:space="preserve">
     <value>Textrecognition using WindowsInk</value>
   </data>
+  <data name="annotations_equals" xml:space="preserve">
+    <value>Equals</value>
+  </data>
 </root>

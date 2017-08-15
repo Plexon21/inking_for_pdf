@@ -34,20 +34,23 @@ namespace TestFormMapper01
                 new double[] {endPointX, startPointY, endPointX, endPointY}
             };
         }
-       
 
-        public IList<Point> MapToForm(IList<Point> annotationPoints)
+
+        public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
         {
             if (annotationPoints == null || annotationPoints.Count < 2) return null;
             var firstPoint = annotationPoints[0];
             var lastPoint = annotationPoints[annotationPoints.Count - 1];
-            return new List<Point>
+            return new List<IList<Point>>
             {
-                firstPoint,
-                new Point(firstPoint.X,lastPoint.Y),
-                lastPoint,
-                new Point(lastPoint.X,firstPoint.Y),
-                firstPoint
+                new List<Point>
+                {
+                    firstPoint,
+                    new Point(firstPoint.X,lastPoint.Y),
+                    lastPoint,
+                    new Point(lastPoint.X,firstPoint.Y),
+                    firstPoint
+                }
             };
         }
     }

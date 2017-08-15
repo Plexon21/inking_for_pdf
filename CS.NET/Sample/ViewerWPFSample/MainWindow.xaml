@@ -41,6 +41,7 @@
                 <MenuItem Header="{x:Static props:MainWindowRes.annotations_nochange}" Name="NoChange" IsChecked="True" Click="FormMap_Changed"/>
                 <MenuItem Header="{x:Static props:MainWindowRes.annotations_rectangle}" Name="Rect" Click="FormMap_Changed"/>
                 <MenuItem Header="{x:Static props:MainWindowRes.annotations_polyline}" Name="Poly" Click="FormMap_Changed"/>
+                <MenuItem Header="{x:Static props:MainWindowRes.annotations_equals}" Name="Equals" Click="FormMap_Changed"/>
             </MenuItem>
             <MenuItem Header="Test" Name="Test">
                 <MenuItem Header="Create Annotations" Name="Create" Click="CreateAnnotations"></MenuItem>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -152,7 +153,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             PageLayoutMode = (PageLayoutMode == TPageLayoutMode.None) ? TPageLayoutMode.OneColumn : PageLayoutMode;
             Logger.LogInfo("Created Object instance");
         }
-        
+
         public void Initialize()
         {
             Logger.LogInfo("Initialize");
@@ -788,7 +789,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 _scrollingToNextPageEnabled = value;
             }
         }
-        
+
         private TPageLayoutMode _pageLayoutMode;
         public TPageLayoutMode PageLayoutMode
         {
@@ -823,7 +824,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             canvas.PageLayoutMode = value;
             OnPageLayoutModeChanged(value);
         }
-        
+
         private FitMode _fitMode;
         public FitMode FitMode
         {
@@ -865,7 +866,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
                 viewport.ZoomCenteredOnViewportCenter(1.0);
             }
         }
-        
+
         public void ZoomToRectangle(PdfTargetRect rect)
         {
             if (_fitMode != FitMode.FitNone)
@@ -1027,7 +1028,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             IList<double[]> annots = null;
             try
             {
-                 annots = loadedFormMapper.MapToForm(oldAnnot.Rect);
+                annots = loadedFormMapper.MapToForm(oldAnnot.Rect);
             }
             catch (Exception e)
             {
@@ -1063,7 +1064,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 if (annot.SubType == PdfDocument.TPdfAnnotationType.eAnnotationText && annot.Contents.Length > 0)
                 {
-                    UpdateAnnotations(new UpdateAnnotationArgs(new UpdateAnnotation(annot,null,annot.Contents,"Sticky Note",null,-1)));
+                    UpdateAnnotations(new UpdateAnnotationArgs(new UpdateAnnotation(annot, null, annot.Contents, "Sticky Note", null, -1)));
                 }
             }
         }
@@ -1090,7 +1091,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         {
             canvas.DocumentManager.GetAnnotationsOnPage(pageNr);
         }
-        
+
         public IPdfAnnotationFormMapper LoadFormMapper()
         {
             var formMapper = _annotationFormMappers.Where(p => p.Metadata.Name.Equals(AnnotationFormMapper))
@@ -1103,7 +1104,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             IPdfAnnotationFormMapper loadedFormMapper = null;
             try
             {
-                 loadedFormMapper = formMapper.Value;
+                loadedFormMapper = formMapper.Value;
             }
             catch (Exception e)
             {
@@ -1118,16 +1119,27 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             return loadedFormMapper;
         }
 
-        public IList<Point> DrawForm(IList<Point> annotationPoints)
+        public IList<IList<Point>> DrawForm(IList<Point> annotationPoints)
         {
             var loadedFormMapper = LoadFormMapper();
             if (loadedFormMapper == null) return null;
-            var res = loadedFormMapper.MapToForm(annotationPoints);
-            if (res != null) return (List<Point>)res;
-            Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
-            return annotationPoints;
+            try
+            {
+                var res = loadedFormMapper.MapToForm(annotationPoints);
+
+                if (res != null) return res;
+                Logger.LogError($"FormMapper {AnnotationFormMapper} did not return a value");
+                return new List<IList<Point>> {annotationPoints};
+            ;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError($"There occured an Exception while using {AnnotationFormMapper}.");
+                Logger.LogException(e);
+                return new List<IList<Point>>{ annotationPoints};
+            }
         }
-        
+
         public IPdfTextConverter LoadTextConverter()
         {
             var converter = _textConverters.Where(p => p.Metadata.Name.Equals(TextConverter))
@@ -1195,7 +1207,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             return
                 $"Textconverter {TextConverter} did not return a value.";
         }
-        
+
         public void SaveAs(string fileName)
         {
             canvas.DocumentManager.SaveAs(fileName);
@@ -2130,7 +2142,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
         static extern TViewerError PdfViewerGetLastError();
         [DllImport("PdfViewerAPI.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
         static extern UIntPtr PdfViewerGetLastErrorMessageW(StringBuilder errorMessageBuffer, UIntPtr errorMessageBufferSize);
-        
+
         #endregion native imports
     }
 }

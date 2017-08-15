@@ -28,9 +28,9 @@ namespace AnnotationFormMapper
             return result;
         }
 
-        public IList<Point> MapToForm(IList<Point> annotationPoints)
+        public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
         {
-            return annotationPoints;
+            return new List<IList<Point>>{annotationPoints};
         }
     }
 }

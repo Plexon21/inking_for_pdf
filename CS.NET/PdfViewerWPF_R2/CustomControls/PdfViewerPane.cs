@@ -193,13 +193,20 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     if (annotationPoints != null)
                     {
-                        var drawingAnnotations = controller.DrawForm(annotationPoints);
-                        if (drawingAnnotations != null)
+                        var annotList = controller.DrawForm(annotationPoints);
+                        if (annotList != null)
                         {
-                            for (int i = 0; i < drawingAnnotations.Count - 1; i++)
+                            foreach (var annot in annotList)
                             {
-                                dc.DrawLine(annotPen, drawingAnnotations[i], drawingAnnotations[i + 1]);
+                                if (annot != null && annot.Count > 1)
+                                {
+                                    for (int i = 0; i < annot.Count - 1; i++)
+                                    {
+                                        dc.DrawLine(annotPen, annot[i], annot[i + 1]);
+                                    }
+                                }
                             }
+
                         }
                     }
                 }
@@ -207,14 +214,21 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     if (annotationPoints != null)
                     {
-                        var drawingAnnotations = controller.DrawForm(annotationPoints);
-                        if (drawingAnnotations != null)
+                        var annotList = controller.DrawForm(annotationPoints);
+                        if (annotList != null)
                         {
-                            for (var i = 0; i < drawingAnnotations.Count - 1; i++)
+                            foreach (var annot in annotList)
                             {
-                                dc.DrawLine(annotPen, drawingAnnotations[i], drawingAnnotations[i + 1]);
+                                if (annot != null && annot.Count > 1)
+                                {
+                                    for (var i = 0; i < annot.Count - 1; i++)
+                                    {
+                                        dc.DrawLine(annotPen, annot[i], annot[i + 1]);
+                                    }
+                                    dc.DrawLine(annotPen, annot[annot.Count - 1],
+                                        lastMousePosition);
+                                }
                             }
-                            dc.DrawLine(annotPen, drawingAnnotations[drawingAnnotations.Count - 1], lastMousePosition);
                         }
                     }
                 }

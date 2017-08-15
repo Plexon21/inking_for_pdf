@@ -713,6 +713,9 @@ namespace ViewerWPFSample
                 case "Poly":
                     PdfViewer.AnnotationFormMapper = "PolylineFormMapper";
                     break;
+                case "Equals":
+                    PdfViewer.AnnotationFormMapper = "EqualsFormMapper";
+                    break;
             }
         }
 

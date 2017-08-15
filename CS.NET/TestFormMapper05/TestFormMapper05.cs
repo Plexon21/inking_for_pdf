@@ -19,7 +19,7 @@ namespace TestFormMapper05
         {
            throw new NotImplementedException();
         }
-        public IList<Point> MapToForm(IList<Point> annotationPoints)
+        public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
         {
             throw new NotImplementedException();
         }

@@ -18,7 +18,7 @@ namespace AnnotationFormMapper
         public string AnnotationType { get; } = "eAnnotationRectangle";
         public IList<double[]> MapToForm(double[] annotationPoints)
         {
-            if (annotationPoints == null || annotationPoints.Length < 2 || annotationPoints.Length%2!=0) return null;
+            if (annotationPoints == null || annotationPoints.Length < 2 || annotationPoints.Length % 2 != 0) return null;
             var startPointX = annotationPoints[0];
             var startPointY = annotationPoints[1];
             var endPointX = annotationPoints[annotationPoints.Length - 2];
@@ -32,18 +32,21 @@ namespace AnnotationFormMapper
                 new double[] {endPointX, startPointY, endPointX, endPointY}
             };
         }
-        public IList<Point> MapToForm(IList<Point> annotationPoints)
+        public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
         {
-            if(annotationPoints==null || annotationPoints.Count < 2)return null;
+            if (annotationPoints == null || annotationPoints.Count < 2) return null;
             var firstPoint = annotationPoints[0];
             var lastPoint = annotationPoints[annotationPoints.Count - 1];
-            return new List<Point>
+            return new List<IList<Point>>
             {
-                firstPoint,
-                new Point(firstPoint.X,lastPoint.Y),
-                lastPoint,
-                new Point(lastPoint.X,firstPoint.Y),
-                firstPoint
+                new List<Point>
+                {
+                    firstPoint,
+                    new Point(firstPoint.X,lastPoint.Y),
+                    lastPoint,
+                    new Point(lastPoint.X,firstPoint.Y),
+                    firstPoint
+                }
             };
         }
     }

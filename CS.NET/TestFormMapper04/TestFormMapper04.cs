@@ -20,9 +20,9 @@ namespace TestFormMapper04
         {
             return new List<double[]>();
         }
-        public IList<Point> MapToForm(IList<Point> annotationPoints)
+        public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
         {
-            return new List<Point>();
+            return new List<IList<Point>>();
         }
     }
 }

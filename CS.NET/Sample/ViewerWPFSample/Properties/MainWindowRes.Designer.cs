@@ -79,6 +79,15 @@ namespace ViewerWPFSample.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Equals.
+        /// </summary>
+        public static string annotations_equals {
+            get {
+                return ResourceManager.GetString("annotations_equals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FormMapper.
         /// </summary>
         public static string annotations_formmapper {

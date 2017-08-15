@@ -7,6 +7,6 @@ namespace PdfTools.PdfViewerCSharpAPI.Extensibility
     {
         string AnnotationType { get; }
         IList<double[]> MapToForm(double[] annotationPoints);
-        IList<Point> MapToForm(IList<Point> annotationPoints);
+        IList<IList<Point>> MapToForm(IList<Point> annotationPoints);
     }
 }

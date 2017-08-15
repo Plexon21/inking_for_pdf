@@ -38,18 +38,21 @@ namespace TestFormMapper06
         [Export(typeof(IPdfAnnotationFormMapper)),
          ExportMetadata("Name", "RectangleFormMapper"),
          ExportMetadata("Version", 1)]
-        public IList<Point> MapToForm(IList<Point> annotationPoints)
+        public IList<IList<Point>> MapToForm(IList<Point> annotationPoints)
         {
             if (annotationPoints == null || annotationPoints.Count < 2) return null;
             var firstPoint = annotationPoints[0];
             var lastPoint = annotationPoints[annotationPoints.Count - 1];
-            return new List<Point>
+            return new List<IList<Point>>
             {
-                firstPoint,
-                new Point(firstPoint.X,lastPoint.Y),
-                lastPoint,
-                new Point(lastPoint.X,firstPoint.Y),
-                firstPoint
+                new List<Point>
+                {
+                    firstPoint,
+                    new Point(firstPoint.X,lastPoint.Y),
+                    lastPoint,
+                    new Point(lastPoint.X,firstPoint.Y),
+                    firstPoint
+                }
             };
         }
     }
