@@ -6,6 +6,9 @@ using System.Text;
 
 namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
+    /// <summary>
+    /// Used to distinguish form mapper extensions before loading them
+    /// </summary
     public interface IPdfAnnotationFormMapperMetadata
     {
         string Name { get; }

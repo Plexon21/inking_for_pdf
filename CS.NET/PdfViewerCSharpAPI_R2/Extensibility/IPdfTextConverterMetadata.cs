@@ -6,6 +6,9 @@ using System.Text;
 
 namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
+    /// <summary>
+    /// Used to distinguish text converter extensions before loading them
+    /// </summary>
     public interface IPdfTextConverterMetadata
     {
         string Name { get; }
