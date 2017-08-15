@@ -11,6 +11,10 @@ using System.Windows.Media;
 
 namespace PdfTools.PdfViewerCSharpAPI.Annotations
 {
+
+    /// <summary>
+    /// Representation of an Annotation
+    /// </summary>
     public class PdfAnnotation
     {
         public IntPtr AnnotId;
@@ -34,8 +38,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         public readonly IntPtr PopupAnnotation;
         public readonly double BorderWidth;
 
-        public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r,
-            double[] color, double dBorderWidth = 1.0d)
+        public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, double[] color, double dBorderWidth = 1.0)
         {
             this.SubType = eType;
             this.PageNr = iPage;
@@ -62,11 +65,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.BorderWidth = dBorderWidth;
         }
 
-        public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, string content, double[] color, double dBorderWidth = 1.0d) :this(eType,iPage,r,color,dBorderWidth)
+        public PdfAnnotation(PdfDocument.TPdfAnnotationType eType, int iPage, double[] r, string content, double[] color, double dBorderWidth = 1.0) :this(eType,iPage,r,color,dBorderWidth)
         {
             this.Contents = content;
         }
 
+        /// <summary>
+        /// constructor used to read an annotation from the API
+        /// Uses marshalling to read the attributes
+        /// </summary>
+        /// <param name="annot"></param>
         public PdfAnnotation(PdfDocument.TPdfAnnotation annot)
         {
             this.AnnotId = annot.annotationHandle;
@@ -107,6 +115,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             this.HasPopup = annot.hasPopup == 1;
             this.PopupAnnotation = annot.m_pPopupAnnot;
         }
+
         public PdfAnnotation(PdfAnnotation annot)
         {
             this.AnnotId = annot.AnnotId;
@@ -177,6 +186,11 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
             return AnnotId.ToInt64();
         }
 
+        /// <summary>
+        /// Converts a string to the corresponding TPdfAnnotationType
+        /// </summary>
+        /// <param name="annotSubType"></param>
+        /// <returns></returns>
         public static PdfDocument.TPdfAnnotationType ConvertSubtype(string annotSubType)
         {
             switch (annotSubType.ToLower(CultureInfo.InvariantCulture))
@@ -209,46 +223,83 @@ namespace PdfTools.PdfViewerCSharpAPI.Annotations
         }
 
 
-
-        public bool ContainsOrIntersectsWithRect(PdfSourceRect markedRect, bool OnIntersect)
+        /// <summary>
+        /// Checks whether the bounding rectangle of this annotation is intersected by a rectangle.
+        /// If OnIntersect is false the markedRect has to completly contain the bounding rectangle.
+        /// </summary>
+        /// <param name="markedRect"></param>
+        /// <param name="onIntersect"></param>
+        /// <returns></returns>
+        public bool ContainsOrIntersectsWithRect(PdfSourceRect markedRect, bool onIntersect)
         {
             PdfSourceRect annotRect = new PdfSourceRect(Rect[0], Rect[1], Rect[2] - Rect[0], Rect[3] - Rect[1]);
 
-            if (OnIntersect)
+            if (onIntersect)
             {
                 return markedRect.intersectsDouble(annotRect);
             }
             return markedRect.contains(annotRect);
         }
 
+        /// <summary>
+        /// Checks whether a point is inside the bounding rectangle of this annotation
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public bool ContainsPoint(PdfSourcePoint point)
         {
             return Rect[0] <= point.dX && Rect[1] <= point.dY && Rect[2] >= point.dX && Rect[3] >= point.dY;
         }
 
-        public UpdateAnnotation Move(double x, double y)
+        /// <summary>
+        /// Returns an UpdateAnnotation object that can be used to move the annotation the given amount
+        /// </summary>
+        /// <param name="deltaX"></param>
+        /// <param name="deltaY"></param>
+        /// <returns></returns>
+        public UpdateAnnotation Move(double deltaX, double deltaY)
         {
-            double[] rect = new double[] { Rect[0] + x, Rect[1] + y, Rect[2] + x, Rect[3] + y };
+            double[] rect = new double[] { Rect[0] + deltaX, Rect[1] + deltaY, Rect[2] + deltaX, Rect[3] + deltaY };
 
             return new UpdateAnnotation(this, rect, null, null, null, -1);
         }
 
+        /// <summary>
+        /// Returns an UpdateAnnotation object that can be used to change the content of the annotation
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public UpdateAnnotation UpdateContent(string content)
         {
             return new UpdateAnnotation(this, null, content, null, null, -1);
         }
 
+        /// <summary>
+        /// Returns an UpdateAnnotation object that can be used to change the label of the annotation
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns></returns>
         public UpdateAnnotation UpdateLabel(string label)
         {
             return new UpdateAnnotation(this, null, null, label, null, -1);
         }
 
+        /// <summary>
+        /// Returns an UpdateAnnotation object that can be used to change the color of the annotation
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public UpdateAnnotation UpdateColor(Color color)
         {
             double[] colorArray = new double[] { color.R / 255.0, color.G / 255.0, color.B / 255.0 };
             return new UpdateAnnotation(this, null, null, null, colorArray, -1);
         }
 
+        /// <summary>
+        /// Returns an UpdateAnnotation object that can be used to change the borderwidth of the annotation
+        /// </summary>
+        /// <param name="width"></param>
+        /// <returns></returns>
         public UpdateAnnotation UpdateWidth(double width)
         {
             return new UpdateAnnotation(this, null, null, null, null, width);

@@ -1094,7 +1094,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public IPdfAnnotationFormMapper LoadFormMapper()
         {
-            var formMapper = _annotationFormMappers.Where(p => p.Metadata.Name.Equals(AnnotationFormMapper))
+            var formMapper = _annotationFormMappers?.Where(p => p.Metadata.Name.Equals(AnnotationFormMapper))
                 .OrderByDescending(p => p.Metadata.Version).FirstOrDefault();
             if (formMapper == null)
             {
@@ -1142,7 +1142,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
         public IPdfTextConverter LoadTextConverter()
         {
-            var converter = _textConverters.Where(p => p.Metadata.Name.Equals(TextConverter))
+            var converter = _textConverters?.Where(p => p.Metadata.Name.Equals(TextConverter))
                 .OrderByDescending(p => p.Metadata.Version).FirstOrDefault();
             if (converter == null)
             {
