@@ -29,6 +29,10 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement.Requests
             this.Annots = new List<PdfAnnotation> { new PdfAnnotation(eType, iPage, r, color, dBorderWidth) };
         }
     }
+
+    /// <summary>
+    /// Requests the creation of a new annotation
+    /// </summary>
     public class PdfCreateAnnotationRequest : APdfRequest<CreateAnnotationArgs, IList<PdfAnnotation>>
     {
         public PdfCreateAnnotationRequest(CreateAnnotationArgs arguments)
