@@ -1045,11 +1045,13 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             var newAnnotations = annots.Select(points => new PdfAnnotation(PdfAnnotation.ConvertSubtype(loadedFormMapper.AnnotationType), oldAnnot.PageNr, points, oldAnnot.Colors, oldAnnot.BorderWidth)).ToList();
 
             canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(newAnnotations));
+            UpdateThumbnail(oldAnnot.PageNr);
         }
 
         public void CreateAnnotationsWithoutMapper(IList<PdfAnnotation> annots)
         {
             canvas.DocumentManager.CreateAnnotations(new CreateAnnotationArgs(annots));
+            UpdateThumbnail(annots[0].PageNr);
         }
 
         public void CreateTextAnnotation(string content, int page, double[] point, double[] color)
@@ -1075,6 +1077,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 canvas.DocumentManager.UpdateAnnotations(args);
                 LoadAllAnnotationsOnPage(args.updateAnnots.First().Annot.PageNr);
+                UpdateThumbnail(args.updateAnnots.First().Annot.PageNr);
             }
         }
 
@@ -1084,6 +1087,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
             {
                 canvas.DocumentManager.DeleteAnnotations(new DeleteAnnotationArgs(annots.Select(annot => annot.AnnotId).ToList()));
                 LoadAllAnnotationsOnPage(annots[0].PageNr);
+                UpdateThumbnail(annots[0].PageNr);
             }
         }
 
@@ -1997,6 +2001,16 @@ namespace PdfTools.PdfViewerCSharpAPI.Model
 
             ThumbnailCacheArgs args = new ThumbnailCacheArgs(loadPage, canvas.Rotation, sourceRect, thumbnailWidth, thumbnailHeight, pageNo, Resolution);
             return canvas.DocumentManager.RequestThumbnail(args);
+        }
+
+        /// <summary> [InkingForPDF]
+        /// Updates the thumbnails
+        /// </summary>
+        /// <param name="pageNr"></param>
+        public void UpdateThumbnail(int pageNr)
+        {
+            ThumbnailCacheArgs args = new ThumbnailCacheArgs(true, canvas.Rotation, null, thumbnailWidth, thumbnailHeight, pageNr, Resolution);
+            canvas.DocumentManager.ReloadThumbnail(args);
         }
 
         public WriteableBitmap GetThumbnail(int pageNo)

@@ -62,6 +62,13 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
 
         WriteableBitmap GetThumbnail(ThumbnailCacheArgs args);
 
+        /// <summary>
+        /// Reloads the thumbnails
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        WriteableBitmap ReloadThumbnail(ThumbnailCacheArgs args); //[InkingForPDF]
+
         void CancelRequest(IPdfRequest request);
 
 

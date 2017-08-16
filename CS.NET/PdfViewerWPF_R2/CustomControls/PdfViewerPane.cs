@@ -722,7 +722,7 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 {
                     foreach (var annot in annotList)
                     {
-                        if (annot != null && annot.Count > 1)
+                        if (annot != null && annot.Count > 0)
                         {
                             for (var i = 0; i < annot.Count - 1; i++)
                             {

@@ -318,6 +318,12 @@ namespace PdfTools.PdfViewerCSharpAPI.DocumentManagement
             return thumbnailCache.Get(args);
         }
 
+        public WriteableBitmap ReloadThumbnail(ThumbnailCacheArgs args) //[InkingForPDF]
+        {
+            thumbnailCache.InvalidateCache();
+            return thumbnailCache.Get(args);
+        }
+
 
         public void CancelRequest(IPdfRequest request)
         {
