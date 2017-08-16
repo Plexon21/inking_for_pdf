@@ -419,6 +419,10 @@ namespace PdfTools.PdfViewerWPF.CustomControls
                 movingAnnotations = false;
                 mouseOverAnnotationInMarkMode = false;
             }
+            if (value != TMouseMode.eMouseClickAnnotationMode)
+            {
+                creatingClickAnnotation = false;
+            }
 
             annotationPoints = null;
             selectedAnnotations.Clear();
