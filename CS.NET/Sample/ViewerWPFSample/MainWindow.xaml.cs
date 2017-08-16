@@ -578,13 +578,13 @@ namespace ViewerWPFSample
                     PdfViewer.Scroll((int)(-0.05 * PdfViewer.ActualWidth), 0);
                     break;
                 case Key.Delete:
-                    if (PdfViewer.MouseMode == TMouseMode.eMouseMarkMode) PdfViewer.DeleteSelectedAnnotations(); //[InkingForPDF]
+                    PdfViewer.DeleteSelectedAnnotations(); //[InkingForPDF]
                     break;
                 case Key.Space:
-                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.EndCurrentClickAnotation(); //[InkingForPDF]
+                    PdfViewer.EndCurrentClickAnotation(); //[InkingForPDF]
                     break;
                 case Key.Escape:
-                    if (PdfViewer.MouseMode == TMouseMode.eMouseClickAnnotationMode) PdfViewer.AbortCurrentClickAnnotation(); //[InkingForPDF]
+                    PdfViewer.AbortCurrentClickAnnotation(); //[InkingForPDF]
                     break;
                 default:
                     //do nothing
