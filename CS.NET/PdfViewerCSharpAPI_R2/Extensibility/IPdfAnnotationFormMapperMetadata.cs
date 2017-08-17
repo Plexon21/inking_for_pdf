@@ -8,7 +8,7 @@ namespace PdfTools.PdfViewerCSharpAPI.Extensibility
 {
     /// <summary>
     /// Used to distinguish form mapper extensions before loading them
-    /// </summary
+    /// </summary>
     public interface IPdfAnnotationFormMapperMetadata
     {
         string Name { get; }
