@@ -436,6 +436,8 @@ namespace PdfTools.PdfViewerWPF.CustomControls
         /// <param name="pointCount"></param>
         public void MassCreateAnnotations(int annotCount, int pointCount)
         {
+            if (!controller.IsOpen) return;
+
             Random rnd = new Random();
 
             //min and max positions of the points in page coordinates
